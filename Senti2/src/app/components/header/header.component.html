@@ -1,0 +1,18 @@
+<header class="navbar">
+  <div class="logo">Senti2</div>
+
+  <nav>
+    <a routerLink="/inicio" routerLinkActive="active">Inicio</a> <a routerLink="/servicios"
+      routerLinkActive="active">Servicios</a>
+    <a routerLink="/psicologos" routerLinkActive="active">Psicólogos</a>
+    <a routerLink="/origen" routerLinkActive="active">Origen</a>
+    <a routerLink="/contacto" routerLinkActive="active">Contacto</a>
+
+    <!-- User Async Check -->
+    @if (supabase.currentUser$ | async) {
+    <a (click)="supabase.signOut()" style="cursor: pointer;">Salir</a>
+    } @else {
+    <a routerLink="/login">Login</a>
+    }
+  </nav>
+</header>

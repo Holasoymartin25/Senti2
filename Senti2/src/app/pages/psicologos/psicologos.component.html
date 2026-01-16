@@ -1,0 +1,17 @@
+<div class="psicologos-conatiner">
+    <h1 class="page-title">Nuestros Especialistas</h1>
+
+    <div class="cards-grid">
+        @for (specialist of specialists; track specialist.name) {
+        <div class="card" [class.highlight]="specialist.highlight">
+            <div class="image-wrapper">
+                <img [src]="specialist.image" [alt]="specialist.name"
+                    onerror="this.src='https://via.placeholder.com/150'">
+            </div>
+            <h3 class="name">{{ specialist.name }}</h3>
+            <p class="specialty">{{ specialist.title }}</p>
+            <p class="description">{{ specialist.description }}</p>
+        </div>
+        }
+    </div>
+</div>
