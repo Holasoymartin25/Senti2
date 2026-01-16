@@ -1,0 +1,108 @@
+.hero-section {
+  padding: 60px 0;
+  background-color: var(--bg-cream);
+  /* Explicitly set here too */
+}
+
+.hero-title {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #3e2723;
+  margin-bottom: 50px;
+  letter-spacing: 1px;
+}
+
+.hero-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+  background-color: rgba(235, 220, 189, 0.5);
+  /* Semi-transparent darker cream */
+  border-radius: 40px;
+  padding: 30px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.hero-image-container {
+  flex: 1;
+}
+
+.hero-image {
+  width: 100%;
+  border-radius: 40px;
+  border: 5px solid #00aaff;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.hero-text {
+  flex: 1;
+  text-align: left;
+  padding: 20px;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.cta-buttons {
+  margin-top: 30px;
+  display: flex;
+  gap: 20px;
+}
+
+.cta-buttons .btn-primary,
+.cta-buttons .btn-outline {
+  padding: 15px 30px;
+  text-align: center;
+  border-radius: 30px;
+}
+
+/* Features Section */
+.features-section {
+  padding: 60px 0;
+  background-color: var(--bg-cream);
+}
+
+.section-title {
+  font-size: 2.5rem;
+  color: #3e2723;
+  margin-bottom: 50px;
+}
+
+.features-grid {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.feature-card {
+  background-color: white !important;
+  /* Force white background */
+  border: 1px solid #eee;
+  /* Subtle border */
+  border-radius: 20px;
+  padding: 40px 30px;
+  width: 300px;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  /* Stronger shadow */
+}
+
+.feature-card h3 {
+  color: #5D4037;
+  margin-bottom: 20px;
+  font-size: 1.4rem;
+}
+
+.feature-card p {
+  color: #555;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+  .hero-content {
+    flex-direction: column;
+  }
+}
