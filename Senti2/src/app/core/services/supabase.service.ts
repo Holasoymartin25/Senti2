@@ -17,18 +17,36 @@ export class SupabaseService {
     }
 
     private async initSession() {
-        const { data } = await this.supabase.auth.getSession();
-        if (data.session) {
-            this._currentUser.next(data.session.user);
+        // Manejar el callback de OAuth si existe
+        const { data: { session }, error } = await this.supabase.auth.getSession();
+        
+        if (error) {
+            console.error('Error getting session:', error);
+        }
+
+        if (session) {
+            this._currentUser.next(session.user);
+            // Si hay una sesión y estamos en la página de login, redirigir
+            if (this.router.url === '/' || this.router.url === '/login') {
+                this.router.navigate(['/inicio']);
+            }
         } else {
             this._currentUser.next(null);
         }
 
+        // Escuchar cambios en el estado de autenticación
         this.supabase.auth.onAuthStateChange((event, session) => {
             if (event === 'SIGNED_IN' && session) {
                 this._currentUser.next(session.user);
+                // Redirigir a inicio después de login exitoso
+                if (this.router.url === '/' || this.router.url === '/login') {
+                    this.router.navigate(['/inicio']);
+                }
             } else if (event === 'SIGNED_OUT') {
                 this._currentUser.next(null);
+                this.router.navigate(['/']);
+            } else if (event === 'TOKEN_REFRESHED' && session) {
+                this._currentUser.next(session.user);
             }
         });
     }
@@ -59,8 +77,22 @@ export class SupabaseService {
     async signInWithGoogle(): Promise<any> {
         const { data, error } = await this.supabase.auth.signInWithOAuth({
             provider: 'google',
+            options: {
+                redirectTo: `${window.location.origin}/inicio`,
+                queryParams: {
+                    access_type: 'offline',
+                    prompt: 'consent',
+                }
+            }
         });
-        return { data, error };
+        
+        if (error) {
+            return { data: null, error };
+        }
+        
+        // Si hay una URL de redirección, el navegador será redirigido automáticamente
+        // No necesitamos hacer nada más aquí
+        return { data, error: null };
     }
 
     async signOut(): Promise<void> {
