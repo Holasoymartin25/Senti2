@@ -1,0 +1,168 @@
+<div class="profile-dashboard">
+  <div class="dashboard-header">
+    <div class="container">
+      <div class="header-content">
+        <div class="avatar-section">
+          <div class="avatar-circle">
+            <span class="avatar-initials">{{ getInitials() }}</span>
+          </div>
+          <div class="user-info">
+            <h1 class="user-name">{{ getDisplayName() }}</h1>
+            <p class="user-email">{{ userEmail }}</p>
+            <span class="member-since" *ngIf="profile.created_at">
+              Miembro desde {{ formatDate(profile.created_at) }}
+            </span>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button class="btn-icon" (click)="toggleEditMode()" [class.active]="editMode">
+            {{ editMode ? 'Cancelar' : 'Editar Perfil' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="dashboard-content">
+    <div class="container">
+      <div *ngIf="errorMessage" class="alert alert-error">
+        <strong>Error:</strong> {{ errorMessage }}
+      </div>
+
+      <div *ngIf="successMessage" class="alert alert-success">
+        <strong>Éxito:</strong> {{ successMessage }}
+      </div>
+
+      <div *ngIf="loading" class="loading-container">
+        <div class="loading-spinner"></div>
+        <p>Cargando tu perfil...</p>
+      </div>
+
+      <div *ngIf="!loading && !editMode" class="dashboard-grid">
+        <div class="dashboard-card">
+          <div class="card-header">
+            <h3>Información Personal</h3>
+          </div>
+          <div class="card-content">
+            <div class="info-row">
+              <span class="info-label">Nombre completo</span>
+              <span class="info-value">{{ getFullName() || 'No especificado' }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Teléfono</span>
+              <span class="info-value">{{ profile.telefono || 'No especificado' }}</span>
+            </div>
+            <div class="info-row" *ngIf="profile.fecha_nacimiento">
+              <span class="info-label">Fecha de nacimiento</span>
+              <span class="info-value">{{ formatDate(profile.fecha_nacimiento) }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-card">
+          <div class="card-header">
+            <h3>Cuenta</h3>
+          </div>
+          <div class="card-content">
+            <div class="info-row">
+              <span class="info-label">Email</span>
+              <span class="info-value">{{ userEmail }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Estado</span>
+              <span class="info-badge active">Activo</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-card">
+          <div class="card-header">
+            <h3>Acciones</h3>
+          </div>
+          <div class="card-content">
+            <button class="action-btn" (click)="toggleEditMode()">
+              Editar Perfil
+            </button>
+            <button class="action-btn secondary" (click)="logout()">
+              Cerrar Sesión
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="!loading && editMode" class="edit-form-container">
+        <div class="edit-form-card">
+          <h2 class="form-title">Editar Información Personal</h2>
+          <form (ngSubmit)="saveProfile()" class="profile-form">
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="nombre" class="form-label">
+                  Nombre
+                </label>
+                <input
+                  type="text"
+                  id="nombre"
+                  name="nombre"
+                  [(ngModel)]="profile.nombre"
+                  placeholder="Tu nombre"
+                  class="form-input"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="apellidos" class="form-label">
+                  Apellidos
+                </label>
+                <input
+                  type="text"
+                  id="apellidos"
+                  name="apellidos"
+                  [(ngModel)]="profile.apellidos"
+                  placeholder="Tus apellidos"
+                  class="form-input"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="telefono" class="form-label">
+                  Teléfono
+                </label>
+                <input
+                  type="tel"
+                  id="telefono"
+                  name="telefono"
+                  [(ngModel)]="profile.telefono"
+                  placeholder="Tu teléfono"
+                  class="form-input"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="fecha_nacimiento" class="form-label">
+                  Fecha de Nacimiento
+                </label>
+                <input
+                  type="date"
+                  id="fecha_nacimiento"
+                  name="fecha_nacimiento"
+                  [(ngModel)]="profile.fecha_nacimiento"
+                  class="form-input"
+                />
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn-primary" [disabled]="saving">
+                <span *ngIf="!saving">Guardar Cambios</span>
+                <span *ngIf="saving">Guardando...</span>
+              </button>
+              <button type="button" class="btn-secondary" (click)="toggleEditMode()" [disabled]="saving">
+                Cancelar
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

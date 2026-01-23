@@ -26,6 +26,7 @@
   cursor: pointer;
   transition: all var(--transition-base);
   position: relative;
+  
 }
 
 .logo::after {
@@ -91,6 +92,62 @@ nav a.active::before {
   width: 80%;
 }
 
+.profile-link {
+  background: var(--gradient-primary);
+  color: white !important;
+  padding: 10px 20px;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  margin-left: var(--space-sm);
+  text-decoration: none;
+}
+
+.profile-link::before {
+  display: none;
+}
+
+.profile-link:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-colored);
+  background: var(--primary-sage-dark);
+  color: white !important;
+}
+
+.profile-link:hover .user-name {
+  color: white !important;
+}
+
+.profile-link .user-name {
+  display: block;
+  font-size: 0.9rem;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 600;
+  color: white !important;
+  text-decoration: none;
+}
+
+.logout-link {
+  background: transparent;
+  color: var(--neutral-slate) !important;
+  padding: 10px 15px;
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  margin-left: var(--space-xs);
+  border: 1px solid var(--neutral-stone);
+  text-decoration: none;
+  transition: all var(--transition-base);
+}
+
+.logout-link:hover {
+  background: var(--neutral-cream);
+  color: var(--primary-sage) !important;
+  border-color: var(--primary-sage);
+  text-decoration: none;
+}
+
 nav a:last-child {
   background: var(--gradient-primary);
   color: white;
@@ -114,22 +171,30 @@ nav a:last-child:hover {
 @media (max-width: 768px) {
   .navbar {
     padding: var(--space-sm) var(--space-md);
-    flex-wrap: wrap;
+    flex-direction: column; /* Apila logo arriba y menú abajo */
+    gap: 1rem; /* Espacio entre el logo y el menú */
   }
 
   nav {
-    gap: var(--space-sm);
+    width: 100%;
+    justify-content: center; /* Centra los enlaces */
+    gap: var(--space-xs); /* Reduce el espacio entre enlaces */
     flex-wrap: wrap;
   }
 
   nav a {
     font-size: 0.85rem;
-    padding: var(--space-xs);
+    padding: 6px 12px; /* Ajuste ligero para que quepan mejor */
   }
 
+  /* AQUÍ ESTÁ EL CAMBIO PRINCIPAL */
   nav a:last-child {
     margin-left: 0;
-    width: 100%;
-    margin-top: var(--space-xs);
+    width: auto; /* Ya no ocupa el 100% */
+    margin-top: 0; /* Quitamos el margen superior forzado */
+    
+    /* Mantenemos el estilo de botón pero ajustado */
+    padding: 6px 16px; 
+    display: inline-block;
   }
 }

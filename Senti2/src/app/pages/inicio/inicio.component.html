@@ -5,8 +5,7 @@
     <div class="hero-content">
       <div class="hero-image-container">
         <!-- Placeholder for the woman on couch with tablet -->
-        <img src="assets/hero-woman.jpg" alt="Bienestar Emocional" class="hero-image"
-          onerror="this.src='https://via.placeholder.com/600x400?text=Woman+Tablet'">
+        <img src="assets/hands-plant.jpg" alt="Bienestar Emocional" class="hero-image">
       </div>
 
       <div class="hero-text">
@@ -18,8 +17,9 @@
         </p>
 
         <div class="cta-buttons">
-          <a routerLink="/" class="btn-primary">Comenzar Ahora</a>
-          <a routerLink="/servicios" class="btn-outline">Conocer Más</a>
+          <button (click)="handleStart()" class="btn-primary" style="cursor: pointer; border: none;">Comenzar
+            Ahora</button>
+          <a routerLink="/psicologos" class="btn-outline">Conocer Más</a>
         </div>
       </div>
     </div>
