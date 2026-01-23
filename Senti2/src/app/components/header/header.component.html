@@ -1,5 +1,5 @@
 <header class="navbar">
-  <div class="logo">Senti2</div>
+  <div class="logo" routerLink="/inicio">Senti2</div>
 
   <nav>
     <a routerLink="/inicio" routerLinkActive="active">Inicio</a> <a routerLink="/servicios"
@@ -8,11 +8,15 @@
     <a routerLink="/origen" routerLinkActive="active">Origen</a>
     <a routerLink="/contacto" routerLinkActive="active">Contacto</a>
 
-    <!-- User Async Check -->
-    @if (supabase.currentUser$ | async) {
-    <a (click)="supabase.signOut()" style="cursor: pointer;">Salir</a>
+    @if (supabase.currentUser$ | async; as user) {
+    <a routerLink="/perfil" routerLinkActive="active" class="profile-link">
+      <span class="user-name" [title]="user?.email || 'Mi Perfil'">
+        {{ (userName$ | async) || 'Mi Perfil' }}
+      </span>
+    </a>
+    <a (click)="supabase.signOut()" style="cursor: pointer;" class="logout-link">Salir</a>
     } @else {
-    <a routerLink="/login">Login</a>
+    <a routerLink="/login" routerLinkActive="active">Login</a>
     }
   </nav>
 </header>

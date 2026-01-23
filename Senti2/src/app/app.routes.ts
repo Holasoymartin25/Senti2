@@ -6,6 +6,7 @@ import { authGuard } from './core/guards/auth.guard';
 import { PsicologosComponent } from './pages/psicologos/psicologos.component';
 import { OrigenComponent } from './pages/origen/origen.component';
 import { ContactoComponent } from './pages/contacto/contacto.component';
+import { PerfilComponent } from './pages/perfil/perfil.component';
 
 export const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -37,6 +38,11 @@ export const routes: Routes = [
   {
     path: 'contacto',
     component: ContactoComponent
+  },
+  {
+    path: 'perfil',
+    component: PerfilComponent,
+    canActivate: [authGuard]
   },
 
   { path: '**', redirectTo: 'login' }
