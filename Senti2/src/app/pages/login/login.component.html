@@ -32,7 +32,7 @@
 
     <div class="login-right">
       <div class="login-card">
-        <!-- Toggle entre Login y Registro -->
+
         <div class="auth-tabs">
           <button class="auth-tab" [class.active]="!isRegisterMode" (click)="toggleMode()" type="button">
             Iniciar Sesión
@@ -47,7 +47,7 @@
           <p class="subtitle">{{ isRegisterMode ? 'Únete a nuestra comunidad' : 'Inicia sesión para continuar' }}</p>
         </div>
 
-        <!-- Mensaje de éxito -->
+
         <div *ngIf="successMessage" class="success-message">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
@@ -56,7 +56,7 @@
           <span>{{ successMessage }}</span>
         </div>
 
-        <!-- Formulario de Login -->
+
         <form *ngIf="!isRegisterMode && !successMessage" (ngSubmit)="onLogin()" class="login-form">
           <div class="form-group">
             <label for="email">Correo electrónico</label>
@@ -98,7 +98,7 @@
           </button>
         </form>
 
-        <!-- Formulario de Registro -->
+
         <form *ngIf="isRegisterMode && !successMessage" (ngSubmit)="onRegister()" class="login-form">
           <div class="form-group">
             <label for="register-email">Correo electrónico</label>
@@ -145,7 +145,7 @@
           </button>
         </form>
 
-        <!-- Botón de Google (solo en login) -->
+
         <div *ngIf="!isRegisterMode && !successMessage">
           <div class="divider">
             <span>O continúa con</span>
@@ -166,7 +166,7 @@
           </button>
         </div>
 
-        <!-- Mensaje de error -->
+
         <div *ngIf="errorMessage" class="error-message">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="12" cy="12" r="10"></circle>

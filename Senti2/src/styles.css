@@ -1,9 +1,5 @@
-/* ============================================
-   SENTI2 - Sistema de Diseño Innovador
-   ============================================ */
-
 :root {
-  /* Paleta de colores única - Inspirada en bienestar y calma */
+ 
   --primary-sage: #87A96B;
   --primary-sage-dark: #6B8554;
   --primary-sage-light: #A8C088;
@@ -12,7 +8,7 @@
   --accent-lavender: #B8A9D9;
   --accent-lavender-light: #D4C9E8;
   
-  /* Neutros sofisticados */
+
   --neutral-cream: #FAF7F2;
   --neutral-warm: #F5F1EB;
   --neutral-stone: #E8E3DB;
@@ -20,23 +16,23 @@
   --neutral-slate: #4A4A4A;
   --neutral-gray: #6B6B6B;
   
-  /* Gradientes únicos */
+
   --gradient-primary: linear-gradient(135deg, #87A96B 0%, #6B8554 100%);
   --gradient-soft: linear-gradient(135deg, #F4A88A 0%, #B8A9D9 100%);
   --gradient-warm: linear-gradient(135deg, #FAF7F2 0%, #F5F1EB 100%);
   --gradient-overlay: linear-gradient(180deg, rgba(250, 247, 242, 0.95) 0%, rgba(245, 241, 235, 0.98) 100%);
   
-  /* Sombras suaves y naturales */
+
   --shadow-soft: 0 2px 8px rgba(44, 44, 44, 0.08);
   --shadow-medium: 0 4px 16px rgba(44, 44, 44, 0.12);
   --shadow-large: 0 8px 32px rgba(44, 44, 44, 0.16);
   --shadow-colored: 0 4px 20px rgba(135, 169, 107, 0.25);
   
-  /* Tipografía moderna */
+
   --font-display: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   
-  /* Espaciado consistente */
+
   --space-xs: 0.5rem;
   --space-sm: 1rem;
   --space-md: 1.5rem;
@@ -44,20 +40,20 @@
   --space-xl: 3rem;
   --space-2xl: 4rem;
   
-  /* Bordes redondeados */
+
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 16px;
   --radius-xl: 24px;
   --radius-full: 9999px;
   
-  /* Transiciones suaves */
+
   --transition-fast: 0.15s ease;
   --transition-base: 0.3s ease;
   --transition-slow: 0.5s ease;
 }
 
-/* Reset y base */
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -79,7 +75,7 @@ body {
   overflow-x: hidden;
 }
 
-/* Tipografía */
+
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display);
   font-weight: 700;
@@ -105,7 +101,7 @@ a {
   transition: all var(--transition-base);
 }
 
-/* Contenedor principal */
+
 .container {
   max-width: 1280px;
   margin: 0 auto;
@@ -118,7 +114,7 @@ a {
   }
 }
 
-/* Botones */
+
 .btn-primary {
   display: inline-flex;
   align-items: center;
@@ -214,7 +210,7 @@ a {
   color: var(--neutral-charcoal);
 }
 
-/* Cards y superficies */
+
 .card {
   background: white;
   border-radius: var(--radius-lg);
@@ -228,7 +224,7 @@ a {
   transform: translateY(-4px);
 }
 
-/* Utilidades */
+
 .text-center {
   text-align: center;
 }
@@ -243,7 +239,7 @@ a {
 .mb-lg { margin-bottom: var(--space-lg); }
 .mb-xl { margin-bottom: var(--space-xl); }
 
-/* Animaciones */
+
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -283,7 +279,7 @@ a {
   animation: slideIn 0.6s ease-out;
 }
 
-/* Scrollbar personalizado */
+
 ::-webkit-scrollbar {
   width: 10px;
 }
