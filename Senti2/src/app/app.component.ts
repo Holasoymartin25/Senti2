@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
+import { RouterOutlet, Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { CommonModule } from '@angular/common';
 import { filter } from 'rxjs/operators';
-import { SupabaseService } from './core/services/supabase.service';
+import { AuthApiService } from './core/services/auth-api.service';
 
 @Component({
   selector: 'app-root',
@@ -23,31 +23,24 @@ export class AppComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private supabase: SupabaseService
+    private route: ActivatedRoute,
+    private authApi: AuthApiService
   ) {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: any) => {
-      this.showHeaderFooter = event.url !== '/' && event.url !== '/login';
+      this.showHeaderFooter = event.url !== '/' && event.url !== '/login' && !event.url.startsWith('/auth/callback');
     });
   }
 
   async ngOnInit() {
-    const hashParams = new URLSearchParams(window.location.hash.substring(1));
-    const accessToken = hashParams.get('access_token');
-    const error = hashParams.get('error');
-    
-    if (error) {
-      console.error('Error en OAuth:', error);
-      this.router.navigate(['/']);
-      return;
-    }
-
-    if (accessToken) {
-      setTimeout(async () => {
-        await this.supabase.refreshUserState();
-        window.history.replaceState({}, document.title, window.location.pathname);
-      }, 500);
-    }
+    this.route.queryParams.subscribe(params => {
+      const token = params['token'];
+      const refreshToken = params['refresh_token'];
+      
+      if (token) {
+        this.authApi.handleAuthCallback(token, refreshToken);
+      }
+    });
   }
 }

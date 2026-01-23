@@ -121,26 +121,45 @@ class SupabaseService
     public function getGoogleOAuthUrl(string $redirectUrl): string
     {
         $redirectUri = urlencode($redirectUrl);
-        return "{$this->url}/auth/v1/authorize?provider=google&redirect_to={$redirectUri}";
+        $url = "{$this->url}/auth/v1/authorize?provider=google&redirect_to={$redirectUri}&response_type=code";
+        Log::info('URL de OAuth generada', ['url' => $url, 'redirect_to' => $redirectUrl]);
+        return $url;
     }
 
-    public function exchangeCodeForSession(string $code): ?array
+    public function exchangeCodeForSession(string $code, string $redirectUrl): ?array
     {
         try {
-            $response = Http::withHeaders([
+            $response = Http::asForm()->withHeaders([
                 'apikey' => $this->key,
-                'Content-Type' => 'application/json',
+                'Content-Type' => 'application/x-www-form-urlencoded',
             ])->post("{$this->url}/auth/v1/token?grant_type=authorization_code", [
                 'code' => $code,
+                'redirect_to' => $redirectUrl,
             ]);
 
             if ($response->successful()) {
-                return $response->json();
+                $data = $response->json();
+                Log::info('Sesión obtenida exitosamente', [
+                    'has_access_token' => isset($data['access_token']),
+                    'has_refresh_token' => isset($data['refresh_token'])
+                ]);
+                return $data;
             }
 
+            $errorBody = $response->body();
+            Log::error('Error al intercambiar código', [
+                'status' => $response->status(),
+                'body' => $errorBody,
+                'code' => $code,
+                'redirect_url' => $redirectUrl
+            ]);
             return null;
         } catch (\Exception $e) {
-            Log::error('Error intercambiando código: ' . $e->getMessage());
+            Log::error('Error intercambiando código: ' . $e->getMessage(), [
+                'code' => $code,
+                'redirect_url' => $redirectUrl,
+                'trace' => $e->getTraceAsString()
+            ]);
             return null;
         }
     }

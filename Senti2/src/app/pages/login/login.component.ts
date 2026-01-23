@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { SupabaseService } from '../../core/services/supabase.service';
 
 @Component({
@@ -11,7 +11,7 @@ import { SupabaseService } from '../../core/services/supabase.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   email = '';
   password = '';
   confirmPassword = '';
@@ -20,7 +20,27 @@ export class LoginComponent {
   loading = false;
   isRegisterMode = false;
 
-  constructor(private supabase: SupabaseService, private router: Router) { }
+  constructor(
+    private supabase: SupabaseService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) { }
+
+  ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      const token = params['token'];
+      const error = params['error'];
+      
+      if (error) {
+        this.errorMessage = decodeURIComponent(error);
+        this.loading = false;
+      }
+      
+      if (token) {
+        this.router.navigate(['/inicio']);
+      }
+    });
+  }
 
   toggleMode() {
     this.isRegisterMode = !this.isRegisterMode;
