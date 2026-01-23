@@ -33,11 +33,11 @@
   height: 100%;
   object-fit: cover;
   transition: transform var(--transition-slow);
+  transform: scale(1.05);
+  /* Slight permanent zoom to crop watermark edges */
 }
 
-.contacto-container:hover .image-side img {
-  transform: scale(1.05);
-}
+
 
 .form-side {
   padding: var(--space-2xl);
