@@ -28,13 +28,11 @@ export class AppComponent implements OnInit {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: any) => {
-      // Ocultar header y footer en la página de login (ruta raíz)
       this.showHeaderFooter = event.url !== '/' && event.url !== '/login';
     });
   }
 
   async ngOnInit() {
-    // Manejar el callback de OAuth si existe en la URL
     const hashParams = new URLSearchParams(window.location.hash.substring(1));
     const accessToken = hashParams.get('access_token');
     const error = hashParams.get('error');
@@ -45,11 +43,11 @@ export class AppComponent implements OnInit {
       return;
     }
 
-    // Si hay un token de acceso, Supabase lo manejará automáticamente
-    // Solo necesitamos esperar a que se procese
     if (accessToken) {
-      // Limpiar el hash de la URL
-      window.history.replaceState({}, document.title, window.location.pathname);
+      setTimeout(async () => {
+        await this.supabase.refreshUserState();
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }, 500);
     }
   }
 }
