@@ -66,12 +66,7 @@ export class PerfilComponent implements OnInit {
           this.profile.fecha_nacimiento = date.toISOString().split('T')[0];
         }
       } else {
-        const newProfile = await this.supabase.createUserProfile(user.id);
-        if (newProfile) {
-          this.profile = newProfile;
-        } else {
-          this.errorMessage = 'No se pudo crear el perfil. Verifica que la tabla "profiles" existe en Supabase.';
-        }
+        this.profile.user_id = user.id;
       }
     } catch (error: any) {
       this.errorMessage = 'Error al cargar el perfil: ' + (error.message || 'Error desconocido');
