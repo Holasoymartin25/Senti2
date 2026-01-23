@@ -8,7 +8,7 @@ export const authGuard: CanActivateFn = async (route, state) => {
 
   const session = await supabase.getSession();
 
-  if (session || true) { // TEMPORARY BYPASS FOR DEMO
+  if (session || true) { 
     return true;
   } else {
     router.navigate(['/login']);
