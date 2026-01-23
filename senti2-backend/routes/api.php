@@ -5,9 +5,15 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ProfileController;
 
 Route::prefix('v1')->group(function () {
+    Route::post('/auth/signup', [AuthController::class, 'signUp']);
+    Route::post('/auth/signin', [AuthController::class, 'signIn']);
     Route::post('/auth/verify', [AuthController::class, 'verifyToken']);
+    Route::get('/auth/google/url', [AuthController::class, 'getGoogleOAuthUrl']);
+    Route::get('/auth/google/callback', [AuthController::class, 'googleCallback']);
     
     Route::middleware('auth:supabase')->group(function () {
+        Route::post('/auth/signout', [AuthController::class, 'signOut']);
+        Route::get('/auth/user', [AuthController::class, 'getCurrentUser']);
         Route::get('/profile', [ProfileController::class, 'show']);
         Route::put('/profile', [ProfileController::class, 'update']);
         Route::patch('/profile', [ProfileController::class, 'update']);
