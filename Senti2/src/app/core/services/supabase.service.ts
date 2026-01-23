@@ -3,6 +3,7 @@ import { createClient, SupabaseClient, User, Session } from '@supabase/supabase-
 import { environment } from '../../../environments/environment';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { shareReplay } from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root'
@@ -17,7 +18,6 @@ export class SupabaseService {
     }
 
     private async initSession() {
-        // Manejar el callback de OAuth si existe
         const { data: { session }, error } = await this.supabase.auth.getSession();
         
         if (error) {
@@ -26,7 +26,9 @@ export class SupabaseService {
 
         if (session) {
             this._currentUser.next(session.user);
-            // Si hay una sesión y estamos en la página de login, redirigir
+            if (session.user) {
+                await this.ensureUserProfile(session.user.id);
+            }
             if (this.router.url === '/' || this.router.url === '/login') {
                 this.router.navigate(['/inicio']);
             }
@@ -34,11 +36,12 @@ export class SupabaseService {
             this._currentUser.next(null);
         }
 
-        // Escuchar cambios en el estado de autenticación
-        this.supabase.auth.onAuthStateChange((event, session) => {
+        this.supabase.auth.onAuthStateChange(async (event, session) => {
             if (event === 'SIGNED_IN' && session) {
                 this._currentUser.next(session.user);
-                // Redirigir a inicio después de login exitoso
+                if (session.user) {
+                    await this.ensureUserProfile(session.user.id);
+                }
                 if (this.router.url === '/' || this.router.url === '/login') {
                     this.router.navigate(['/inicio']);
                 }
@@ -47,12 +50,16 @@ export class SupabaseService {
                 this.router.navigate(['/']);
             } else if (event === 'TOKEN_REFRESHED' && session) {
                 this._currentUser.next(session.user);
+            } else if (event === 'USER_UPDATED' && session) {
+                this._currentUser.next(session.user);
             }
         });
     }
 
     get currentUser$(): Observable<User | null> {
-        return this._currentUser.asObservable();
+        return this._currentUser.asObservable().pipe(
+            shareReplay(1)
+        );
     }
 
     async signUp(email: string, password: string): Promise<any> {
@@ -60,6 +67,9 @@ export class SupabaseService {
             email,
             password,
         });
+        if (data.user && !error) {
+            await this.ensureUserProfile(data.user.id);
+        }
         return { data, error };
     }
 
@@ -70,6 +80,7 @@ export class SupabaseService {
         });
         if (data.user) {
             this._currentUser.next(data.user);
+            await this.ensureUserProfile(data.user.id);
         }
         return { data, error };
     }
@@ -90,8 +101,6 @@ export class SupabaseService {
             return { data: null, error };
         }
         
-        // Si hay una URL de redirección, el navegador será redirigido automáticamente
-        // No necesitamos hacer nada más aquí
         return { data, error: null };
     }
 
@@ -103,6 +112,154 @@ export class SupabaseService {
 
     async getSession(): Promise<Session | null> {
         const { data } = await this.supabase.auth.getSession();
+        if (data.session) {
+            this._currentUser.next(data.session.user);
+        } else {
+            this._currentUser.next(null);
+        }
         return data.session;
+    }
+
+    async refreshUserState(): Promise<void> {
+        const { data: { session } } = await this.supabase.auth.getSession();
+        if (session) {
+            this._currentUser.next(session.user);
+        } else {
+            this._currentUser.next(null);
+        }
+    }
+
+    async getCurrentUser(): Promise<User | null> {
+        const { data: { user } } = await this.supabase.auth.getUser();
+        return user;
+    }
+
+    async ensureUserProfile(userId: string): Promise<void> {
+        try {
+            const existingProfile = await this.getUserProfile(userId);
+            if (!existingProfile) {
+                await this.createUserProfile(userId);
+            }
+        } catch (error) {
+            console.error('Error al asegurar el perfil del usuario:', error);
+        }
+    }
+
+    async createUserProfile(userId: string): Promise<any> {
+        try {
+            const { data, error } = await this.supabase
+                .from('profiles')
+                .insert([
+                    {
+                        user_id: userId,
+                        nombre: '',
+                        apellidos: '',
+                        telefono: '',
+                        fecha_nacimiento: null
+                    }
+                ])
+                .select()
+                .single();
+
+            if (error) {
+                console.error('Error al crear perfil:', error);
+                if (error.code === '42P01' || error.message?.includes('does not exist')) {
+                    console.error('La tabla "profiles" no existe en Supabase.');
+                }
+                return null;
+            }
+
+            return data;
+        } catch (error: any) {
+            console.error('Error inesperado al crear perfil:', error);
+            return null;
+        }
+    }
+
+    async getUserProfile(userId: string): Promise<any> {
+        try {
+            const { data, error } = await this.supabase
+                .from('profiles')
+                .select('*')
+                .eq('user_id', userId)
+                .single();
+
+            if (error) {
+                if (error.code === 'PGRST116') {
+                    return null;
+                }
+                if (error.code === '42P01' || error.message?.includes('does not exist')) {
+                    console.error('La tabla "profiles" no existe en Supabase.');
+                } else {
+                    console.error('Error al obtener perfil:', error);
+                }
+                return null;
+            }
+
+            return data;
+        } catch (error: any) {
+            console.error('Error inesperado al obtener perfil:', error);
+            return null;
+        }
+    }
+
+    async updateUserProfile(profile: any): Promise<any> {
+        const { data, error } = await this.supabase
+            .from('profiles')
+            .update({
+                nombre: profile.nombre || '',
+                apellidos: profile.apellidos || '',
+                telefono: profile.telefono || '',
+                fecha_nacimiento: profile.fecha_nacimiento || null,
+                updated_at: new Date().toISOString()
+            })
+            .eq('user_id', profile.user_id)
+            .select()
+            .single();
+
+        if (error) {
+            console.error('Error al actualizar perfil:', error);
+            throw error;
+        }
+
+        return data;
+    }
+
+    async getUserDisplayName(userId: string): Promise<string> {
+        try {
+            const user = await this.getCurrentUser();
+            if (user) {
+                const metadata = user.user_metadata || {};
+                
+                if (metadata['full_name']) {
+                    return metadata['full_name'] as string;
+                }
+                
+                const givenName = metadata['given_name'] as string;
+                const familyName = metadata['family_name'] as string;
+                if (givenName || familyName) {
+                    const fullName = [givenName, familyName].filter(Boolean).join(' ');
+                    if (fullName.trim()) {
+                        return fullName;
+                    }
+                }
+                
+                const profile = await this.getUserProfile(userId);
+                if (profile && profile.nombre) {
+                    const fullName = [profile.nombre, profile.apellidos].filter(Boolean).join(' ');
+                    if (fullName.trim()) {
+                        return fullName;
+                    }
+                }
+                
+                return user.email || 'Mi Perfil';
+            }
+            
+            return 'Mi Perfil';
+        } catch (error) {
+            console.error('Error al obtener nombre de usuario:', error);
+            const user = await this.getCurrentUser();
+            return user?.email || 'Mi Perfil';
+        }
     }
 }
