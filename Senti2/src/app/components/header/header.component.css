@@ -115,22 +115,30 @@ nav a:last-child:hover {
 @media (max-width: 768px) {
   .navbar {
     padding: var(--space-sm) var(--space-md);
-    flex-wrap: wrap;
+    flex-direction: column; /* Apila logo arriba y menú abajo */
+    gap: 1rem; /* Espacio entre el logo y el menú */
   }
 
   nav {
-    gap: var(--space-sm);
+    width: 100%;
+    justify-content: center; /* Centra los enlaces */
+    gap: var(--space-xs); /* Reduce el espacio entre enlaces */
     flex-wrap: wrap;
   }
 
   nav a {
     font-size: 0.85rem;
-    padding: var(--space-xs);
+    padding: 6px 12px; /* Ajuste ligero para que quepan mejor */
   }
 
+  /* AQUÍ ESTÁ EL CAMBIO PRINCIPAL */
   nav a:last-child {
     margin-left: 0;
-    width: 100%;
-    margin-top: var(--space-xs);
+    width: auto; /* Ya no ocupa el 100% */
+    margin-top: 0; /* Quitamos el margen superior forzado */
+    
+    /* Mantenemos el estilo de botón pero ajustado */
+    padding: 6px 16px; 
+    display: inline-block;
   }
 }
