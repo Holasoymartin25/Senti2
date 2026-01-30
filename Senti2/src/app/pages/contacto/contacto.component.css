@@ -47,6 +47,26 @@
   background: white;
 }
 
+.form-message {
+  padding: var(--space-md) var(--space-lg);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-lg);
+  font-size: 0.95rem;
+  font-family: var(--font-body);
+}
+
+.form-message--success {
+  background: rgba(135, 169, 107, 0.15);
+  border: 1px solid var(--primary-sage);
+  color: var(--neutral-charcoal);
+}
+
+.form-message--error {
+  background: rgba(245, 48, 3, 0.08);
+  border: 1px solid var(--accent-coral, #f53003);
+  color: var(--neutral-charcoal);
+}
+
 .form-group {
   margin-bottom: var(--space-lg);
 }
