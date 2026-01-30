@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nueva consulta de contacto - Senti2</title>
+    <title>Consulta de contacto - Senti2</title>
     <style>
         body { font-family: sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
         h1 { color: #1b1b18; font-size: 1.25rem; margin-bottom: 1rem; }

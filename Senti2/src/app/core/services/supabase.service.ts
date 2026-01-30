@@ -45,8 +45,8 @@ export class SupabaseService {
         );
     }
 
-    async signUp(email: string, password: string): Promise<any> {
-        return await this.authApi.signUp(email, password);
+    async signUp(email: string, password: string, confirmPassword: string): Promise<any> {
+        return await this.authApi.signUp(email, password, confirmPassword);
     }
 
     async signIn(email: string, password: string): Promise<any> {
