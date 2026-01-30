@@ -1,0 +1,53 @@
+<div class="page-wrap">
+  <div class="page-content back-link-wrap">
+    <a routerLink="/area-personal" class="back-link">← Volver a Área Personal</a>
+  </div>
+  <div class="page-hero">
+    <h1>Recursos Educativos</h1>
+    <p class="lead">Accede a una biblioteca completa de artículos, ejercicios y técnicas para cuidar tu salud mental.</p>
+  </div>
+
+  <div class="page-content">
+    <section class="content-section">
+      <h2>Biblioteca de contenidos</h2>
+      <p>Artículos sobre salud mental y ejercicios de mindfulness con base en guías y evidencia. El contenido es orientativo y no sustituye una evaluación o tratamiento profesional.</p>
+    </section>
+
+    <section class="content-section">
+      <h2>Artículos sobre salud mental</h2>
+      <div class="resource-grid">
+        <article class="resource-card" *ngFor="let a of articulos">
+          <h3>{{ a.title }}</h3>
+          <p>{{ a.shortDesc }}</p>
+          <button type="button" class="btn-link" (click)="toggleArticle(a.id)">
+            {{ expandedArticleId === a.id ? 'Ocultar' : 'Leer artículo' }}
+          </button>
+          <div class="resource-full" *ngIf="expandedArticleId === a.id">
+            <div class="article-content">{{ a.content }}</div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="content-section">
+      <h2>Ejercicios de mindfulness</h2>
+      <p>Prácticas breves de atención plena para reducir el estrés y conectar con el presente. Sigue los pasos en un lugar tranquilo.</p>
+      <div class="resource-grid">
+        <article class="resource-card" *ngFor="let e of ejercicios">
+          <h3>{{ e.title }}</h3>
+          <p>{{ e.shortDesc }}</p>
+          <span class="duration">Duración: {{ e.duration }}</span>
+          <button type="button" class="btn-link" (click)="toggleExercise(e.id)">
+            {{ expandedExerciseId === e.id ? 'Ocultar' : 'Comenzar' }}
+          </button>
+          <div class="resource-full" *ngIf="expandedExerciseId === e.id">
+            <p class="evidence" *ngIf="e.evidence">Evidencia: {{ e.evidence }}</p>
+            <ol class="exercise-steps">
+              <li *ngFor="let step of e.steps">{{ step }}</li>
+            </ol>
+          </div>
+        </article>
+      </div>
+    </section>
+  </div>
+</div>

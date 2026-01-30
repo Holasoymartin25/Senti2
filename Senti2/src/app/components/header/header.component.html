@@ -9,6 +9,7 @@
     <a routerLink="/contacto" routerLinkActive="active">Contacto</a>
 
     @if (supabase.currentUser$ | async; as user) {
+    <a routerLink="/area-personal" routerLinkActive="active">Área Personal</a>
     <a routerLink="/perfil" routerLinkActive="active" class="profile-link">
       <span class="user-name" [title]="user?.email || 'Mi Perfil'">
         {{ (userName$ | async) || 'Mi Perfil' }}

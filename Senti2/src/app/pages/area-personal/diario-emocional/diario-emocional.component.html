@@ -1,0 +1,76 @@
+<div class="page-wrap">
+  <div class="page-content back-link-wrap">
+    <a routerLink="/area-personal" class="back-link">← Volver a Área Personal</a>
+  </div>
+  <div class="page-hero">
+    <h1>Diario Emocional</h1>
+    <p class="lead">Lleva un registro diario de tus emociones y pensamientos para conocerte mejor y detectar patrones.</p>
+  </div>
+
+  <div class="page-content">
+    <section class="content-section">
+      <h2>¿Para qué sirve un diario emocional?</h2>
+      <p>Anotar cómo te sientes cada día te ayuda a tomar conciencia de tus estados de ánimo, identificar qué situaciones te afectan más y ver cómo evolucionas con el tiempo. Es una herramienta sencilla que se usa en activación conductual y en seguimiento del estado de ánimo (evidencia en depresión y bienestar). Los datos se guardan solo en tu dispositivo.</p>
+    </section>
+
+    <section class="content-section">
+      <h2>Registro de hoy</h2>
+      <p class="date-label">Fecha: {{ todayStr }}</p>
+      <form class="diario-form" (ngSubmit)="save()">
+        <div class="form-group">
+          <label>¿Cómo te sientes hoy? (1 = muy bajo, 10 = muy bien)</label>
+          <div class="scale-row">
+            <span class="scale-min">1</span>
+            <input type="range" min="1" max="10" [(ngModel)]="mood" name="mood" class="scale-input">
+            <span class="scale-max">10</span>
+            <span class="scale-value">{{ mood }}</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Emociones principales (marca las que sientas hoy)</label>
+          <div class="emotions-row">
+            <label class="emotion-chip" *ngFor="let e of emociones">
+              <input type="checkbox" [checked]="selectedEmotions[e]" (change)="toggleEmotion(e)">
+              <span>{{ e }}</span>
+            </label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Notas del día (opcional)</label>
+          <textarea placeholder="¿Qué ha pasado hoy? ¿Qué te ha ayudado o dificultado?" rows="4" [(ngModel)]="note" name="note"></textarea>
+        </div>
+        <button type="submit" class="btn-save">Guardar entrada</button>
+        <p class="saved-msg" *ngIf="saved">Entrada guardada correctamente.</p>
+      </form>
+    </section>
+
+    <section class="content-section" *ngIf="entries.length > 0">
+      <h2>Análisis de patrones</h2>
+      <p>Resumen a partir de tus entradas. Cuantas más registres, más útil será ver tendencias.</p>
+      <div class="patterns-box">
+        <div class="pattern-stat" *ngIf="patternSummary.avgMood7 !== null">
+          <span class="pattern-value">{{ patternSummary.avgMood7 }}</span>
+          <span class="pattern-label">Estado medio (1–10) últimos 7 días</span>
+        </div>
+        <div class="pattern-stat" *ngIf="patternSummary.topEmotions.length > 0">
+          <span class="pattern-label">Emociones más registradas</span>
+          <ul class="top-emotions">
+            <li *ngFor="let t of patternSummary.topEmotions">{{ t.name }} ({{ t.count }})</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="content-section" *ngIf="entries.length > 0">
+      <h2>Historial de entradas</h2>
+      <ul class="entries-list">
+        <li *ngFor="let e of entries" class="entry-item">
+          <span class="entry-date">{{ formatDate(e.date) }}</span>
+          <span class="entry-mood">Estado: {{ e.mood }}/10</span>
+          <span class="entry-emotions">{{ e.emotions.join(', ') || '—' }}</span>
+          <p class="entry-note" *ngIf="e.note">{{ e.note }}</p>
+        </li>
+      </ul>
+    </section>
+  </div>
+</div>

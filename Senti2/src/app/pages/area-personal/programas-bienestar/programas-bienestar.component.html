@@ -1,0 +1,59 @@
+<div class="page-wrap">
+  <div class="page-content back-link-wrap">
+    <a routerLink="/area-personal" class="back-link">← Volver a Área Personal</a>
+  </div>
+  <div class="page-hero">
+    <h1>Programas de Bienestar</h1>
+    <p class="lead">Participa en programas estructurados de 4 a 8 semanas diseñados para abordar diferentes aspectos de tu salud emocional.</p>
+  </div>
+
+  <div class="page-content">
+    <section class="content-section">
+      <h2>¿Qué son los programas de bienestar?</h2>
+      <p>Son itinerarios guiados que combinan contenidos educativos, ejercicios prácticos y seguimiento. Cada programa tiene una duración de 4 a 8 semanas y está pensado para un objetivo concreto: manejo del estrés, mejora del sueño, regulación emocional. El contenido se basa en TCC, higiene del sueño y regulación emocional con evidencia. No sustituyen una evaluación ni un tratamiento profesional.</p>
+    </section>
+
+    <section class="content-section">
+      <h2>Programas disponibles</h2>
+      <div class="programas-grid">
+        <article class="programa-card" *ngFor="let p of programas">
+          <div class="programa-header">
+            <h3>{{ p.title }}</h3>
+            <span class="duration">{{ p.duration }}</span>
+          </div>
+          <p>{{ p.description }}</p>
+          <ul>
+            <li>Contenido por semanas con objetivos y actividades</li>
+            <li>Enlazado a Recursos Educativos y Diario</li>
+            <li>Evidencia en guías y literatura</li>
+          </ul>
+          <button type="button" class="btn-programa" (click)="toggleProgram(p.id)">
+            {{ expandedProgramId === p.id ? 'Ocultar programa' : 'Ver programa' }}
+          </button>
+
+          <div class="programa-full" *ngIf="expandedProgramId === p.id">
+            <p class="evidence" *ngIf="p.evidence">{{ p.evidence }}</p>
+            <div class="weeks-list">
+              <div class="week-block" *ngFor="let w of p.weeks">
+                <h4>Semana {{ w.week }}: {{ w.title }}</h4>
+                <p class="obj-label">Objetivos:</p>
+                <ul class="obj-list">
+                  <li *ngFor="let o of w.objectives">{{ o }}</li>
+                </ul>
+                <p class="act-label">Actividades:</p>
+                <ul class="act-list">
+                  <li *ngFor="let a of w.activities">{{ a }}</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="content-section">
+      <h2>Contenido multimedia</h2>
+      <p>Cada programa incluye referencias a vídeos, audios guiados y materiales de la sección <a routerLink="/area-personal/recursos-educativos">Recursos Educativos</a> (respiración, mindfulness, artículos). Los contenidos se trabajan semana a semana para mantener un orden y no saturarte. Puedes combinar el programa con el <a routerLink="/area-personal/diario-emocional">Diario Emocional</a> para registrar tu práctica.</p>
+    </section>
+  </div>
+</div>
