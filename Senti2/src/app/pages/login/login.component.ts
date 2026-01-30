@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { SupabaseService } from '../../core/services/supabase.service';
+import { AuthApiService } from '../../core/services/auth-api.service';
 
 @Component({
   selector: 'app-login',
@@ -19,27 +20,66 @@ export class LoginComponent implements OnInit {
   successMessage = '';
   loading = false;
   isRegisterMode = false;
+  /** Muestra "Cargando..." en /auth/callback mientras se procesa OAuth (hash). */
+  isProcessingCallback = false;
 
   constructor(
     private supabase: SupabaseService,
+    private authApi: AuthApiService,
     private router: Router,
     private route: ActivatedRoute
   ) { }
 
   ngOnInit() {
+    // Supabase OAuth redirige aquí con tokens en el hash: #access_token=...&refresh_token=...
+    const hash = typeof window !== 'undefined' ? window.location.hash : '';
+    const isCallbackRoute = typeof window !== 'undefined' && window.location.pathname.includes('auth/callback');
+
+    if (hash && isCallbackRoute) {
+      this.isProcessingCallback = true;
+    }
+
+    if (hash) {
+      const params = new URLSearchParams(hash.substring(1));
+      const accessToken = params.get('access_token');
+      const refreshToken = params.get('refresh_token');
+      const errorDesc = params.get('error_description') || params.get('error');
+      if (errorDesc) {
+        this.isProcessingCallback = false;
+        this.errorMessage = decodeURIComponent(errorDesc);
+        this.loading = false;
+        this.replaceStateWithoutHash();
+        return;
+      }
+      if (accessToken) {
+        this.authApi.handleAuthCallback(accessToken, refreshToken ?? undefined);
+        this.replaceStateWithoutHash();
+        return;
+      }
+      this.isProcessingCallback = false;
+    }
+
+    // Query params: backend puede redirigir con ?token=...&refresh_token=... o ?error=...
     this.route.queryParams.subscribe(params => {
       const token = params['token'];
+      const refreshToken = params['refresh_token'];
       const error = params['error'];
-      
+
       if (error) {
         this.errorMessage = decodeURIComponent(error);
         this.loading = false;
       }
-      
+
       if (token) {
-        this.router.navigate(['/inicio']);
+        this.authApi.handleAuthCallback(token, refreshToken);
       }
     });
+  }
+
+  private replaceStateWithoutHash(): void {
+    if (typeof window !== 'undefined' && window.history.replaceState) {
+      window.history.replaceState(null, '', window.location.pathname + window.location.search);
+    }
   }
 
   toggleMode() {
@@ -52,36 +92,59 @@ export class LoginComponent implements OnInit {
   }
 
   async onLogin() {
+    if (!this.email || !this.password) {
+      this.errorMessage = 'Por favor, completa todos los campos';
+      return;
+    }
+
     this.loading = true;
     this.errorMessage = '';
     this.successMessage = '';
 
-    const { data, error } = await this.supabase.signIn(this.email, this.password);
-    this.loading = false;
-
-    if (error) {
-      this.errorMessage = error.message;
-      return;
+    try {
+      const { data, error } = await this.supabase.signIn(this.email, this.password);
+      if (error) throw error;
+      this.router.navigate(['/inicio']);
+    } catch (error: any) {
+      this.errorMessage = error.message || 'Error al iniciar sesión. Por favor, verifica tus credenciales.';
+    } finally {
+      this.loading = false;
     }
-    this.router.navigate(['/inicio']);
   }
 
   async onRegister() {
+    if (!this.email || !this.password || !this.confirmPassword) {
+      this.errorMessage = 'Por favor, completa todos los campos';
+      return;
+    }
+
+    if (this.password !== this.confirmPassword) {
+      this.errorMessage = 'Las contraseñas no coinciden';
+      return;
+    }
+
+    if (this.password.length < 6) {
+      this.errorMessage = 'La contraseña debe tener al menos 6 caracteres';
+      return;
+    }
+
     this.loading = true;
     this.errorMessage = '';
     this.successMessage = '';
 
-    const { data, error } = await this.supabase.signUp(this.email, this.password, this.confirmPassword);
-    this.loading = false;
-
-    if (error) {
-      this.errorMessage = error.message;
-      return;
+    try {
+      const { data, error } = await this.supabase.signUp(this.email, this.password);
+      if (error) throw error;
+      this.successMessage = '¡Registro exitoso! Por favor, revisa tu correo electrónico para confirmar tu cuenta.';
+      // Limpiar formulario
+      this.email = '';
+      this.password = '';
+      this.confirmPassword = '';
+    } catch (error: any) {
+      this.errorMessage = error.message || 'Error al registrarse. Por favor, intenta de nuevo.';
+    } finally {
+      this.loading = false;
     }
-    this.successMessage = data?.message ?? '';
-    this.email = '';
-    this.password = '';
-    this.confirmPassword = '';
   }
 
   async onGoogleLogin() {
@@ -89,8 +152,13 @@ export class LoginComponent implements OnInit {
     this.errorMessage = '';
     this.successMessage = '';
 
-    const { error } = await this.supabase.signInWithGoogle();
-    this.loading = false;
-    if (error) this.errorMessage = error.message;
+    try {
+      const { error } = await this.supabase.signInWithGoogle();
+      if (error) throw error;
+      // Redirect happens automatically
+    } catch (error: any) {
+      this.errorMessage = error.message || 'Error al iniciar sesión con Google. Por favor, intenta de nuevo.';
+      this.loading = false;
+    }
   }
 }

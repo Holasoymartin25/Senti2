@@ -7,10 +7,15 @@ export const authGuard: CanActivateFn = async (route, state) => {
   const router = inject(Router);
 
   const token = authApi.getToken();
-  
+
   if (!token) {
     router.navigate(['/login']);
     return false;
+  }
+
+  // Si ya tenemos usuario (p. ej. tras OAuth callback), no repetir verifyToken
+  if (authApi.getCurrentUserValue()) {
+    return true;
   }
 
   const user = await authApi.verifyToken(token);

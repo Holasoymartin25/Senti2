@@ -20,18 +20,8 @@ class AuthController extends Controller
     public function signUp(Request $request)
     {
         $validated = $request->validate([
-            'email' => 'required|email|max:255',
-            'password' => 'required|string|min:6|max:255',
-            'confirmPassword' => 'required|string|same:password',
-        ], [
-            'email.required' => 'El correo electrónico es obligatorio.',
-            'email.email' => 'Introduce un correo electrónico válido.',
-            'email.max' => 'El correo electrónico no puede exceder 255 caracteres.',
-            'password.required' => 'La contraseña es obligatoria.',
-            'password.min' => 'La contraseña debe tener al menos 6 caracteres.',
-            'password.max' => 'La contraseña no puede exceder 255 caracteres.',
-            'confirmPassword.required' => 'Debes confirmar tu contraseña.',
-            'confirmPassword.same' => 'Las contraseñas no coinciden.',
+            'email' => 'required|email',
+            'password' => 'required|string|min:6',
         ]);
 
         $result = $this->supabaseService->signUp(
@@ -40,9 +30,8 @@ class AuthController extends Controller
         );
 
         if (!$result['success']) {
-            $errorMessage = $result['error']['message'] ?? 'Error al registrar usuario';
             return response()->json([
-                'error' => $errorMessage
+                'error' => $result['error']['message'] ?? 'Error al registrar usuario'
             ], 400);
         }
 
@@ -60,13 +49,8 @@ class AuthController extends Controller
     public function signIn(Request $request)
     {
         $validated = $request->validate([
-            'email' => 'required|email|max:255',
+            'email' => 'required|email',
             'password' => 'required|string',
-        ], [
-            'email.required' => 'El correo electrónico es obligatorio.',
-            'email.email' => 'Introduce un correo electrónico válido.',
-            'email.max' => 'El correo electrónico no puede exceder 255 caracteres.',
-            'password.required' => 'La contraseña es obligatoria.',
         ]);
 
         $result = $this->supabaseService->signIn(
@@ -75,9 +59,8 @@ class AuthController extends Controller
         );
 
         if (!$result['success']) {
-            $errorMessage = $result['error']['message'] ?? 'Credenciales inválidas';
             return response()->json([
-                'error' => $errorMessage
+                'error' => $result['error']['message'] ?? 'Credenciales inválidas'
             ], 401);
         }
 
@@ -127,8 +110,16 @@ class AuthController extends Controller
 
     public function getGoogleOAuthUrl(Request $request)
     {
-        $redirectUrl = $request->input('redirect_to', url('/api/v1/auth/google/callback'));
-        
+        if (!$this->supabaseService->isConfigured()) {
+            return response()->json([
+                'error' => 'OAuth no configurado. Comprueba SUPABASE_URL y SUPABASE_KEY en el servidor.',
+            ], 503);
+        }
+
+        // Supabase envía los tokens en el hash (#) al frontend, no un "code" al backend.
+        // El redirect_to debe ser la URL del frontend para que el navegador reciba el hash.
+        $frontendUrl = rtrim(config('app.frontend_url', 'http://localhost:4200'), '/');
+        $redirectUrl = $request->input('redirect_to', $frontendUrl . '/auth/callback');
         $url = $this->supabaseService->getGoogleOAuthUrl($redirectUrl);
 
         return response()->json(['url' => $url]);
