@@ -29,7 +29,7 @@ export class AppComponent implements OnInit {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: any) => {
-      this.showHeaderFooter = event.url !== '/' && event.url !== '/login' && !event.url.startsWith('/auth/callback');
+      this.showHeaderFooter = event.url !== '/login' && !event.url.startsWith('/auth/callback');
     });
   }
 

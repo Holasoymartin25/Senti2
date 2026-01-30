@@ -9,43 +9,22 @@ import { ContactoComponent } from './pages/contacto/contacto.component';
 import { PerfilComponent } from './pages/perfil/perfil.component';
 
 export const routes: Routes = [
-  { path: '', component: LoginComponent },
+  { path: '', pathMatch: 'full', redirectTo: 'inicio' },
 
-  { path: 'login', redirectTo: '', pathMatch: 'full' },
-  
+  { path: 'login', component: LoginComponent },
   { path: 'auth/callback', component: LoginComponent },
 
-  {
-    path: 'inicio',
-    component: InicioComponent,
-    canActivate: [authGuard]
-  },
-  {
-    path: 'servicios',
-    component: ServiciosComponent,
-    canActivate: [authGuard]
-  },
+  { path: 'inicio', component: InicioComponent },
+  { path: 'servicios', component: ServiciosComponent },
+  { path: 'psicologos', component: PsicologosComponent },
+  { path: 'origen', component: OrigenComponent },
+  { path: 'contacto', component: ContactoComponent },
 
-  {
-    path: 'psicologos',
-    component: PsicologosComponent,
-    canActivate: [authGuard]
-  },
-  {
-    path: 'origen',
-    component: OrigenComponent,
-    canActivate: [authGuard]
-  },
-
-  {
-    path: 'contacto',
-    component: ContactoComponent
-  },
   {
     path: 'perfil',
     component: PerfilComponent,
     canActivate: [authGuard]
   },
 
-  { path: '**', redirectTo: 'login' }
+  { path: '**', redirectTo: 'inicio' }
 ];

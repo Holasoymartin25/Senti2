@@ -1,38 +1,43 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
-export interface ContactFormData {
-    nombre: string;
-    apellidos: string;
-    email: string;
-    mensaje: string;
-    cv?: File | null;
+export interface ContactForm {
+  nombre: string;
+  apellidos: string;
+  email: string;
+  mensaje: string;
+  cv?: File | null;
+}
+
+export interface ContactResponse {
+  message: string;
+}
+
+export interface ContactErrorResponse {
+  message: string;
+  errors?: Record<string, string[]>;
 }
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
 export class ContactService {
-    private apiUrl = environment.apiUrl;
+  private apiUrl = environment.apiUrl;
 
-    constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {}
 
-    async sendContactForm(data: ContactFormData): Promise<{ message?: string; error?: string }> {
-        const formData = new FormData();
-        formData.append('nombre', data.nombre ?? '');
-        formData.append('apellidos', data.apellidos ?? '');
-        formData.append('email', data.email ?? '');
-        formData.append('mensaje', data.mensaje ?? '');
-        if (data.cv) {
-            formData.append('cv', data.cv, data.cv.name);
-        }
-
-        try {
-            const response: any = await this.http.post(`${this.apiUrl}/contact`, formData).toPromise();
-            return { message: response?.message };
-        } catch (err: any) {
-            return { error: err?.error?.error ?? err?.error?.message ?? 'Error' };
-        }
+  send(form: ContactForm): Observable<ContactResponse> {
+    const formData = new FormData();
+    formData.append('nombre', form.nombre.trim());
+    formData.append('apellidos', form.apellidos.trim());
+    formData.append('email', form.email.trim());
+    formData.append('mensaje', form.mensaje.trim());
+    if (form.cv) {
+      formData.append('cv', form.cv, form.cv.name);
     }
+
+    return this.http.post<ContactResponse>(`${this.apiUrl}/contact`, formData);
+  }
 }

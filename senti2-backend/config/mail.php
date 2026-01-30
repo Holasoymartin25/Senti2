@@ -43,6 +43,7 @@ return [
             'url' => env('MAIL_URL'),
             'host' => env('MAIL_HOST', '127.0.0.1'),
             'port' => env('MAIL_PORT', 2525),
+            'encryption' => env('MAIL_ENCRYPTION'),
             'username' => env('MAIL_USERNAME'),
             'password' => env('MAIL_PASSWORD'),
             'timeout' => null,
@@ -117,7 +118,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Correo de destino para formulario de contacto
+    | Correo de destino para consultas de contacto
     |--------------------------------------------------------------------------
     */
     'contact_to' => env('MAIL_CONTACT_TO', 'senti2soporte@gmail.com'),
