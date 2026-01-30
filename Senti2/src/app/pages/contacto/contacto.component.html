@@ -5,7 +5,6 @@
         </div>
 
         <div class="form-side">
-            <!-- Form Fields matching design -->
             <div class="form-group">
                 <label>Nombre:</label>
                 <input type="text" placeholder="Introduzca su nombre" class="input-brown">
@@ -22,13 +21,20 @@
             </div>
 
             <div class="form-group">
-                <label>Problema:</label>
+                <label>Motivo / Mensaje:</label>
                 <textarea placeholder="Introduzca una descripción..." class="input-brown textarea-brown"></textarea>
             </div>
 
-            <button class="btn-primary" style="width: 100%; border: none; cursor: pointer;">Enviar Mensaje</button>
+            <!-- CV -->
+            <div class="form-group">
+                <label>Adjuntar CV:</label>
+                <input type="file" accept=".pdf,.doc,.docx" class="input-brown">
+                <small class="file-hint">PDF, DOC o DOCX</small>
+            </div>
 
-            <!-- Note: No submit button shown in snippet, but usually needed. Adding one implicit or per design it might be auto-save or not shown? I'll add one. -->
+            <button class="btn-primary" style="width: 100%; border: none; cursor: pointer;">
+                Enviar Mensaje
+            </button>
         </div>
     </div>
 </div>

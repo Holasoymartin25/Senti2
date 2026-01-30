@@ -103,6 +103,45 @@ label {
   margin-top: var(--space-md);
 }
 
+/* Estilo base del input file */
+:host ::ng-deep .file-input {
+  width: 100%;
+  padding: 10px;
+  background: var(--neutral-cream);
+  border: 2px solid var(--neutral-stone);
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+/* Botón interno del input file */
+:host ::ng-deep .file-input::file-selector-button {
+  background: var(--primary-sage);
+  color: white;
+  border: none;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  margin-right: 12px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+/* Hover */
+:host ::ng-deep .file-input::file-selector-button:hover {
+  background: #6f8f54;
+}
+
+/* Texto ayuda debajo */
+.file-hint {
+  display: block;
+  margin-top: 6px;
+  font-size: 0.75rem;
+  color: var(--neutral-gray);
+  font-family: var(--font-body);
+}
+
 @media (max-width: 968px) {
   .contacto-container {
     grid-template-columns: 1fr;
