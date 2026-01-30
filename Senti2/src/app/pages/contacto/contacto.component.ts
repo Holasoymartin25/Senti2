@@ -46,8 +46,10 @@ export class ContactoComponent {
 
         this.loading = false;
 
-        if (result.success) {
-            this.successMessage = result.message;
+        if (result.error) {
+            this.errorMessage = result.error;
+        } else {
+            this.successMessage = result.message ?? '';
             this.nombre = '';
             this.apellidos = '';
             this.email = '';
@@ -55,8 +57,6 @@ export class ContactoComponent {
             this.cv = null;
             const fileInput = document.querySelector('#cv-input') as HTMLInputElement;
             if (fileInput) fileInput.value = '';
-        } else {
-            this.errorMessage = result.error;
         }
     }
 }
