@@ -5,36 +5,49 @@
         </div>
 
         <div class="form-side">
-            <div class="form-group">
-                <label>Nombre:</label>
-                <input type="text" placeholder="Introduzca su nombre" class="input-brown">
-            </div>
+            @if (successMessage) {
+                <div class="form-message form-message--success" role="alert">
+                    {{ successMessage }}
+                </div>
+            }
+            @if (errorMessage) {
+                <div class="form-message form-message--error" role="alert">
+                    {{ errorMessage }}
+                </div>
+            }
 
-            <div class="form-group">
-                <label>Apellidos:</label>
-                <input type="text" placeholder="Introduzca su apellido/s" class="input-brown">
-            </div>
+            <form (ngSubmit)="onSubmit()" #contactForm="ngForm">
+                <div class="form-group">
+                    <label for="nombre">Nombre:</label>
+                    <input id="nombre" type="text" name="nombre" [(ngModel)]="nombre" placeholder="Introduzca su nombre" class="input-brown">
+                </div>
 
-            <div class="form-group">
-                <label>Email:</label>
-                <input type="email" placeholder="Introduzca un email válido" class="input-brown">
-            </div>
+                <div class="form-group">
+                    <label for="apellidos">Apellidos:</label>
+                    <input id="apellidos" type="text" name="apellidos" [(ngModel)]="apellidos" placeholder="Introduzca su apellido/s" class="input-brown">
+                </div>
 
-            <div class="form-group">
-                <label>Motivo / Mensaje:</label>
-                <textarea placeholder="Introduzca una descripción..." class="input-brown textarea-brown"></textarea>
-            </div>
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input id="email" type="email" name="email" [(ngModel)]="email" placeholder="Introduzca un email válido" class="input-brown">
+                </div>
 
-            <!-- CV -->
-            <div class="form-group">
-                <label>Adjuntar CV:</label>
-                <input type="file" accept=".pdf,.doc,.docx" class="input-brown">
-                <small class="file-hint">PDF, DOC o DOCX</small>
-            </div>
+                <div class="form-group">
+                    <label for="mensaje">Motivo / Mensaje:</label>
+                    <textarea id="mensaje" name="mensaje" [(ngModel)]="mensaje" placeholder="Introduzca una descripción..." class="input-brown textarea-brown"></textarea>
+                </div>
 
-            <button class="btn-primary" style="width: 100%; border: none; cursor: pointer;">
-                Enviar Mensaje
-            </button>
+                <!-- CV -->
+                <div class="form-group">
+                    <label>Adjuntar CV:</label>
+                    <input id="cv-input" type="file" accept=".pdf,.doc,.docx" class="input-brown" (change)="onFileSelected($event)">
+                    <small class="file-hint">PDF, DOC o DOCX (opcional)</small>
+                </div>
+
+                <button type="submit" class="btn-primary" [disabled]="loading" style="width: 100%; border: none; cursor: pointer;">
+                    {{ loading ? 'Enviando...' : 'Enviar Mensaje' }}
+                </button>
+            </form>
         </div>
     </div>
 </div>

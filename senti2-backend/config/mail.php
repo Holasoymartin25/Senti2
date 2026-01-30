@@ -115,4 +115,11 @@ return [
         'name' => env('MAIL_FROM_NAME', 'Example'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Correo de destino para formulario de contacto
+    |--------------------------------------------------------------------------
+    */
+    'contact_to' => env('MAIL_CONTACT_TO', 'senti2soporte@gmail.com'),
+
 ];

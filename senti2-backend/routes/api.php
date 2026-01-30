@@ -2,9 +2,12 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\ContactController;
 use App\Http\Controllers\Api\ProfileController;
 
 Route::prefix('v1')->group(function () {
+    Route::post('/contact', [ContactController::class, 'store']);
+
     Route::post('/auth/signup', [AuthController::class, 'signUp']);
     Route::post('/auth/signin', [AuthController::class, 'signIn']);
     Route::post('/auth/verify', [AuthController::class, 'verifyToken']);
