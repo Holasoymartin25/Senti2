@@ -20,8 +20,18 @@ class AuthController extends Controller
     public function signUp(Request $request)
     {
         $validated = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required|string|min:6',
+            'email' => 'required|email|max:255',
+            'password' => 'required|string|min:6|max:255',
+            'confirmPassword' => 'required|string|same:password',
+        ], [
+            'email.required' => 'El correo electrónico es obligatorio.',
+            'email.email' => 'Introduce un correo electrónico válido.',
+            'email.max' => 'El correo electrónico no puede exceder 255 caracteres.',
+            'password.required' => 'La contraseña es obligatoria.',
+            'password.min' => 'La contraseña debe tener al menos 6 caracteres.',
+            'password.max' => 'La contraseña no puede exceder 255 caracteres.',
+            'confirmPassword.required' => 'Debes confirmar tu contraseña.',
+            'confirmPassword.same' => 'Las contraseñas no coinciden.',
         ]);
 
         $result = $this->supabaseService->signUp(
@@ -30,8 +40,9 @@ class AuthController extends Controller
         );
 
         if (!$result['success']) {
+            $errorMessage = $result['error']['message'] ?? 'Error al registrar usuario';
             return response()->json([
-                'error' => $result['error']['message'] ?? 'Error al registrar usuario'
+                'error' => $errorMessage
             ], 400);
         }
 
@@ -49,8 +60,13 @@ class AuthController extends Controller
     public function signIn(Request $request)
     {
         $validated = $request->validate([
-            'email' => 'required|email',
+            'email' => 'required|email|max:255',
             'password' => 'required|string',
+        ], [
+            'email.required' => 'El correo electrónico es obligatorio.',
+            'email.email' => 'Introduce un correo electrónico válido.',
+            'email.max' => 'El correo electrónico no puede exceder 255 caracteres.',
+            'password.required' => 'La contraseña es obligatoria.',
         ]);
 
         $result = $this->supabaseService->signIn(
@@ -59,8 +75,9 @@ class AuthController extends Controller
         );
 
         if (!$result['success']) {
+            $errorMessage = $result['error']['message'] ?? 'Credenciales inválidas';
             return response()->json([
-                'error' => $result['error']['message'] ?? 'Credenciales inválidas'
+                'error' => $errorMessage
             ], 401);
         }
 

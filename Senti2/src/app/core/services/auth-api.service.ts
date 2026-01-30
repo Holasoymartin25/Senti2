@@ -57,19 +57,16 @@ export class AuthApiService {
         return this._currentUser.asObservable().pipe(shareReplay(1));
     }
 
-    async signUp(email: string, password: string): Promise<any> {
+    async signUp(email: string, password: string, confirmPassword: string): Promise<any> {
         try {
             const response: any = await this.http.post(`${this.apiUrl}/auth/signup`, {
                 email,
-                password
+                password,
+                confirmPassword
             }).toPromise();
-
             return { data: response, error: null };
-        } catch (error: any) {
-            return {
-                data: null,
-                error: { message: error.error?.error || 'Error al registrarse' }
-            };
+        } catch (err: any) {
+            return { data: null, error: { message: err?.error?.error ?? 'Error al registrarse' } };
         }
     }
 
@@ -79,22 +76,15 @@ export class AuthApiService {
                 email,
                 password
             }).toPromise();
-
-            if (response.access_token) {
+            if (response?.access_token) {
                 this.setToken(response.access_token);
-                if (response.refresh_token) {
-                    this.setRefreshToken(response.refresh_token);
-                }
+                if (response.refresh_token) this.setRefreshToken(response.refresh_token);
                 this._currentUser.next(response.user);
                 return { data: response, error: null };
             }
-
             return { data: null, error: { message: 'Error al iniciar sesión' } };
-        } catch (error: any) {
-            return {
-                data: null,
-                error: { message: error.error?.error || 'Error al iniciar sesión' }
-            };
+        } catch (err: any) {
+            return { data: null, error: { message: err?.error?.error ?? 'Error al iniciar sesión' } };
         }
     }
 
