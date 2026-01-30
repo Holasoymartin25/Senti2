@@ -1,0 +1,92 @@
+<div class="page-wrap">
+  <div class="page-content back-link-wrap">
+    <a routerLink="/area-personal" class="back-link">← Volver a Área Personal</a>
+  </div>
+  <div class="page-hero">
+    <h1>Estadísticas y Seguimiento</h1>
+    <p class="lead">Visualiza tu progreso en el tiempo con gráficos y estadísticas detalladas.</p>
+  </div>
+
+  <div class="page-content">
+    <section class="content-section">
+      <h2>Tu evolución emocional</h2>
+      <p>Aquí puedes ver cómo evolucionan tus puntuaciones en los tests emocionales y el uso del diario. Los datos se guardan en tu dispositivo y son privados. Realizar los tests y el diario con regularidad te ayuda a identificar tendencias.</p>
+    </section>
+
+    <section class="content-section" *ngIf="testResults.length > 0">
+      <h2>Última puntuación por test</h2>
+      <div class="summary-cards">
+        <div class="summary-card" *ngFor="let testId of getTestIds()">
+          <h3>{{ lastByTest[testId].testTitle }}</h3>
+          <div class="score-row">
+            <span class="score-value">{{ lastByTest[testId].displayScore }}</span>
+            <span class="score-sep">/</span>
+            <span class="score-max">{{ lastByTest[testId].displayMax }}</span>
+          </div>
+          <p class="level">Nivel: {{ lastByTest[testId].level }}</p>
+          <p class="date">{{ formatDateShort(lastByTest[testId].date) }}</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="content-section" *ngIf="testResults.length > 0">
+      <h2>Historial de tests</h2>
+      <div class="history-table-wrap">
+        <table class="history-table">
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Test</th>
+              <th>Puntuación</th>
+              <th>Nivel</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let r of testResults">
+              <td>{{ formatDate(r.date) }}</td>
+              <td>{{ r.testTitle }}</td>
+              <td>{{ r.displayScore }} / {{ r.displayMax }}</td>
+              <td>{{ r.level }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="content-section" *ngIf="diaryEntries.length > 0">
+      <h2>Resumen del diario emocional</h2>
+      <div class="diary-stats">
+        <div class="stat-card">
+          <span class="stat-value">{{ diaryStats.totalEntries }}</span>
+          <span class="stat-label">Entradas totales</span>
+        </div>
+        <div class="stat-card" *ngIf="diaryStats.avgMoodLast7 !== null">
+          <span class="stat-value">{{ diaryStats.avgMoodLast7 }}</span>
+          <span class="stat-label">Estado medio (1–10) últimos 7 días</span>
+        </div>
+        <div class="stat-card" *ngIf="getTopEmotions(5).length > 0">
+          <span class="stat-label">Emociones más registradas</span>
+          <ul class="emotions-list">
+            <li *ngFor="let e of getTopEmotions(5)">{{ e.name }} ({{ e.count }})</li>
+          </ul>
+        </div>
+      </div>
+      <div class="diary-history-wrap">
+        <h3>Últimas entradas</h3>
+        <ul class="diary-list">
+          <li *ngFor="let e of diaryEntries.slice(0, 10)" class="diary-item">
+            <span class="diary-date">{{ formatDateShort(e.date) }}</span>
+            <span class="diary-mood">Estado: {{ e.mood }}/10</span>
+            <span class="diary-emotions">{{ e.emotions.join(', ') }}</span>
+            <p class="diary-note" *ngIf="e.note">{{ e.note }}</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="content-section empty-state" *ngIf="testResults.length === 0 && diaryEntries.length === 0">
+      <h2>Sin datos todavía</h2>
+      <p>Cuando completes <a routerLink="/area-personal/tests-emocionales">tests emocionales</a> o añadas entradas en el <a routerLink="/area-personal/diario-emocional">diario emocional</a>, aquí aparecerán tus estadísticas y tu historial.</p>
+    </section>
+  </div>
+</div>

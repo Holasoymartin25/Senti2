@@ -1,0 +1,99 @@
+/* Área Personal: diseño sobrio y profesional */
+
+.area-page {
+  min-height: 80vh;
+  background: var(--neutral-cream);
+}
+
+.area-header {
+  background: var(--primary-sage);
+  color: white;
+  padding: var(--space-xl) var(--space-lg);
+  margin-bottom: var(--space-2xl);
+}
+
+.area-header-inner {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.area-header h1 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: var(--space-xs);
+  color: white;
+  letter-spacing: 0.02em;
+}
+
+.area-header-desc {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.area-main {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 var(--space-lg) var(--space-2xl);
+}
+
+.area-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--space-md);
+}
+
+.area-card {
+  display: block;
+  background: white;
+  border: 1px solid var(--neutral-stone);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.area-card:hover {
+  border-color: var(--primary-sage);
+  background: var(--neutral-warm);
+}
+
+.area-card h2 {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--neutral-charcoal);
+  margin-bottom: var(--space-sm);
+  letter-spacing: 0.01em;
+}
+
+.area-card p {
+  font-size: 0.9rem;
+  color: var(--neutral-slate);
+  line-height: 1.55;
+  margin: 0 0 var(--space-md);
+}
+
+.area-card-link {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--primary-sage);
+}
+
+.area-card:hover .area-card-link {
+  color: var(--primary-sage-dark);
+}
+
+@media (max-width: 768px) {
+  .area-header {
+    padding: var(--space-lg) var(--space-md);
+    margin-bottom: var(--space-xl);
+  }
+
+  .area-grid {
+    grid-template-columns: 1fr;
+  }
+}

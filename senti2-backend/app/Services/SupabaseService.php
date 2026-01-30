@@ -168,5 +168,120 @@ class SupabaseService
             return null;
         }
     }
+
+    /**
+     * Base URL para REST API (tablas).
+     */
+    private function restUrl(string $table): string
+    {
+        return rtrim($this->url, '/') . '/rest/v1/' . $table;
+    }
+
+    private function restHeaders(): array
+    {
+        return [
+            'apikey' => $this->key,
+            'Authorization' => 'Bearer ' . $this->key,
+            'Content-Type' => 'application/json',
+        ];
+    }
+
+    /**
+     * Insertar resultado de test emocional.
+     */
+    public function insertTestResult(string $userId, array $data): ?array
+    {
+        try {
+            $body = [
+                'user_id' => $userId,
+                'test_id' => $data['test_id'],
+                'test_title' => $data['test_title'],
+                'score' => (int) $data['score'],
+                'display_score' => (int) $data['display_score'],
+                'display_max' => (int) $data['display_max'],
+                'level' => $data['level'],
+            ];
+            $response = Http::withHeaders($this->restHeaders())
+                ->withHeaders(['Prefer' => 'return=representation'])
+                ->post($this->restUrl('test_results'), $body);
+
+            if ($response->successful()) {
+                $json = $response->json();
+                return is_array($json) && isset($json[0]) ? $json[0] : $json;
+            }
+            Log::error('Supabase insertTestResult failed', ['status' => $response->status(), 'body' => $response->body()]);
+            return null;
+        } catch (\Exception $e) {
+            Log::error('Supabase insertTestResult: ' . $e->getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Obtener resultados de tests del usuario (más recientes primero).
+     */
+    public function getTestResults(string $userId): array
+    {
+        try {
+            $url = $this->restUrl('test_results') . '?user_id=eq.' . $userId . '&order=created_at.desc';
+            $response = Http::withHeaders($this->restHeaders())->get($url);
+            if ($response->successful()) {
+                $list = $response->json();
+                return is_array($list) ? $list : [];
+            }
+            return [];
+        } catch (\Exception $e) {
+            Log::error('Supabase getTestResults: ' . $e->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * Insertar entrada del diario emocional.
+     */
+    public function insertDiaryEntry(string $userId, array $data): ?array
+    {
+        try {
+            $body = [
+                'user_id' => $userId,
+                'date' => $data['date'],
+                'mood' => (int) $data['mood'],
+                'emotions' => $data['emotions'] ?? [],
+                'note' => $data['note'] ?? '',
+            ];
+            $response = Http::withHeaders($this->restHeaders())
+                ->withHeaders(['Prefer' => 'return=representation'])
+                ->post($this->restUrl('diary_entries'), $body);
+
+            if ($response->successful()) {
+                $json = $response->json();
+                return is_array($json) && isset($json[0]) ? $json[0] : $json;
+            }
+            Log::error('Supabase insertDiaryEntry failed', ['status' => $response->status(), 'body' => $response->body()]);
+            return null;
+        } catch (\Exception $e) {
+            Log::error('Supabase insertDiaryEntry: ' . $e->getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Obtener entradas del diario del usuario (más recientes primero).
+     */
+    public function getDiaryEntries(string $userId): array
+    {
+        try {
+            $url = $this->restUrl('diary_entries') . '?user_id=eq.' . $userId . '&order=date.desc';
+            $response = Http::withHeaders($this->restHeaders())->get($url);
+            if ($response->successful()) {
+                $list = $response->json();
+                return is_array($list) ? $list : [];
+            }
+            return [];
+        } catch (\Exception $e) {
+            Log::error('Supabase getDiaryEntries: ' . $e->getMessage());
+            return [];
+        }
+    }
 }
 
