@@ -1,0 +1,49 @@
+<div class="page-wrap">
+  <div class="page-content back-link-wrap">
+    <a routerLink="/area-personal" class="back-link">← Volver a Área Personal</a>
+  </div>
+  <div class="page-hero">
+    <h1>Tests Emocionales</h1>
+    <p class="lead">Evaluaciones psicológicas breves y confiables para conocer tu estado emocional actual. Basadas en instrumentos validados científicamente.</p>
+  </div>
+
+  <div class="page-content">
+    <section class="content-section">
+      <h2>¿Por qué realizar un test?</h2>
+      <p>Los cuestionarios de autoinforme te ayudan a tomar conciencia de tu estado emocional. No sustituyen un diagnóstico profesional, pero son un primer paso útil para identificar áreas en las que trabajar.</p>
+    </section>
+
+    <section class="content-section tests-grid">
+      <article class="test-card">
+        <div class="test-card-header">
+          <h3>Evaluación de ansiedad y estrés</h3>
+          <span class="badge">~5 min</span>
+        </div>
+        <p>Cuestionario breve para valorar niveles de ansiedad y estrés en tu día a día. Incluye ítems sobre preocupación, tensión y reacciones físicas.</p>
+        <a [routerLink]="['/area-personal/tests-emocionales/ejecutar', 'ansiedad-estres']" class="btn-card">Comenzar test</a>
+      </article>
+
+      <article class="test-card">
+        <div class="test-card-header">
+          <h3>Test de depresión</h3>
+          <span class="badge">~5 min</span>
+        </div>
+        <p>Escala de cribado para detectar posibles síntomas depresivos. Te permite ver si sería recomendable buscar apoyo profesional.</p>
+        <a [routerLink]="['/area-personal/tests-emocionales/ejecutar', 'depresion']" class="btn-card">Comenzar test</a>
+      </article>
+
+      <article class="test-card">
+        <div class="test-card-header">
+          <h3>Análisis de bienestar general</h3>
+          <span class="badge">~5 min</span>
+        </div>
+        <p>Valoración global de tu bienestar emocional, satisfacción vital y equilibrio. Ideal para hacer un seguimiento periódico.</p>
+        <a [routerLink]="['/area-personal/tests-emocionales/ejecutar', 'bienestar']" class="btn-card">Comenzar test</a>
+      </article>
+    </section>
+
+    <section class="content-section notice-box">
+      <p><strong>Importante:</strong> Estos tests son orientativos. Si los resultados te preocupan o necesitas ayuda, contacta con un profesional de la salud mental.</p>
+    </section>
+  </div>
+</div>

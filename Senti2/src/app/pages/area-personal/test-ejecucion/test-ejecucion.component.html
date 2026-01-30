@@ -1,0 +1,77 @@
+<div class="page-wrap" *ngIf="test">
+  <div class="page-content back-link-wrap">
+    <a routerLink="/area-personal/tests-emocionales" class="back-link">← Volver a Tests Emocionales</a>
+  </div>
+
+  <div class="page-hero">
+    <h1>{{ test.title }}</h1>
+    <p class="lead">{{ test.description }}</p>
+  </div>
+
+  <div class="page-content">
+    <ng-container *ngIf="!submitted">
+      <section class="content-section instruction-box">
+        <p class="instruction">{{ test.instruction }}</p>
+        <p class="duration">{{ test.duration }}</p>
+        <p class="instruction-note">Estos tests son instrumentos de cribado; el resultado es orientativo y no sustituye una evaluación por un profesional.</p>
+      </section>
+
+      <form (ngSubmit)="submit()" class="test-form">
+        <div class="question-block" *ngFor="let q of test.questions">
+          <label class="question-label">{{ q.text }}</label>
+          <div class="options-row">
+            <label class="option" *ngFor="let opt of scaleOptions">
+              <input type="radio" [name]="q.id" [value]="opt" [(ngModel)]="answers[q.id]">
+              <span class="option-value">{{ opt }}</span>
+              <span class="option-label">{{ getOptionLabel(opt) }}</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn-submit" [disabled]="!allAnswered()">
+            Ver resultados
+          </button>
+        </div>
+      </form>
+    </ng-container>
+
+    <section class="content-section results-box" *ngIf="submitted && interpretation">
+      <h2>Resultados</h2>
+      <div class="score-display">
+        <span class="score-value">{{ displayScore }}</span>
+        <span class="score-sep">/</span>
+        <span class="score-max">{{ displayMaxScore }}</span>
+      </div>
+      <div class="interpretation">
+        <p class="level"><strong>Nivel: {{ interpretation.level }}</strong></p>
+        <p class="message">{{ interpretation.message }}</p>
+      </div>
+
+      <section class="tools-section" *ngIf="interpretation.tools?.length">
+        <h3>Herramientas para gestionar</h3>
+        <p class="tools-intro">Estrategias con apoyo en guías y evidencia científica. Pueden complementar, no sustituir, la valoración de un profesional.</p>
+        <ul class="tools-list">
+          <li class="tool-card" *ngFor="let tool of interpretation.tools">
+            <h4 class="tool-title">{{ tool.title }}</h4>
+            <p class="tool-desc">{{ tool.description }}</p>
+            <p class="tool-evidence" *ngIf="tool.evidence">Evidencia: {{ tool.evidence }}</p>
+          </li>
+        </ul>
+      </section>
+
+      <p class="disclaimer">Este resultado es orientativo y no sustituye una evaluación profesional. Si te preocupa, consulta con un profesional de la salud mental.</p>
+      <div class="results-actions">
+        <button type="button" class="btn-secondary" (click)="hacerOtroTest()">Hacer otro test</button>
+        <a routerLink="/area-personal" class="btn-primary">Volver al Área Personal</a>
+      </div>
+    </section>
+  </div>
+</div>
+
+<div class="page-wrap" *ngIf="!test">
+  <div class="page-content">
+    <p>Test no encontrado.</p>
+    <a routerLink="/area-personal/tests-emocionales">Volver a Tests Emocionales</a>
+  </div>
+</div>

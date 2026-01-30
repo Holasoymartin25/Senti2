@@ -1,0 +1,53 @@
+<div class="page-wrap">
+  <div class="page-content back-link-wrap">
+    <a routerLink="/area-personal" class="back-link">← Volver a Área Personal</a>
+  </div>
+  <div class="page-hero">
+    <h1>Chat de Apoyo</h1>
+    <p class="lead">Conecta con profesionales de la salud mental a través de nuestro sistema de chat seguro y confidencial.</p>
+  </div>
+
+  <div class="page-content">
+    <section class="content-section">
+      <h2>Cómo funciona</h2>
+      <p>Nuestro chat te permite hablar en tiempo real con profesionales de psicología y salud mental. Todo el contenido está cifrado y es confidencial. Puedes usarlo para consultas puntuales o para recibir apoyo. <strong>En esta versión el chat funciona en modo demostración:</strong> puedes escribir y recibirás una respuesta automática con información de utilidad; la conexión con profesionales en vivo estará disponible cuando el servicio esté desplegado.</p>
+    </section>
+
+    <section class="content-section crisis-box">
+      <h2>Si necesitas ayuda ahora</h2>
+      <p>En situaciones de urgencia emocional o crisis, contacta con servicios de atención 24h. Son gratuitos y confidenciales.</p>
+      <ul class="crisis-list">
+        <li><strong>024</strong> — Línea de atención a la conducta suicida (Ministerio de Sanidad). 24h, 365 días. Gratuita y confidencial.</li>
+        <li><strong>Teléfono de la Esperanza</strong> — <a href="tel:717003717">717 003 717</a> (móvil) / <a href="tel:914590055">914 590 055</a> (fijo). Atención en crisis 24h.</li>
+        <li><strong>112</strong> — Emergencias. Usa en caso de riesgo vital inminente.</li>
+      </ul>
+      <p class="crisis-note">Este chat no sustituye una evaluación ni un tratamiento profesional. En crisis, prioriza contactar con los recursos anteriores.</p>
+    </section>
+
+    <section class="content-section chat-section">
+      <h2>Chat de apoyo</h2>
+      <div class="chat-box">
+        <div class="chat-header">
+          <span>Chat de apoyo</span>
+          <span class="status-dot">Modo demostración</span>
+        </div>
+        <div class="chat-body">
+          <div class="messages-list" *ngIf="messages.length; else welcomeBlock">
+            <div *ngFor="let msg of messages" class="message" [class.message--user]="msg.role === 'user'" [class.message--support]="msg.role === 'support'">
+              <span class="message-role">{{ msg.role === 'user' ? 'Tú' : 'Apoyo' }}</span>
+              <p class="message-text">{{ msg.text }}</p>
+              <span class="message-time">{{ msg.date | date:'shortTime' }}</span>
+            </div>
+          </div>
+          <ng-template #welcomeBlock>
+            <p class="chat-welcome">Escribe tu mensaje abajo para probar el chat. Recibirás una respuesta automática con información útil y recursos de crisis.</p>
+          </ng-template>
+        </div>
+        <div class="chat-input-area">
+          <input type="text" placeholder="Escribe tu mensaje..." [(ngModel)]="newMessage" (keydown.enter)="sendMessage()">
+          <button type="button" (click)="sendMessage()">Enviar</button>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
