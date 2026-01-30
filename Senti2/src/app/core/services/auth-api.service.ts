@@ -57,16 +57,24 @@ export class AuthApiService {
         return this._currentUser.asObservable().pipe(shareReplay(1));
     }
 
-    async signUp(email: string, password: string, confirmPassword: string): Promise<any> {
+    /** Valor actual del usuario (sincrono). Usado por el guard para evitar verifyToken duplicado. */
+    getCurrentUserValue(): User | null {
+        return this._currentUser.value;
+    }
+
+    async signUp(email: string, password: string): Promise<any> {
         try {
             const response: any = await this.http.post(`${this.apiUrl}/auth/signup`, {
                 email,
-                password,
-                confirmPassword
+                password
             }).toPromise();
+
             return { data: response, error: null };
-        } catch (err: any) {
-            return { data: null, error: { message: err?.error?.error ?? 'Error al registrarse' } };
+        } catch (error: any) {
+            return {
+                data: null,
+                error: { message: error.error?.error || 'Error al registrarse' }
+            };
         }
     }
 
@@ -76,22 +84,32 @@ export class AuthApiService {
                 email,
                 password
             }).toPromise();
-            if (response?.access_token) {
+
+            if (response.access_token) {
                 this.setToken(response.access_token);
-                if (response.refresh_token) this.setRefreshToken(response.refresh_token);
+                if (response.refresh_token) {
+                    this.setRefreshToken(response.refresh_token);
+                }
                 this._currentUser.next(response.user);
                 return { data: response, error: null };
             }
+
             return { data: null, error: { message: 'Error al iniciar sesión' } };
-        } catch (err: any) {
-            return { data: null, error: { message: err?.error?.error ?? 'Error al iniciar sesión' } };
+        } catch (error: any) {
+            return {
+                data: null,
+                error: { message: error.error?.error || 'Error al iniciar sesión' }
+            };
         }
     }
 
     async signInWithGoogle(): Promise<any> {
         try {
-            const response: any = await this.http.get(`${this.apiUrl}/auth/google/url`).toPromise();
-            
+            const redirectTo = `${window.location.origin}/auth/callback`;
+            const response: any = await this.http.get(
+                `${this.apiUrl}/auth/google/url?redirect_to=${encodeURIComponent(redirectTo)}`
+            ).toPromise();
+
             if (response.url) {
                 window.location.href = response.url;
                 return { data: null, error: null };

@@ -12,8 +12,13 @@ class SupabaseService
 
     public function __construct()
     {
-        $this->url = config('services.supabase.url');
-        $this->key = config('services.supabase.key');
+        $this->url = (string) (config('services.supabase.url') ?? '');
+        $this->key = (string) (config('services.supabase.key') ?? '');
+    }
+
+    public function isConfigured(): bool
+    {
+        return $this->url !== '' && $this->key !== '';
     }
 
     public function signUp(string $email, string $password): array

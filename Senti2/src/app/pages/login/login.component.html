@@ -1,5 +1,11 @@
 <div class="login-container">
-  <div class="login-wrapper">
+  <!-- Pantalla de carga al volver de OAuth (auth/callback) -->
+  <div *ngIf="isProcessingCallback" class="callback-loading">
+    <div class="callback-loading-spinner"></div>
+    <p class="callback-loading-text">Completando inicio de sesión...</p>
+  </div>
+
+  <div *ngIf="!isProcessingCallback" class="login-wrapper">
     <div class="login-left">
       <div class="brand-section">
         <a class="brand-title" href="/inicio">Senti2</a>

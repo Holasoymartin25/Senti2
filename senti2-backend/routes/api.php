@@ -14,7 +14,7 @@ Route::prefix('v1')->group(function () {
     Route::get('/auth/google/url', [AuthController::class, 'getGoogleOAuthUrl']);
     Route::get('/auth/google/callback', [AuthController::class, 'googleCallback']);
     
-    Route::middleware('auth:supabase')->group(function () {
+    Route::middleware('verify.supabase')->group(function () {
         Route::post('/auth/signout', [AuthController::class, 'signOut']);
         Route::get('/auth/user', [AuthController::class, 'getCurrentUser']);
         Route::get('/profile', [ProfileController::class, 'show']);

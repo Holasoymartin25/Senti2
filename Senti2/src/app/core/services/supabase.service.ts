@@ -31,7 +31,7 @@ export class SupabaseService {
         const user = await this.authApi.getCurrentUser();
         if (user) {
             this._currentUser.next(user);
-            if (this.router.url === '/' || this.router.url === '/login') {
+            if (this.router.url === '/login') {
                 this.router.navigate(['/inicio']);
             }
         } else {
@@ -45,8 +45,8 @@ export class SupabaseService {
         );
     }
 
-    async signUp(email: string, password: string, confirmPassword: string): Promise<any> {
-        return await this.authApi.signUp(email, password, confirmPassword);
+    async signUp(email: string, password: string): Promise<any> {
+        return await this.authApi.signUp(email, password);
     }
 
     async signIn(email: string, password: string): Promise<any> {
