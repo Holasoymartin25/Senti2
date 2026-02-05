@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { RouterOutlet, Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
+import { ChatWidgetComponent } from './components/chat-widget/chat-widget.component';
 import { CommonModule } from '@angular/common';
 import { filter } from 'rxjs/operators';
 import { AuthApiService } from './core/services/auth-api.service';
@@ -13,6 +14,7 @@ import { AuthApiService } from './core/services/auth-api.service';
     RouterOutlet,
     HeaderComponent,
     FooterComponent,
+    ChatWidgetComponent,
     CommonModule
   ],
   templateUrl: './app.component.html',

@@ -1,0 +1,38 @@
+<div class="chat-widget">
+  <button type="button" class="chat-fab" (click)="toggleOpen()" aria-label="Abrir chat">
+    <span class="chat-fab__icon" aria-hidden="true">🌿</span>
+  </button>
+
+  <section class="chat-panel" [class.chat-panel--open]="isOpen" aria-live="polite">
+    <header class="chat-panel__header">
+      <div>
+        <h3>Chat de IA</h3>
+        <span class="status">En línea</span>
+      </div>
+      <button type="button" class="chat-panel__close" (click)="toggleOpen()" aria-label="Cerrar chat">
+        ✕
+      </button>
+    </header>
+
+    <div class="chat-panel__body" #chatBody>
+      <div class="message" *ngFor="let msg of messages" [class.message--user]="msg.role === 'user'">
+        <p class="message__text">{{ msg.text }}</p>
+        <span class="message__time">{{ msg.date | date:'shortTime' }}</span>
+      </div>
+      <div class="message message--assistant" *ngIf="isLoading">
+        <p class="message__text">Escribiendo…</p>
+      </div>
+    </div>
+
+    <div class="chat-panel__input">
+      <input
+        type="text"
+        placeholder="Escribe un mensaje…"
+        [(ngModel)]="newMessage"
+        (keydown.enter)="sendMessage()"
+        [disabled]="isLoading"
+      />
+      <button type="button" (click)="sendMessage()" [disabled]="isLoading">Enviar</button>
+    </div>
+  </section>
+</div>
