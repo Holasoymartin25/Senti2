@@ -1,6 +1,6 @@
 .navbar {
-  background: white;
-  border-bottom: 1px solid var(--neutral-stone);
+  background: var(--bg-navbar);
+  border-bottom: 1px solid var(--border-color);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -9,8 +9,33 @@
   top: 0;
   z-index: 100;
   backdrop-filter: blur(10px);
-  background: rgba(255, 255, 255, 0.95);
   box-shadow: var(--shadow-soft);
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.theme-toggle {
+  background: var(--neutral-stone);
+  border: none;
+  border-radius: var(--radius-full);
+  width: 42px;
+  height: 42px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-base);
+  font-size: 1.25rem;
+}
+
+.theme-toggle:hover {
+  background: var(--primary-sage);
+  transform: scale(1.05);
 }
 
 .logo {
@@ -51,7 +76,7 @@ nav {
 }
 
 nav a {
-  color: var(--neutral-slate);
+  color: var(--text-secondary);
   text-decoration: none;
   font-weight: 500;
   font-size: 0.95rem;
@@ -76,7 +101,7 @@ nav a::before {
 
 nav a:hover {
   color: var(--primary-sage);
-  background: var(--neutral-cream);
+  background: var(--bg-page);
 }
 
 nav a.active {
@@ -127,7 +152,7 @@ nav a.active::before {
 
 .logout-link {
   background: transparent;
-  color: var(--neutral-slate) !important;
+  color: var(--text-secondary) !important;
   padding: 10px 15px;
   border-radius: var(--radius-md);
   font-weight: 500;
@@ -138,7 +163,7 @@ nav a.active::before {
 }
 
 .logout-link:hover {
-  background: var(--neutral-cream);
+  background: var(--bg-page);
   color: var(--primary-sage) !important;
   border-color: var(--primary-sage);
   text-decoration: none;

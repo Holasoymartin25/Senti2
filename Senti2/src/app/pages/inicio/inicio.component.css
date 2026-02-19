@@ -37,7 +37,7 @@
   grid-template-columns: 1fr 1fr;
   gap: var(--space-2xl);
   align-items: center;
-  background: white;
+  background: var(--bg-card);
   border-radius: var(--radius-xl);
   padding: var(--space-2xl);
   box-shadow: var(--shadow-medium);
@@ -90,7 +90,7 @@
 /* Features Section */
 .features-section {
   padding: var(--space-2xl) 0;
-  background: white;
+  background: var(--bg-card);
   position: relative;
 }
 
@@ -111,7 +111,7 @@
 }
 
 .feature-card {
-  background: white;
+  background: var(--bg-card);
   border: 2px solid var(--neutral-stone);
   border-radius: var(--radius-lg);
   padding: var(--space-xl);

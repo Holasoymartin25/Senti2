@@ -45,7 +45,8 @@
 }
 
 .service-card {
-  background: white;
+  background: var(--bg-card);
+  color: var(--text-primary);
   border-radius: var(--radius-lg);
   padding: var(--space-xl);
   box-shadow: var(--shadow-soft);
@@ -88,7 +89,7 @@
 
 .service-card p {
   font-size: 1rem;
-  color: var(--neutral-slate);
+  color: var(--text-secondary);
   line-height: 1.7;
   margin-bottom: var(--space-md);
 }
@@ -101,7 +102,7 @@
 
 .service-card ul li {
   padding: var(--space-xs) 0 var(--space-xs) var(--space-lg);
-  color: var(--neutral-slate);
+  color: var(--text-secondary);
   font-size: 0.95rem;
   line-height: 1.8;
   position: relative;
@@ -114,6 +115,10 @@
   color: var(--primary-sage);
   font-weight: 700;
   font-size: 1.1rem;
+}
+
+:host-context(.theme-dark) .service-card {
+  background: #242428;
 }
 
 @media (max-width: 768px) {

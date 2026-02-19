@@ -20,6 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->alias([
             'verify.supabase' => \App\Http\Middleware\VerifySupabaseToken::class,
+            'require.admin' => \App\Http\Middleware\RequireAdminOrPsicologo::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

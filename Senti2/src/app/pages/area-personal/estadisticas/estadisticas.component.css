@@ -75,7 +75,7 @@
 }
 
 .chart-card {
-  background: white;
+  background: var(--bg-card);
   border-radius: var(--radius-lg);
   padding: var(--space-xl);
   box-shadow: var(--shadow-soft);
@@ -112,7 +112,7 @@
 }
 
 .summary-card {
-  background: white;
+  background: var(--bg-card);
   border-radius: var(--radius-lg);
   padding: var(--space-xl);
   box-shadow: var(--shadow-soft);
@@ -150,7 +150,7 @@
 
 .history-table-wrap {
   overflow-x: auto;
-  background: white;
+  background: var(--bg-card);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-soft);
 }
@@ -187,7 +187,7 @@
 }
 
 .stat-card {
-  background: white;
+  background: var(--bg-card);
   border-radius: var(--radius-lg);
   padding: var(--space-xl);
   min-width: 160px;
@@ -229,7 +229,7 @@
 }
 
 .diary-item {
-  background: white;
+  background: var(--bg-card);
   border-radius: var(--radius-md);
   padding: var(--space-lg);
   margin-bottom: var(--space-sm);

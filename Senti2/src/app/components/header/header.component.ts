@@ -2,6 +2,8 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SupabaseService } from '../../core/services/supabase.service';
+import { ThemeService } from '../../core/services/theme.service';
+import { RoleService } from '../../core/services/role.service';
 import { Observable, from } from 'rxjs';
 import { map, switchMap, catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
@@ -19,6 +21,8 @@ export class HeaderComponent implements OnInit {
 
   constructor(
     public supabase: SupabaseService,
+    public theme: ThemeService,
+    public roleService: RoleService,
     private cdr: ChangeDetectorRef
   ) { }
 

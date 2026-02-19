@@ -5,6 +5,7 @@ import { FooterComponent } from './components/footer/footer.component';
 import { CommonModule } from '@angular/common';
 import { filter } from 'rxjs/operators';
 import { AuthApiService } from './core/services/auth-api.service';
+import { ThemeService } from './core/services/theme.service';
 
 @Component({
   selector: 'app-root',
@@ -24,7 +25,8 @@ export class AppComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private authApi: AuthApiService
+    private authApi: AuthApiService,
+    private theme: ThemeService
   ) {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)

@@ -1,6 +1,11 @@
 <header class="navbar">
   <div class="logo" routerLink="/inicio">Senti2</div>
 
+  <div class="header-actions">
+    <button type="button" class="theme-toggle" (click)="theme.toggle()" [attr.aria-label]="theme.isDarkMode ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'">
+      <span *ngIf="theme.isDarkMode" class="theme-icon">☀️</span>
+      <span *ngIf="!theme.isDarkMode" class="theme-icon">🌙</span>
+    </button>
   <nav>
     <a routerLink="/inicio" routerLinkActive="active">Inicio</a> <a routerLink="/servicios"
       routerLinkActive="active">Servicios</a>
@@ -9,6 +14,11 @@
     <a routerLink="/contacto" routerLinkActive="active">Contacto</a>
 
     @if (supabase.currentUser$ | async; as user) {
+    @if (roleService.role$ | async; as role) {
+    @if (role === 'admin' || role === 'psicologo') {
+      <a routerLink="/admin/estadisticas" routerLinkActive="active">Panel Admin</a>
+    }
+    }
     <a routerLink="/area-personal" routerLinkActive="active">Área Personal</a>
     <a routerLink="/perfil" routerLinkActive="active" class="profile-link">
       <span class="user-name" [title]="user?.email || 'Mi Perfil'">
@@ -20,4 +30,5 @@
     <a routerLink="/login" routerLinkActive="active">Login</a>
     }
   </nav>
+  </div>
 </header>

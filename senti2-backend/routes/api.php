@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\AreaPersonalController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ContactController;
 use App\Http\Controllers\Api\ProfileController;
+use App\Http\Controllers\Api\AdminStatsController;
 
 Route::prefix('v1')->group(function () {
     Route::post('/contact', [ContactController::class, 'store']);
@@ -26,6 +27,10 @@ Route::prefix('v1')->group(function () {
         Route::get('/area-personal/test-results', [AreaPersonalController::class, 'getTestResults']);
         Route::post('/area-personal/diary-entries', [AreaPersonalController::class, 'storeDiaryEntry']);
         Route::get('/area-personal/diary-entries', [AreaPersonalController::class, 'getDiaryEntries']);
+
+        Route::middleware('require.admin')->group(function () {
+            Route::get('/admin/stats', [AdminStatsController::class, 'index']);
+        });
     });
 });
 

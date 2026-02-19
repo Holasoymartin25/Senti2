@@ -1,0 +1,90 @@
+<div class="page-wrap admin-stats">
+  <div class="page-content back-link-wrap">
+    <a routerLink="/inicio" class="back-link">← Volver al inicio</a>
+  </div>
+
+  <div class="page-hero">
+    <h1>Panel de administración</h1>
+    <p class="lead">Estadísticas globales de la plataforma Senti2.</p>
+  </div>
+
+  <div class="page-content" *ngIf="loading">
+    <div class="loading-state">
+      <div class="loading-spinner"></div>
+      <p>Cargando estadísticas...</p>
+    </div>
+  </div>
+
+  <div class="page-content" *ngIf="error">
+    <div class="error-state">
+      <p>{{ error }}</p>
+    </div>
+  </div>
+
+  <div class="page-content" *ngIf="!loading && !error && stats">
+    <section class="content-section summary-cards">
+      <h2>Resumen general</h2>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <span class="stat-value">{{ stats.summary.totalUsersWithData }}</span>
+          <span class="stat-label">Usuarios con datos</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value">{{ stats.summary.totalTestResults }}</span>
+          <span class="stat-label">Resultados de tests</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value">{{ stats.summary.totalDiaryEntries }}</span>
+          <span class="stat-label">Entradas de diario</span>
+        </div>
+        <div class="stat-card" *ngIf="stats.summary.averageMood !== null">
+          <span class="stat-value">{{ stats.summary.averageMood }}</span>
+          <span class="stat-label">Estado medio global (1-10)</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="content-section" *ngIf="getTestsByTitleEntries().length > 0">
+      <h2>Tests realizados por tipo</h2>
+      <div class="bar-chart">
+        <div class="bar-row" *ngFor="let item of getTestsByTitleEntries()">
+          <span class="bar-label">{{ item.title }}</span>
+          <div class="bar-track">
+            <div
+              class="bar-fill"
+              [style.width.%]="(item.count / getMaxTestCount()) * 100"
+            ></div>
+          </div>
+          <span class="bar-value">{{ item.count }}</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="content-section" *ngIf="stats && stats.moodSeries && stats.moodSeries.length > 0">
+      <h2>Evolución del estado de ánimo (últimos 30 días)</h2>
+      <div class="mood-chart">
+        <div class="mood-bar" *ngFor="let point of stats.moodSeries" [title]="point.date + ': ' + point.avg + '/10 (' + point.count + ' entradas)'">
+          <div
+            class="mood-fill"
+            [style.height.%]="(point.avg / 10) * 100"
+          ></div>
+        </div>
+      </div>
+      <div class="mood-labels">
+        <span>10</span>
+        <span>5</span>
+        <span>0</span>
+      </div>
+    </section>
+
+    <section class="content-section" *ngIf="getRoleCounts().length > 0">
+      <h2>Usuarios por rol</h2>
+      <div class="role-cards">
+        <div class="role-card" *ngFor="let item of getRoleCounts()">
+          <span class="role-name">{{ item.key }}</span>
+          <span class="role-count">{{ item.value }}</span>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

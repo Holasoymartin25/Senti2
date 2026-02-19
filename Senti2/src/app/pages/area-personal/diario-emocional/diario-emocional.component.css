@@ -75,7 +75,7 @@
 }
 
 .diario-form {
-  background: white;
+  background: var(--bg-card);
   border-radius: var(--radius-lg);
   padding: var(--space-xl);
   box-shadow: var(--shadow-soft);
@@ -157,7 +157,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-xl);
-  background: white;
+  background: var(--bg-card);
   border-radius: var(--radius-lg);
   padding: var(--space-xl);
   box-shadow: var(--shadow-soft);
@@ -196,7 +196,7 @@
 }
 
 .entry-item {
-  background: white;
+  background: var(--bg-card);
   border-radius: var(--radius-md);
   padding: var(--space-lg);
   margin-bottom: var(--space-md);

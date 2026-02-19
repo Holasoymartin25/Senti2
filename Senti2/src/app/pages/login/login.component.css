@@ -75,7 +75,7 @@
   grid-template-columns: 1fr 1.1fr;
   max-width: 1200px;
   width: 100%;
-  background: white;
+  background: var(--bg-card);
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-large);
   overflow: hidden;
@@ -180,7 +180,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: white;
+  background: var(--bg-card);
 }
 
 .login-card {
@@ -220,7 +220,7 @@
 }
 
 .auth-tab.active {
-  background: white;
+  background: var(--bg-card);
   color: var(--primary-sage);
   box-shadow: var(--shadow-soft);
 }
@@ -293,7 +293,7 @@
 .form-group input:focus {
   outline: none;
   border-color: var(--primary-sage);
-  background: white;
+  background: var(--bg-card);
   box-shadow: 0 0 0 4px rgba(135, 169, 107, 0.1);
 }
 
@@ -360,7 +360,7 @@
 }
 
 .divider span {
-  background: white;
+  background: var(--bg-card);
   padding: 0 var(--space-md);
   color: var(--neutral-gray);
   font-size: 0.875rem;
@@ -371,7 +371,7 @@
 .btn-google {
   width: 100%;
   padding: 14px 24px;
-  background: white;
+  background: var(--bg-card);
   border: 2px solid var(--neutral-stone);
   border-radius: var(--radius-md);
   font-size: 1rem;

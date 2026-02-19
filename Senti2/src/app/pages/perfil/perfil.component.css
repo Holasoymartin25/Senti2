@@ -110,7 +110,7 @@
 }
 
 .btn-icon.active {
-  background: white;
+  background: var(--bg-card);
   color: var(--primary-sage);
 }
 
@@ -170,7 +170,7 @@
 
 /* Tarjetas del Dashboard */
 .dashboard-card {
-  background: white;
+  background: var(--bg-card);
   border-radius: var(--radius-lg);
   padding: var(--space-xl);
   box-shadow: var(--shadow-soft);
@@ -260,7 +260,7 @@
   width: 100%;
   padding: var(--space-md);
   border: 2px solid var(--neutral-stone);
-  background: white;
+  background: var(--bg-card);
   border-radius: var(--radius-md);
   font-weight: 600;
   color: var(--neutral-charcoal);
@@ -298,7 +298,7 @@
 }
 
 .edit-form-card {
-  background: white;
+  background: var(--bg-card);
   border-radius: var(--radius-lg);
   padding: var(--space-2xl);
   box-shadow: var(--shadow-medium);
@@ -393,7 +393,7 @@
 }
 
 .btn-secondary {
-  background: white;
+  background: var(--bg-card);
   color: var(--neutral-slate);
   border: 2px solid var(--neutral-stone);
 }

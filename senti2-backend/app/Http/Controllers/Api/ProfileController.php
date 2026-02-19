@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Profile;
+use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 
 class ProfileController extends Controller
@@ -46,6 +47,7 @@ class ProfileController extends Controller
             'apellidos' => 'nullable|string|max:255',
             'telefono' => 'nullable|string|max:20',
             'fecha_nacimiento' => 'nullable|date',
+            'role' => ['nullable', Rule::in([Profile::ROLE_USER, Profile::ROLE_PSICOLOGO, Profile::ROLE_ADMIN])],
         ]);
 
         $profile = Profile::where('user_id', $userId)->first();
@@ -53,10 +55,14 @@ class ProfileController extends Controller
         if (!$profile) {
             $profile = Profile::create([
                 'user_id' => $userId,
-                ...$validated
+                'nombre' => $validated['nombre'] ?? '',
+                'apellidos' => $validated['apellidos'] ?? '',
+                'telefono' => $validated['telefono'] ?? '',
+                'fecha_nacimiento' => $validated['fecha_nacimiento'] ?? null,
+                'role' => $validated['role'] ?? Profile::ROLE_USER,
             ]);
         } else {
-            $profile->update($validated);
+            $profile->update(array_filter($validated, fn ($v) => $v !== null));
         }
 
         return response()->json($profile);

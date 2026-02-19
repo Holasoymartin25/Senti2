@@ -1,5 +1,4 @@
 :root {
- 
   --primary-sage: #87A96B;
   --primary-sage-dark: #6B8554;
   --primary-sage-light: #A8C088;
@@ -7,7 +6,6 @@
   --accent-peach-light: #F8C4B0;
   --accent-lavender: #B8A9D9;
   --accent-lavender-light: #D4C9E8;
-  
 
   --neutral-cream: #FAF7F2;
   --neutral-warm: #F5F1EB;
@@ -15,42 +13,81 @@
   --neutral-charcoal: #2C2C2C;
   --neutral-slate: #4A4A4A;
   --neutral-gray: #6B6B6B;
-  
 
   --gradient-primary: linear-gradient(135deg, #87A96B 0%, #6B8554 100%);
   --gradient-soft: linear-gradient(135deg, #F4A88A 0%, #B8A9D9 100%);
   --gradient-warm: linear-gradient(135deg, #FAF7F2 0%, #F5F1EB 100%);
   --gradient-overlay: linear-gradient(180deg, rgba(250, 247, 242, 0.95) 0%, rgba(245, 241, 235, 0.98) 100%);
-  
 
   --shadow-soft: 0 2px 8px rgba(44, 44, 44, 0.08);
   --shadow-medium: 0 4px 16px rgba(44, 44, 44, 0.12);
   --shadow-large: 0 8px 32px rgba(44, 44, 44, 0.16);
   --shadow-colored: 0 4px 20px rgba(135, 169, 107, 0.25);
-  
 
   --font-display: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  
 
+  /* Theme-aware surface & text (override in theme-dark) */
+  --bg-page: var(--neutral-cream);
+  --bg-card: white;
+  --bg-navbar: rgba(255, 255, 255, 0.95);
+  --text-primary: var(--neutral-charcoal);
+  --text-secondary: var(--neutral-slate);
+  --border-color: var(--neutral-stone);
+  --scrollbar-track: var(--neutral-warm);
+  --footer-bg: #2C2C2C;
+  --footer-text: #e8e8ec;
+  --footer-text-muted: rgba(232, 232, 236, 0.8);
+  --footer-border: rgba(255, 255, 255, 0.1);
   --space-xs: 0.5rem;
   --space-sm: 1rem;
   --space-md: 1.5rem;
   --space-lg: 2rem;
   --space-xl: 3rem;
   --space-2xl: 4rem;
-  
-
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 16px;
   --radius-xl: 24px;
   --radius-full: 9999px;
-  
-
   --transition-fast: 0.15s ease;
   --transition-base: 0.3s ease;
   --transition-slow: 0.5s ease;
+}
+
+/* Modo oscuro */
+.theme-dark {
+  --bg-page: #1a1a1c;
+  --bg-card: #242428;
+  --bg-navbar: rgba(36, 36, 40, 0.95);
+  --text-primary: #b8b8c0;
+  --text-secondary: #8a8a92;
+  --border-color: #3a3a3e;
+  --neutral-cream: #1a1a1c;
+  --neutral-warm: #1e1e22;
+  --neutral-stone: #3a3a3e;
+  --neutral-charcoal: #b8b8c0;
+  --neutral-slate: #8a8a92;
+  --neutral-gray: #7a7a82;
+  --gradient-warm: linear-gradient(135deg, #1a1a1c 0%, #1e1e22 100%);
+  --gradient-overlay: linear-gradient(180deg, rgba(26, 26, 28, 0.95) 0%, rgba(30, 30, 34, 0.98) 100%);
+  --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.4);
+  --shadow-large: 0 8px 32px rgba(0, 0, 0, 0.5);
+  --shadow-colored: 0 4px 20px rgba(135, 169, 107, 0.3);
+  --scrollbar-track: #2a2a2e;
+  --footer-bg: #1e1e22;
+  --footer-text: #b8b8c0;
+  --footer-text-muted: rgba(184, 184, 192, 0.75);
+  --footer-border: rgba(184, 184, 192, 0.12);
+}
+
+.theme-light {
+  --bg-page: var(--neutral-cream);
+  --bg-card: white;
+  --bg-navbar: rgba(255, 255, 255, 0.95);
+  --text-primary: var(--neutral-charcoal);
+  --text-secondary: var(--neutral-slate);
 }
 
 
@@ -67,20 +104,20 @@ html {
 
 body {
   font-family: var(--font-body);
-  background: var(--neutral-cream);
-  color: var(--neutral-charcoal);
+  background: var(--bg-page);
+  color: var(--text-primary);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
+  transition: background 0.3s ease, color 0.3s ease;
 }
-
 
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display);
   font-weight: 700;
   line-height: 1.2;
-  color: var(--neutral-charcoal);
+  color: var(--text-primary);
   letter-spacing: -0.02em;
 }
 
@@ -92,7 +129,7 @@ h4 { font-size: clamp(1.25rem, 2.5vw, 1.5rem); }
 p {
   font-size: 1rem;
   line-height: 1.7;
-  color: var(--neutral-slate);
+  color: var(--text-secondary);
 }
 
 a {
@@ -212,7 +249,7 @@ a {
 
 
 .card {
-  background: white;
+  background: var(--bg-card);
   border-radius: var(--radius-lg);
   padding: var(--space-lg);
   box-shadow: var(--shadow-soft);
@@ -285,7 +322,7 @@ a {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--neutral-warm);
+  background: var(--scrollbar-track);
 }
 
 ::-webkit-scrollbar-thumb {

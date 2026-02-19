@@ -283,5 +283,43 @@ class SupabaseService
             return [];
         }
     }
+
+    /**
+     * Obtener TODOS los resultados de tests (solo con service_role, para panel admin).
+     */
+    public function getAllTestResults(): array
+    {
+        try {
+            $url = $this->restUrl('test_results') . '?order=created_at.desc';
+            $response = Http::withHeaders($this->restHeaders())->get($url);
+            if ($response->successful()) {
+                $list = $response->json();
+                return is_array($list) ? $list : [];
+            }
+            return [];
+        } catch (\Exception $e) {
+            Log::error('Supabase getAllTestResults: ' . $e->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * Obtener TODAS las entradas del diario (solo con service_role, para panel admin).
+     */
+    public function getAllDiaryEntries(): array
+    {
+        try {
+            $url = $this->restUrl('diary_entries') . '?order=date.desc';
+            $response = Http::withHeaders($this->restHeaders())->get($url);
+            if ($response->successful()) {
+                $list = $response->json();
+                return is_array($list) ? $list : [];
+            }
+            return [];
+        } catch (\Exception $e) {
+            Log::error('Supabase getAllDiaryEntries: ' . $e->getMessage());
+            return [];
+        }
+    }
 }
 

@@ -1,6 +1,6 @@
 footer {
-  background: var(--neutral-charcoal);
-  color: white;
+  background: var(--footer-bg);
+  color: var(--footer-text);
   padding: var(--space-2xl) var(--space-lg);
   margin-top: var(--space-2xl);
 }
@@ -14,7 +14,7 @@ footer {
 }
 
 .footer-section h3 {
-  color: white;
+  color: var(--footer-text);
   font-size: 1.1rem;
   font-weight: 700;
   margin-bottom: var(--space-md);
@@ -23,7 +23,7 @@ footer {
 
 .footer-section p,
 .footer-section a {
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--footer-text-muted);
   font-size: 0.9rem;
   line-height: 1.8;
   transition: color var(--transition-base);
@@ -37,9 +37,9 @@ footer {
   max-width: 1280px;
   margin: var(--space-xl) auto 0;
   padding-top: var(--space-lg);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid var(--footer-border);
   text-align: center;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--footer-text-muted);
   font-size: 0.85rem;
 }
 

@@ -220,6 +220,7 @@ class AuthController extends Controller
                 'apellidos' => '',
                 'telefono' => '',
                 'fecha_nacimiento' => null,
+                'role' => Profile::ROLE_USER,
             ]);
         }
     }

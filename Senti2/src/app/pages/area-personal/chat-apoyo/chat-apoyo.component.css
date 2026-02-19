@@ -75,7 +75,7 @@
 
 .features-list li {
   padding: var(--space-md);
-  background: white;
+  background: var(--bg-card);
   border-radius: var(--radius-md);
   margin-bottom: var(--space-sm);
   border-left: 4px solid var(--primary-sage);
@@ -88,7 +88,7 @@
 }
 
 .chat-box {
-  background: white;
+  background: var(--bg-card);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-medium);
   overflow: hidden;

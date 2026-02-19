@@ -56,7 +56,7 @@
 }
 
 .instruction-box {
-  background: white;
+  background: var(--bg-card);
   border-radius: var(--radius-lg);
   padding: var(--space-xl);
   border-left: 4px solid var(--primary-sage);
@@ -84,7 +84,7 @@
 }
 
 .test-form {
-  background: white;
+  background: var(--bg-card);
   border-radius: var(--radius-lg);
   padding: var(--space-xl);
   box-shadow: var(--shadow-soft);
@@ -130,7 +130,7 @@
 
 .option:hover {
   border-color: var(--primary-sage-light);
-  background: white;
+  background: var(--bg-card);
 }
 
 .option input {
@@ -202,7 +202,7 @@
 
 /* Results */
 .results-box {
-  background: white;
+  background: var(--bg-card);
   border-radius: var(--radius-lg);
   padding: var(--space-2xl);
   box-shadow: var(--shadow-soft);
@@ -280,7 +280,7 @@
 }
 
 .tool-card {
-  background: white;
+  background: var(--bg-card);
   padding: var(--space-lg);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-soft);
@@ -325,7 +325,7 @@
 
 .btn-secondary {
   padding: 12px 24px;
-  background: white;
+  background: var(--bg-card);
   color: var(--primary-sage);
   border: 2px solid var(--primary-sage);
   border-radius: var(--radius-md);

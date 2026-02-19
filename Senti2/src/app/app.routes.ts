@@ -3,7 +3,9 @@ import { InicioComponent } from './pages/inicio/inicio.component';
 import { ServiciosComponent } from './pages/servicios/servicios.component';
 import { LoginComponent } from './pages/login/login.component';
 import { authGuard } from './core/guards/auth.guard';
+import { adminRoleGuard } from './core/guards/role.guard';
 import { PsicologosComponent } from './pages/psicologos/psicologos.component';
+import { AdminEstadisticasComponent } from './pages/admin/admin-estadisticas/admin-estadisticas.component';
 import { OrigenComponent } from './pages/origen/origen.component';
 import { ContactoComponent } from './pages/contacto/contacto.component';
 import { PerfilComponent } from './pages/perfil/perfil.component';
@@ -38,6 +40,8 @@ export const routes: Routes = [
   { path: 'area-personal/programas-bienestar', component: ProgramasBienestarComponent, canActivate: [authGuard] },
 
   { path: 'perfil', component: PerfilComponent, canActivate: [authGuard] },
+
+  { path: 'admin/estadisticas', component: AdminEstadisticasComponent, canActivate: [authGuard, adminRoleGuard] },
 
   { path: '**', redirectTo: 'inicio' }
 ];

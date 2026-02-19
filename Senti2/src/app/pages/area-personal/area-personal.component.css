@@ -47,7 +47,7 @@
 
 .area-card {
   display: block;
-  background: white;
+  background: var(--bg-card);
   border: 1px solid var(--neutral-stone);
   border-radius: var(--radius-md);
   padding: var(--space-lg);
