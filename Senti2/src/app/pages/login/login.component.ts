@@ -20,7 +20,6 @@ export class LoginComponent implements OnInit {
   successMessage = '';
   loading = false;
   isRegisterMode = false;
-  /** Muestra "Cargando..." en /auth/callback mientras se procesa OAuth (hash). */
   isProcessingCallback = false;
 
   constructor(
@@ -31,7 +30,6 @@ export class LoginComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    // Supabase OAuth redirige aquí con tokens en el hash: #access_token=...&refresh_token=...
     const hash = typeof window !== 'undefined' ? window.location.hash : '';
     const isCallbackRoute = typeof window !== 'undefined' && window.location.pathname.includes('auth/callback');
 
@@ -59,7 +57,6 @@ export class LoginComponent implements OnInit {
       this.isProcessingCallback = false;
     }
 
-    // Query params: backend puede redirigir con ?token=...&refresh_token=... o ?error=...
     this.route.queryParams.subscribe(params => {
       const token = params['token'];
       const refreshToken = params['refresh_token'];
@@ -136,7 +133,6 @@ export class LoginComponent implements OnInit {
       const { data, error } = await this.supabase.signUp(this.email, this.password);
       if (error) throw error;
       this.successMessage = '¡Registro exitoso! Por favor, revisa tu correo electrónico para confirmar tu cuenta.';
-      // Limpiar formulario
       this.email = '';
       this.password = '';
       this.confirmPassword = '';
@@ -155,7 +151,6 @@ export class LoginComponent implements OnInit {
     try {
       const { error } = await this.supabase.signInWithGoogle();
       if (error) throw error;
-      // Redirect happens automatically
     } catch (error: any) {
       this.errorMessage = error.message || 'Error al iniciar sesión con Google. Por favor, intenta de nuevo.';
       this.loading = false;
