@@ -8,24 +8,26 @@ use Illuminate\Support\Facades\Log;
 class SupabaseService
 {
     private string $url;
-    private string $key;
+    private string $anonKey;
+    private string $serviceRoleKey;
 
     public function __construct()
     {
         $this->url = (string) (config('services.supabase.url') ?? '');
-        $this->key = (string) (config('services.supabase.key') ?? '');
+        $this->anonKey = (string) (config('services.supabase.anon_key') ?? config('services.supabase.key') ?? '');
+        $this->serviceRoleKey = (string) (config('services.supabase.service_role_key') ?? config('services.supabase.key') ?? '');
     }
 
     public function isConfigured(): bool
     {
-        return $this->url !== '' && $this->key !== '';
+        return $this->url !== '' && $this->anonKey !== '';
     }
 
     public function signUp(string $email, string $password): array
     {
         try {
             $response = Http::withHeaders([
-                'apikey' => $this->key,
+                'apikey' => $this->anonKey,
                 'Content-Type' => 'application/json',
             ])->post("{$this->url}/auth/v1/signup", [
                 'email' => $email,
@@ -59,7 +61,7 @@ class SupabaseService
     {
         try {
             $response = Http::withHeaders([
-                'apikey' => $this->key,
+                'apikey' => $this->anonKey,
                 'Content-Type' => 'application/json',
             ])->post("{$this->url}/auth/v1/token?grant_type=password", [
                 'email' => $email,
@@ -93,7 +95,7 @@ class SupabaseService
     {
         try {
             $response = Http::withHeaders([
-                'apikey' => $this->key,
+                'apikey' => $this->anonKey,
                 'Authorization' => 'Bearer ' . $token,
             ])->get("{$this->url}/auth/v1/user");
 
@@ -112,7 +114,7 @@ class SupabaseService
     {
         try {
             $response = Http::withHeaders([
-                'apikey' => $this->key,
+                'apikey' => $this->anonKey,
                 'Authorization' => 'Bearer ' . $token,
             ])->post("{$this->url}/auth/v1/logout");
 
@@ -127,7 +129,6 @@ class SupabaseService
     {
         $redirectUri = urlencode($redirectUrl);
         $url = "{$this->url}/auth/v1/authorize?provider=google&redirect_to={$redirectUri}&response_type=code";
-        Log::info('URL de OAuth generada', ['url' => $url, 'redirect_to' => $redirectUrl]);
         return $url;
     }
 
@@ -135,7 +136,7 @@ class SupabaseService
     {
         try {
             $response = Http::asForm()->withHeaders([
-                'apikey' => $this->key,
+                'apikey' => $this->anonKey,
                 'Content-Type' => 'application/x-www-form-urlencoded',
             ])->post("{$this->url}/auth/v1/token?grant_type=authorization_code", [
                 'code' => $code,
@@ -144,10 +145,6 @@ class SupabaseService
 
             if ($response->successful()) {
                 $data = $response->json();
-                Log::info('Sesión obtenida exitosamente', [
-                    'has_access_token' => isset($data['access_token']),
-                    'has_refresh_token' => isset($data['refresh_token'])
-                ]);
                 return $data;
             }
 
@@ -169,9 +166,6 @@ class SupabaseService
         }
     }
 
-    /**
-     * Base URL para REST API (tablas).
-     */
     private function restUrl(string $table): string
     {
         return rtrim($this->url, '/') . '/rest/v1/' . $table;
@@ -180,18 +174,19 @@ class SupabaseService
     private function restHeaders(): array
     {
         return [
-            'apikey' => $this->key,
-            'Authorization' => 'Bearer ' . $this->key,
+            'apikey' => $this->serviceRoleKey,
+            'Authorization' => 'Bearer ' . $this->serviceRoleKey,
             'Content-Type' => 'application/json',
         ];
     }
 
-    /**
-     * Insertar resultado de test emocional.
-     */
     public function insertTestResult(string $userId, array $data): ?array
     {
         try {
+            if ($this->serviceRoleKey === '') {
+                Log::error('Supabase service_role_key no configurada (SUPABASE_SERVICE_ROLE_KEY)');
+                return null;
+            }
             $body = [
                 'user_id' => $userId,
                 'test_id' => $data['test_id'],
@@ -217,12 +212,13 @@ class SupabaseService
         }
     }
 
-    /**
-     * Obtener resultados de tests del usuario (más recientes primero).
-     */
     public function getTestResults(string $userId): array
     {
         try {
+            if ($this->serviceRoleKey === '') {
+                Log::error('Supabase service_role_key no configurada (SUPABASE_SERVICE_ROLE_KEY)');
+                return [];
+            }
             $url = $this->restUrl('test_results') . '?user_id=eq.' . $userId . '&order=created_at.desc';
             $response = Http::withHeaders($this->restHeaders())->get($url);
             if ($response->successful()) {
@@ -236,12 +232,13 @@ class SupabaseService
         }
     }
 
-    /**
-     * Insertar entrada del diario emocional.
-     */
     public function insertDiaryEntry(string $userId, array $data): ?array
     {
         try {
+            if ($this->serviceRoleKey === '') {
+                Log::error('Supabase service_role_key no configurada (SUPABASE_SERVICE_ROLE_KEY)');
+                return null;
+            }
             $body = [
                 'user_id' => $userId,
                 'date' => $data['date'],
@@ -265,12 +262,13 @@ class SupabaseService
         }
     }
 
-    /**
-     * Obtener entradas del diario del usuario (más recientes primero).
-     */
     public function getDiaryEntries(string $userId): array
     {
         try {
+            if ($this->serviceRoleKey === '') {
+                Log::error('Supabase service_role_key no configurada (SUPABASE_SERVICE_ROLE_KEY)');
+                return [];
+            }
             $url = $this->restUrl('diary_entries') . '?user_id=eq.' . $userId . '&order=date.desc';
             $response = Http::withHeaders($this->restHeaders())->get($url);
             if ($response->successful()) {
