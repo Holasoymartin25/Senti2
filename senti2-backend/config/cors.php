@@ -19,11 +19,12 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => [
+    'allowed_origins' => array_filter([
         'http://localhost:4200',
         'http://127.0.0.1:4200',
-        env('FRONTEND_URL', 'http://localhost:4200'),
-    ],
+        'https://senti2.vercel.app',
+        env('FRONTEND_URL'),
+    ]),
 
     'allowed_origins_patterns' => [],
 
