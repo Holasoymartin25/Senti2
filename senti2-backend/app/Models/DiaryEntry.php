@@ -4,18 +4,20 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Profile extends Model
+class DiaryEntry extends Model
 {
     protected $fillable = [
         'user_id',
-        'nombre',
-        'apellidos',
-        'telefono',
-        'fecha_nacimiento',
+        'date',
+        'mood',
+        'emotions',
+        'note',
     ];
 
     protected $casts = [
-        'fecha_nacimiento' => 'date:Y-m-d',
+        'date' => 'date:Y-m-d',
+        'mood' => 'integer',
+        'emotions' => 'array',
     ];
 
     public function user()

@@ -20,7 +20,6 @@ export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'inicio' },
 
   { path: 'login', component: LoginComponent },
-  { path: 'auth/callback', component: LoginComponent },
 
   { path: 'inicio', component: InicioComponent },
   { path: 'servicios', component: ServiciosComponent },

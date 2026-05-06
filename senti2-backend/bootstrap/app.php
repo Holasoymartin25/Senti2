@@ -17,10 +17,6 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->api(prepend: [
             \Illuminate\Http\Middleware\HandleCors::class,
         ]);
-
-        $middleware->alias([
-            'verify.supabase' => \App\Http\Middleware\VerifySupabaseToken::class,
-        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->render(function (\Throwable $e, Request $request): ?Response {
@@ -37,6 +33,10 @@ return Application::configure(basePath: dirname(__DIR__))
                     'message' => 'Error de validación',
                     'errors' => $e->errors(),
                 ], 422)
+                    ->withHeaders(['Access-Control-Allow-Origin' => $allowOrigin]);
+            }
+            if ($e instanceof \Illuminate\Auth\AuthenticationException) {
+                return response()->json(['error' => 'No autenticado'], 401)
                     ->withHeaders(['Access-Control-Allow-Origin' => $allowOrigin]);
             }
             $status = method_exists($e, 'getStatusCode') ? $e->getStatusCode() : 500;
