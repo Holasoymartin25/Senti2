@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { SupabaseService } from '../../core/services/supabase.service';
-import { AuthApiService } from '../../core/services/auth-api.service';
 
 @Component({
   selector: 'app-login',
@@ -20,64 +19,18 @@ export class LoginComponent implements OnInit {
   successMessage = '';
   loading = false;
   isRegisterMode = false;
-  isProcessingCallback = false;
 
   constructor(
     private supabase: SupabaseService,
-    private authApi: AuthApiService,
     private router: Router,
     private route: ActivatedRoute
   ) { }
 
   ngOnInit() {
-    if (this.authApi.getToken()) {
+    const token = this.route.snapshot.queryParams['token'];
+    if (token) {
       this.router.navigateByUrl(this.getRedirectUrl());
-      return;
     }
-
-    const hash = typeof window !== 'undefined' ? window.location.hash : '';
-    const isCallbackRoute = typeof window !== 'undefined' && window.location.pathname.includes('auth/callback');
-
-    if (hash && isCallbackRoute) {
-      this.isProcessingCallback = true;
-    }
-
-    if (hash) {
-      const params = new URLSearchParams(hash.substring(1));
-      const accessToken = params.get('access_token');
-      const refreshToken = params.get('refresh_token');
-      const errorDesc = params.get('error_description') || params.get('error');
-      if (errorDesc) {
-        this.isProcessingCallback = false;
-        this.errorMessage = decodeURIComponent(errorDesc);
-        this.loading = false;
-        this.replaceStateWithoutHash();
-        return;
-      }
-      if (accessToken) {
-        const redirect = this.getRedirectUrl();
-        this.authApi.handleAuthCallback(accessToken, refreshToken ?? undefined, redirect);
-        this.replaceStateWithoutHash();
-        return;
-      }
-      this.isProcessingCallback = false;
-    }
-
-    this.route.queryParams.subscribe(params => {
-      const token = params['token'];
-      const refreshToken = params['refresh_token'];
-      const error = params['error'];
-
-      if (error) {
-        this.errorMessage = decodeURIComponent(error);
-        this.loading = false;
-      }
-
-      if (token) {
-        const redirect = this.getRedirectUrl();
-        this.authApi.handleAuthCallback(token, refreshToken, redirect);
-      }
-    });
   }
 
   private getRedirectUrl(): string {
@@ -91,12 +44,6 @@ export class LoginComponent implements OnInit {
       return fromStorage;
     }
     return '/inicio';
-  }
-
-  private replaceStateWithoutHash(): void {
-    if (typeof window !== 'undefined' && window.history.replaceState) {
-      window.history.replaceState(null, '', window.location.pathname + window.location.search);
-    }
   }
 
   toggleMode() {
@@ -153,31 +100,11 @@ export class LoginComponent implements OnInit {
     try {
       const { data, error } = await this.supabase.signUp(this.email, this.password);
       if (error) throw error;
-      this.successMessage = '¡Registro exitoso! Por favor, revisa tu correo electrónico para confirmar tu cuenta.';
-      this.email = '';
-      this.password = '';
-      this.confirmPassword = '';
+      const redirect = this.route.snapshot.queryParams['redirect'];
+      this.router.navigateByUrl(redirect && redirect.startsWith('/') ? redirect : '/inicio');
     } catch (error: any) {
       this.errorMessage = error.message || 'Error al registrarse. Por favor, intenta de nuevo.';
     } finally {
-      this.loading = false;
-    }
-  }
-
-  async onGoogleLogin() {
-    const redirect = this.route.snapshot.queryParams['redirect'];
-    if (redirect && redirect.startsWith('/') && typeof sessionStorage !== 'undefined') {
-      sessionStorage.setItem('login_redirect', redirect);
-    }
-    this.loading = true;
-    this.errorMessage = '';
-    this.successMessage = '';
-
-    try {
-      const { error } = await this.supabase.signInWithGoogle();
-      if (error) throw error;
-    } catch (error: any) {
-      this.errorMessage = error.message || 'Error al iniciar sesión con Google. Por favor, intenta de nuevo.';
       this.loading = false;
     }
   }
