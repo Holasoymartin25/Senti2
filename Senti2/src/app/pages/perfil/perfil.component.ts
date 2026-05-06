@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { SupabaseService } from '../../core/services/supabase.service';
+import { AuthApiService } from '../../core/services/auth-api.service';
 import { Router } from '@angular/router';
 
 interface UserProfile {
@@ -41,14 +41,14 @@ export class PerfilComponent implements OnInit {
   userMetadata: any = {};
 
   constructor(
-    private supabase: SupabaseService,
+    private auth: AuthApiService,
     private router: Router
   ) {}
 
   async ngOnInit() {
     this.loading = true;
     try {
-      const user = await this.supabase.getCurrentUser();
+      const user = await this.auth.getCurrentUser();
       if (!user) {
         this.router.navigate(['/login']);
         return;
@@ -56,10 +56,10 @@ export class PerfilComponent implements OnInit {
 
       this.userEmail = user.email || '';
       this.profile.user_id = user.id;
-      this.userMetadata = user.user_metadata || {};
-      this.displayName = await this.supabase.getUserDisplayName(user.id);
+      this.userMetadata = {};
+      this.displayName = await this.auth.getUserDisplayName(user.id);
 
-      const existingProfile = await this.supabase.getUserProfile(user.id);
+      const existingProfile = await this.auth.getUserProfile(user.id);
       if (existingProfile) {
         this.profile = existingProfile;
         this.profile.fecha_nacimiento = this.toDateInputValue(this.profile.fecha_nacimiento);
@@ -106,7 +106,7 @@ export class PerfilComponent implements OnInit {
     this.successMessage = '';
 
     try {
-      const updatedProfile = await this.supabase.updateUserProfile(this.profile);
+      const updatedProfile = await this.auth.updateUserProfile(this.profile);
       if (updatedProfile) {
         this.profile = updatedProfile;
         this.profile.fecha_nacimiento = this.toDateInputValue(this.profile.fecha_nacimiento);
@@ -125,7 +125,7 @@ export class PerfilComponent implements OnInit {
   }
 
   async logout() {
-    await this.supabase.signOut();
+    await this.auth.signOut();
   }
 
   getInitials(): string {
