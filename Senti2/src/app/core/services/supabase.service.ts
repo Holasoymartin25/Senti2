@@ -57,10 +57,6 @@ export class SupabaseService {
         return result;
     }
 
-    async signInWithGoogle(): Promise<any> {
-        return await this.authApi.signInWithGoogle();
-    }
-
     async signOut(): Promise<void> {
         await this.authApi.signOut();
     }

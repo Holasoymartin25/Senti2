@@ -67,11 +67,16 @@ export class AuthApiService {
                 this.http.post<any>(`${this.apiUrl}/auth/signup`, { email, password })
             );
 
+            if (response.access_token) {
+                this.setToken(response.access_token);
+                this._currentUser.next(response.user);
+            }
+
             return { data: response, error: null };
         } catch (error: any) {
             return {
                 data: null,
-                error: { message: error.error?.error || 'Error al registrarse' }
+                error: { message: error.error?.message || error.error?.error || 'Error al registrarse' }
             };
         }
     }
@@ -96,28 +101,6 @@ export class AuthApiService {
             return {
                 data: null,
                 error: { message: error.error?.error || 'Error al iniciar sesión' }
-            };
-        }
-    }
-
-    async signInWithGoogle(): Promise<any> {
-        try {
-            const redirectTo = `${window.location.origin}/auth/callback`;
-            const response: any = await firstValueFrom(
-                this.http.get<any>(`${this.apiUrl}/auth/google/url?redirect_to=${encodeURIComponent(redirectTo)}`)
-            );
-
-            if (response.url) {
-                window.location.href = response.url;
-                return { data: null, error: null };
-            }
-
-            return { data: null, error: { message: 'Error al obtener URL de Google' } };
-        } catch (error: any) {
-            console.error('Error al obtener URL de Google OAuth:', error);
-            return {
-                data: null,
-                error: { message: error.error?.error || 'Error al iniciar sesión con Google' }
             };
         }
     }
@@ -200,19 +183,8 @@ export class AuthApiService {
         try {
             const user = this.getCurrentUserValue() ?? (await this.getCurrentUser());
             if (user) {
-                const metadata = user.user_metadata || {};
-                
-                if (metadata['full_name']) {
-                    return metadata['full_name'] as string;
-                }
-                
-                const givenName = metadata['given_name'] as string;
-                const familyName = metadata['family_name'] as string;
-                if (givenName || familyName) {
-                    const fullName = [givenName, familyName].filter(Boolean).join(' ');
-                    if (fullName.trim()) {
-                        return fullName;
-                    }
+                if ((user as any).name) {
+                    return (user as any).name as string;
                 }
 
                 const profile = await this.getUserProfile(userId);
@@ -222,10 +194,10 @@ export class AuthApiService {
                         return fullName;
                     }
                 }
-                
+
                 return user.email || 'Mi Perfil';
             }
-            
+
             return 'Mi Perfil';
         } catch (error) {
             console.error('Error al obtener nombre de usuario:', error);
@@ -302,18 +274,5 @@ export class AuthApiService {
         this._currentUser.next(null);
     }
 
-    handleAuthCallback(token: string, refreshToken?: string, redirectUrl?: string): void {
-        this.setToken(token);
-        if (refreshToken) {
-            this.setRefreshToken(refreshToken);
-        }
-        const target = redirectUrl || '/inicio';
-        this.verifyToken(token).then(user => {
-            if (user) {
-                this._currentUser.next(user);
-                this.router.navigateByUrl(target);
-            }
-        });
-    }
 }
 
