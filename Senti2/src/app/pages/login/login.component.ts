@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
-import { SupabaseService } from '../../core/services/supabase.service';
+import { AuthApiService } from '../../core/services/auth-api.service';
 
 @Component({
   selector: 'app-login',
@@ -21,7 +21,7 @@ export class LoginComponent implements OnInit {
   isRegisterMode = false;
 
   constructor(
-    private supabase: SupabaseService,
+    private auth: AuthApiService,
     private router: Router,
     private route: ActivatedRoute
   ) { }
@@ -66,7 +66,7 @@ export class LoginComponent implements OnInit {
     this.successMessage = '';
 
     try {
-      const { data, error } = await this.supabase.signIn(this.email, this.password);
+      const { data, error } = await this.auth.signIn(this.email, this.password);
       if (error) throw error;
       const redirect = this.route.snapshot.queryParams['redirect'];
       this.router.navigateByUrl(redirect && redirect.startsWith('/') ? redirect : '/inicio');
@@ -98,7 +98,7 @@ export class LoginComponent implements OnInit {
     this.successMessage = '';
 
     try {
-      const { data, error } = await this.supabase.signUp(this.email, this.password);
+      const { data, error } = await this.auth.signUp(this.email, this.password);
       if (error) throw error;
       const redirect = this.route.snapshot.queryParams['redirect'];
       this.router.navigateByUrl(redirect && redirect.startsWith('/') ? redirect : '/inicio');

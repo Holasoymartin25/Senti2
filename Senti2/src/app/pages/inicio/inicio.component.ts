@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { AuthService } from '../../core/services/auth.service';
+import { AuthApiService } from '../../core/services/auth-api.service';
 
 @Component({
   standalone: true,
@@ -10,14 +10,13 @@ import { AuthService } from '../../core/services/auth.service';
 })
 export class InicioComponent {
 
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(private authApi: AuthApiService, private router: Router) { }
 
   handleStart() {
-    if (this.authService.isLogged()) {
+    if (this.authApi.getToken()) {
       this.router.navigate(['/contacto']);
     } else {
       this.router.navigate(['/login']);
     }
   }
 }
-
