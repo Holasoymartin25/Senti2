@@ -1,0 +1,48 @@
+<div class="admin-container">
+  <h1 class="admin-title">Panel de Administración</h1>
+  <p class="admin-subtitle">Gestión de usuarios y roles</p>
+
+  <div *ngIf="loading" class="loading">Cargando usuarios…</div>
+
+  <div *ngIf="errorMsg" class="alert alert-error">{{ errorMsg }}</div>
+  <div *ngIf="successMsg" class="alert alert-success">{{ successMsg }}</div>
+
+  <div *ngIf="!loading" class="table-wrapper">
+    <table class="users-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Email</th>
+          <th>Nombre</th>
+          <th>Rol</th>
+          <th>Miembro desde</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users">
+          <td>{{ user.id }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.name ?? '—' }}</td>
+          <td>
+            <span class="role-badge" [class.admin]="user.role === 'admin'">
+              {{ user.role }}
+            </span>
+          </td>
+          <td>{{ user.created_at | date:'dd/MM/yyyy' }}</td>
+          <td>
+            <button
+              class="btn-role"
+              [class.demote]="user.role === 'admin'"
+              (click)="toggleRole(user)"
+            >
+              {{ user.role === 'admin' ? 'Quitar admin' : 'Hacer admin' }}
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p *ngIf="users.length === 0" class="empty">No hay usuarios registrados.</p>
+  </div>
+</div>

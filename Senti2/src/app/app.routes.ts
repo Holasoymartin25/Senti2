@@ -3,6 +3,7 @@ import { InicioComponent } from './pages/inicio/inicio.component';
 import { ServiciosComponent } from './pages/servicios/servicios.component';
 import { LoginComponent } from './pages/login/login.component';
 import { authGuard } from './core/guards/auth.guard';
+import { adminGuard } from './core/guards/admin.guard';
 import { PsicologosComponent } from './pages/psicologos/psicologos.component';
 import { OrigenComponent } from './pages/origen/origen.component';
 import { ContactoComponent } from './pages/contacto/contacto.component';
@@ -15,6 +16,7 @@ import { RecursosEducativosComponent } from './pages/area-personal/recursos-educ
 import { DiarioEmocionalComponent } from './pages/area-personal/diario-emocional/diario-emocional.component';
 import { ProgramasBienestarComponent } from './pages/area-personal/programas-bienestar/programas-bienestar.component';
 import { TestEjecucionComponent } from './pages/area-personal/test-ejecucion/test-ejecucion.component';
+import { AdminComponent } from './pages/admin/admin.component';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'inicio' },
@@ -37,6 +39,8 @@ export const routes: Routes = [
   { path: 'area-personal/programas-bienestar', component: ProgramasBienestarComponent, canActivate: [authGuard] },
 
   { path: 'perfil', component: PerfilComponent, canActivate: [authGuard] },
+
+  { path: 'admin', component: AdminComponent, canActivate: [adminGuard] },
 
   { path: '**', redirectTo: 'inicio' }
 ];
