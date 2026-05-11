@@ -9,6 +9,9 @@
     <a routerLink="/contacto" routerLinkActive="active">Contacto</a>
 
     @if (isAuthenticated) {
+    @if (userRole === 'admin' || userRole === 'psicologo') {
+    <a routerLink="/admin" routerLinkActive="active">Panel Admin</a>
+    }
     <a routerLink="/area-personal" routerLinkActive="active">Área Personal</a>
     <a routerLink="/perfil" routerLinkActive="active" class="profile-link">
       <span class="user-name" [title]="userEmail || 'Mi Perfil'">

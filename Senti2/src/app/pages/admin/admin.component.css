@@ -96,32 +96,321 @@
   color: #1d4ed8;
 }
 
-.btn-role {
-  padding: 0.35rem 0.85rem;
-  border: none;
+.role-badge.psicologo {
+  background: #ede9fe;
+  color: #6d28d9;
+}
+
+.role-select {
+  padding: 0.35rem 0.65rem;
+  border: 1.5px solid #d1d5db;
   border-radius: 6px;
   font-size: 0.8rem;
   font-weight: 600;
   cursor: pointer;
-  background: #1d4ed8;
-  color: #fff;
-  transition: background 0.2s;
+  background: #fff;
+  color: #374151;
+  appearance: auto;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.btn-role:hover {
-  background: #1e40af;
+.role-select:hover {
+  border-color: #7c3aed;
 }
 
-.btn-role.demote {
-  background: #dc2626;
-}
-
-.btn-role.demote:hover {
-  background: #b91c1c;
+.role-select:focus {
+  outline: none;
+  border-color: #7c3aed;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.12);
 }
 
 .empty {
   text-align: center;
   color: #9ca3af;
   padding: 2rem;
+}
+
+.actions-cell {
+  white-space: nowrap;
+}
+
+.btn-view {
+  padding: 0.35rem 0.85rem;
+  border: 1.5px solid #7c3aed;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  background: #fff;
+  color: #7c3aed;
+  transition: all 0.2s;
+}
+
+.btn-view:hover,
+.btn-view.active {
+  background: #7c3aed;
+  color: #fff;
+}
+
+.row-selected {
+  background: #faf5ff !important;
+}
+
+/* Panel paciente */
+.patient-panel {
+  margin-top: 2rem;
+  border: 1.5px solid #ede9fe;
+  border-radius: 12px;
+  background: #fff;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(124, 58, 237, 0.08);
+}
+
+.patient-panel-header {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  background: #faf5ff;
+  border-bottom: 1px solid #ede9fe;
+}
+
+.patient-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin: 0;
+}
+
+.patient-email {
+  font-size: 0.85rem;
+  color: #6b7280;
+  flex: 1;
+}
+
+.btn-close {
+  padding: 0.3rem 0.75rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  background: #e5e7eb;
+  color: #374151;
+  transition: background 0.2s;
+}
+
+.btn-close:hover {
+  background: #d1d5db;
+}
+
+.patient-sections {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+}
+
+@media (max-width: 700px) {
+  .patient-sections {
+    grid-template-columns: 1fr;
+  }
+}
+
+.patient-section {
+  padding: 1.25rem 1.5rem;
+}
+
+.patient-section:first-child {
+  border-right: 1px solid #ede9fe;
+}
+
+.section-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #7c3aed;
+  margin: 0 0 1rem;
+}
+
+.empty-section {
+  color: #9ca3af;
+  font-size: 0.875rem;
+}
+
+/* Diario */
+.diary-card {
+  padding: 0.75rem;
+  border: 1px solid #f3f4f6;
+  border-radius: 8px;
+  margin-bottom: 0.75rem;
+  background: #fafafa;
+}
+
+.diary-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.4rem;
+}
+
+.diary-date {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.mood-badge {
+  font-size: 0.75rem;
+  background: #d1fae5;
+  color: #065f46;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+}
+
+.emotion-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin-bottom: 0.4rem;
+}
+
+.emotion-tag {
+  font-size: 0.7rem;
+  background: #ede9fe;
+  color: #6d28d9;
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+}
+
+.diary-note {
+  font-size: 0.8rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+/* Tests */
+.test-card {
+  padding: 0.75rem;
+  border: 1px solid #f3f4f6;
+  border-radius: 8px;
+  margin-bottom: 0.75rem;
+  background: #fafafa;
+}
+
+.test-card-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.4rem;
+}
+
+.test-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #1a1a2e;
+}
+
+.test-date {
+  font-size: 0.75rem;
+  color: #9ca3af;
+}
+
+.test-score {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.score-value {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #374151;
+}
+
+.level-badge {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  background: #e5e7eb;
+  color: #374151;
+}
+
+/* Pestañas psicólogo */
+.psi-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid #e5e7eb;
+  padding-bottom: 0;
+}
+
+.psi-tab {
+  padding: 0.6rem 1.25rem;
+  border: none;
+  background: transparent;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #6b7280;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: color 0.2s, border-color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.psi-tab:hover {
+  color: #7c3aed;
+}
+
+.psi-tab.active {
+  color: #7c3aed;
+  border-bottom-color: #7c3aed;
+}
+
+.tab-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.4rem;
+  height: 1.4rem;
+  padding: 0 0.35rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  background: #ede9fe;
+  color: #6d28d9;
+}
+
+.btn-assign {
+  padding: 0.35rem 0.85rem;
+  border: 1.5px solid #7c3aed;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  background: #7c3aed;
+  color: #fff;
+  transition: background 0.2s;
+}
+
+.btn-assign:hover {
+  background: #6d28d9;
+}
+
+.btn-unassign {
+  padding: 0.35rem 0.75rem;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  background: #fff;
+  color: #6b7280;
+  transition: all 0.2s;
+}
+
+.btn-unassign:hover {
+  border-color: #dc2626;
+  color: #dc2626;
 }
