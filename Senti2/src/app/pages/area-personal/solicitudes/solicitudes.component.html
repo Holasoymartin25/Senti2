@@ -1,0 +1,51 @@
+<div class="solicitudes-container">
+  <h2 class="solicitudes-title">Solicitudes de psicólogo</h2>
+  <p class="solicitudes-subtitle">
+    Estos profesionales quieren acompañarte en tu bienestar emocional. Revisa su mensaje y decide.
+  </p>
+
+  <div *ngIf="errorMsg" class="alert alert-error">{{ errorMsg }}</div>
+  <div *ngIf="successMsg" class="alert alert-success">{{ successMsg }}</div>
+
+  <div *ngIf="loading" class="loading">Cargando solicitudes…</div>
+
+  <div *ngIf="!loading && solicitudes.length === 0 && !successMsg" class="empty-state">
+    <div class="empty-icon">✉️</div>
+    <p>No tienes solicitudes pendientes.</p>
+  </div>
+
+  <div *ngIf="!loading" class="solicitudes-list">
+    <div *ngFor="let sol of solicitudes" class="solicitud-card">
+      <div class="solicitud-header">
+        <div class="psi-avatar">{{ (sol.psicologo.name ?? sol.psicologo.email)[0].toUpperCase() }}</div>
+        <div class="psi-info">
+          <span class="psi-name">{{ sol.psicologo.name ?? '—' }}</span>
+          <span class="psi-email">{{ sol.psicologo.email }}</span>
+        </div>
+        <span class="solicitud-date">{{ sol.created_at | date:'dd/MM/yyyy' }}</span>
+      </div>
+
+      <div class="solicitud-message">
+        <p class="message-label">Mensaje del psicólogo:</p>
+        <blockquote class="message-text">{{ sol.message }}</blockquote>
+      </div>
+
+      <div class="solicitud-actions">
+        <button
+          class="btn-accept"
+          [disabled]="procesandoId === sol.id"
+          (click)="aceptar(sol)"
+        >
+          {{ procesandoId === sol.id ? 'Procesando…' : 'Aceptar' }}
+        </button>
+        <button
+          class="btn-reject"
+          [disabled]="procesandoId === sol.id"
+          (click)="rechazar(sol)"
+        >
+          Rechazar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
