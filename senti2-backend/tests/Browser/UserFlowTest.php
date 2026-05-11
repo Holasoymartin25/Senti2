@@ -31,8 +31,23 @@ test('flujo completo: inicio, secciones, servicios, login, diario, guardar, esta
     $page->wait(1);
     $page->assertSee('Iniciar Sesión');
 
-    $page->fill('email', env('E2E_TEST_EMAIL', 'e2e@senti2.test'))
-        ->fill('password', env('E2E_TEST_PASSWORD', 'password'))
+    $email    = env('E2E_TEST_EMAIL', 'e2e@senti2.test');
+    $password = env('E2E_TEST_PASSWORD', 'password');
+    $apiBase  = rtrim(env('APP_URL', 'http://localhost:8000'), '/');
+
+    $ch = curl_init("{$apiBase}/api/v1/auth/signup");
+    curl_setopt_array($ch, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_POST           => true,
+        CURLOPT_HTTPHEADER     => ['Content-Type: application/json', 'Accept: application/json'],
+        CURLOPT_POSTFIELDS     => json_encode(['name' => 'E2E User', 'email' => $email, 'password' => $password]),
+        CURLOPT_TIMEOUT        => 5,
+    ]);
+    curl_exec($ch);
+    curl_close($ch);
+
+    $page->fill('email', $email)
+        ->fill('password', $password)
         ->click('Iniciar sesión');
     $page->wait(1);
     $page->assertSee('Diario Emocional');
