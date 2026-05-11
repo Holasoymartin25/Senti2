@@ -15,6 +15,8 @@ export const authGuard: CanActivateFn = async (route, state) => {
     return false;
   }
 
+  await authApi.waitForInit();
+
   if (authApi.getCurrentUserValue()) {
     return true;
   }

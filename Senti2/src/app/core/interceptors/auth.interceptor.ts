@@ -73,7 +73,7 @@ function isApiRequest(req: HttpRequest<unknown>): boolean {
 
 function skipRefreshFor(req: HttpRequest<unknown>): boolean {
   const u = req.url;
-  return u.includes('/auth/refresh') || u.includes('/auth/signin') || u.includes('/auth/signup');
+  return u.includes('/auth/refresh') || u.includes('/auth/signin') || u.includes('/auth/signup') || u.includes('/auth/verify');
 }
 
 function addToken(req: HttpRequest<unknown>, token: string | null): HttpRequest<unknown> {
