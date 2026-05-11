@@ -69,7 +69,12 @@ export class LoginComponent implements OnInit {
       const { data, error } = await this.auth.signIn(this.email, this.password);
       if (error) throw error;
       const redirect = this.route.snapshot.queryParams['redirect'];
-      this.router.navigateByUrl(redirect && redirect.startsWith('/') ? redirect : '/inicio');
+      if (redirect && redirect.startsWith('/')) {
+        this.router.navigateByUrl(redirect);
+      } else {
+        const role = this.auth.getCurrentUserValue()?.role;
+        this.router.navigateByUrl(role === 'admin' || role === 'psicologo' ? '/admin' : '/inicio');
+      }
     } catch (error: any) {
       this.errorMessage = error.message || 'Error al iniciar sesión. Por favor, verifica tus credenciales.';
     } finally {
