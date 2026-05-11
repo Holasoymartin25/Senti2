@@ -1,48 +1,159 @@
 <div class="admin-container">
-  <h1 class="admin-title">Panel de Administración</h1>
-  <p class="admin-subtitle">Gestión de usuarios y roles</p>
-
-  <div *ngIf="loading" class="loading">Cargando usuarios…</div>
+  <h1 class="admin-title">
+    {{ currentUserRole === 'psicologo' ? 'Panel del Psicólogo' : 'Panel de Administración' }}
+  </h1>
+  <p class="admin-subtitle">
+    {{ currentUserRole === 'psicologo' ? 'Gestiona tus pacientes y consulta su evolución emocional' : 'Gestión de usuarios y roles' }}
+  </p>
 
   <div *ngIf="errorMsg" class="alert alert-error">{{ errorMsg }}</div>
   <div *ngIf="successMsg" class="alert alert-success">{{ successMsg }}</div>
 
-  <div *ngIf="!loading" class="table-wrapper">
-    <table class="users-table">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Email</th>
-          <th>Nombre</th>
-          <th>Rol</th>
-          <th>Miembro desde</th>
-          <th>Acción</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let user of users">
-          <td>{{ user.id }}</td>
-          <td>{{ user.email }}</td>
-          <td>{{ user.name ?? '—' }}</td>
-          <td>
-            <span class="role-badge" [class.admin]="user.role === 'admin'">
-              {{ user.role }}
-            </span>
-          </td>
-          <td>{{ user.created_at | date:'dd/MM/yyyy' }}</td>
-          <td>
-            <button
-              class="btn-role"
-              [class.demote]="user.role === 'admin'"
-              (click)="toggleRole(user)"
-            >
-              {{ user.role === 'admin' ? 'Quitar admin' : 'Hacer admin' }}
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+  <!-- ── VISTA ADMIN ──────────────────────────────────── -->
+  <ng-container *ngIf="currentUserRole === 'admin'">
+    <div *ngIf="loading" class="loading">Cargando usuarios…</div>
 
-    <p *ngIf="users.length === 0" class="empty">No hay usuarios registrados.</p>
-  </div>
+    <div *ngIf="!loading" class="table-wrapper">
+      <table class="users-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Email</th>
+            <th>Nombre</th>
+            <th>Rol</th>
+            <th>Miembro desde</th>
+            <th>Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of users">
+            <td>{{ user.id }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.name ?? '—' }}</td>
+            <td>
+              <span class="role-badge"
+                [class.admin]="user.role === 'admin'"
+                [class.psicologo]="user.role === 'psicologo'">
+                {{ roleLabels[user.role] ?? user.role }}
+              </span>
+            </td>
+            <td>{{ user.created_at | date:'dd/MM/yyyy' }}</td>
+            <td>
+              <select
+                class="role-select"
+                [ngModel]="user.role"
+                (ngModelChange)="changeRole(user, $event)"
+              >
+                <option *ngFor="let r of allRoles" [value]="r">
+                  {{ roleLabels[r] }}
+                </option>
+              </select>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <p *ngIf="users.length === 0" class="empty">No hay usuarios registrados.</p>
+    </div>
+  </ng-container>
+
+  <!-- ── VISTA PSICÓLOGO ─────────────────────────────── -->
+  <ng-container *ngIf="currentUserRole === 'psicologo'">
+    <div *ngIf="loadingPsi" class="loading">Cargando…</div>
+
+    <div *ngIf="!loadingPsi" class="psi-tabs">
+      <button class="psi-tab" [class.active]="psiTab === 'sin-asignar'" (click)="psiTab = 'sin-asignar'">
+        Sin psicólogo <span class="tab-count">{{ sinAsignar.length }}</span>
+      </button>
+      <button class="psi-tab" [class.active]="psiTab === 'mis-pacientes'" (click)="psiTab = 'mis-pacientes'">
+        Mis pacientes <span class="tab-count">{{ misPacientes.length }}</span>
+      </button>
+    </div>
+
+    <!-- Sin asignar -->
+    <div *ngIf="!loadingPsi && psiTab === 'sin-asignar'" class="table-wrapper">
+      <table class="users-table">
+        <thead>
+          <tr><th>ID</th><th>Email</th><th>Nombre</th><th>Miembro desde</th><th>Acción</th></tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of sinAsignar">
+            <td>{{ user.id }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.name ?? '—' }}</td>
+            <td>{{ user.created_at | date:'dd/MM/yyyy' }}</td>
+            <td>
+              <button class="btn-assign" (click)="asignarPaciente(user)">+ Asignar como paciente</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <p *ngIf="sinAsignar.length === 0" class="empty">Todos los usuarios tienen psicólogo asignado.</p>
+    </div>
+
+    <!-- Mis pacientes -->
+    <div *ngIf="!loadingPsi && psiTab === 'mis-pacientes'">
+      <div class="table-wrapper">
+        <table class="users-table">
+          <thead>
+            <tr><th>ID</th><th>Email</th><th>Nombre</th><th>Miembro desde</th><th>Acciones</th></tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of misPacientes" [class.row-selected]="selectedPatient?.user?.id === user.id">
+              <td>{{ user.id }}</td>
+              <td>{{ user.email }}</td>
+              <td>{{ user.name ?? '—' }}</td>
+              <td>{{ user.created_at | date:'dd/MM/yyyy' }}</td>
+              <td class="actions-cell">
+                <button class="btn-view" [class.active]="selectedPatient?.user?.id === user.id" (click)="verDatosPaciente(user)">
+                  {{ selectedPatient?.user?.id === user.id ? 'Ocultar' : 'Ver datos' }}
+                </button>
+                <button class="btn-unassign" (click)="desasignarPaciente(user)">Desvincular</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <p *ngIf="misPacientes.length === 0" class="empty">Aún no tienes pacientes asignados.</p>
+      </div>
+
+      <!-- Datos del paciente -->
+      <div *ngIf="loadingPatient" class="loading">Cargando datos del paciente…</div>
+      <div *ngIf="selectedPatient && !loadingPatient" class="patient-panel">
+        <div class="patient-panel-header">
+          <h2 class="patient-name">{{ selectedPatient.user.name ?? selectedPatient.user.email }}</h2>
+          <span class="patient-email">{{ selectedPatient.user.email }}</span>
+          <button class="btn-close" (click)="closePatient()">✕ Cerrar</button>
+        </div>
+        <div class="patient-sections">
+          <section class="patient-section">
+            <h3 class="section-title">Diario Emocional</h3>
+            <div *ngIf="selectedPatient.diary.length === 0" class="empty-section">Sin entradas de diario.</div>
+            <div *ngFor="let entry of selectedPatient.diary" class="diary-card">
+              <div class="diary-card-header">
+                <span class="diary-date">{{ entry.date }}</span>
+                <span class="mood-badge">Estado: {{ entry.mood }}/10</span>
+              </div>
+              <div *ngIf="entry.emotions.length > 0" class="emotion-tags">
+                <span *ngFor="let e of entry.emotions" class="emotion-tag">{{ e }}</span>
+              </div>
+              <p *ngIf="entry.note" class="diary-note">{{ entry.note }}</p>
+            </div>
+          </section>
+          <section class="patient-section">
+            <h3 class="section-title">Tests Emocionales</h3>
+            <div *ngIf="selectedPatient.tests.length === 0" class="empty-section">Sin tests realizados.</div>
+            <div *ngFor="let test of selectedPatient.tests" class="test-card">
+              <div class="test-card-header">
+                <span class="test-title">{{ test.testTitle }}</span>
+                <span class="test-date">{{ test.date }}</span>
+              </div>
+              <div class="test-score">
+                <span class="score-value">{{ test.displayScore }}/{{ test.displayMax }}</span>
+                <span class="level-badge" [class]="'level-' + test.level.toLowerCase()">{{ test.level }}</span>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </ng-container>
 </div>

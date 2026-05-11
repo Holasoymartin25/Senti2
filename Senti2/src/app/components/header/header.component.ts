@@ -17,6 +17,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   isAuthenticated = false;
   displayName = 'Mi Perfil';
   userEmail = '';
+  userRole = '';
   private subs: Subscription[] = [];
 
   constructor(
@@ -40,6 +41,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.authApi.currentUser$.subscribe((user) => {
         this.isAuthenticated = !!user;
         this.userEmail = user?.email || '';
+        this.userRole = user?.role || '';
       })
     );
     this.subs.push(
