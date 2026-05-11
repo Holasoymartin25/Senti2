@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ContactController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\PsicologoController;
+use App\Http\Controllers\Api\SolicitudController;
 
 Route::prefix('v1')->group(function () {
     Route::post('/contact', [ContactController::class, 'store']);
@@ -27,7 +28,14 @@ Route::prefix('v1')->group(function () {
         Route::post('/area-personal/test-results', [AreaPersonalController::class, 'storeTestResult']);
         Route::get('/area-personal/test-results', [AreaPersonalController::class, 'getTestResults']);
         Route::post('/area-personal/diary-entries', [AreaPersonalController::class, 'storeDiaryEntry']);
-        Route::get('/area-personal/diary-entries', [AreaPersonalController::class, 'getDiaryEntries']);        Route::middleware('role:admin,psicologo')->prefix('admin')->group(function () {
+        Route::get('/area-personal/diary-entries', [AreaPersonalController::class, 'getDiaryEntries']);
+
+        // Solicitudes (accesible por cualquier usuario autenticado)
+        Route::get('/solicitudes', [SolicitudController::class, 'index']);
+        Route::post('/solicitudes/{id}/aceptar', [SolicitudController::class, 'aceptar']);
+        Route::post('/solicitudes/{id}/rechazar', [SolicitudController::class, 'rechazar']);
+
+        Route::middleware('role:admin,psicologo')->prefix('admin')->group(function () {
             Route::get('/users', [AdminController::class, 'index']);
             Route::get('/users/{id}/data', [AdminController::class, 'getUserData']);
         });
@@ -40,7 +48,8 @@ Route::prefix('v1')->group(function () {
             Route::get('/sin-asignar', [PsicologoController::class, 'getSinAsignar']);
             Route::get('/pacientes', [PsicologoController::class, 'getPacientes']);
             Route::get('/pacientes/{id}/datos', [PsicologoController::class, 'getDatosPaciente']);
-            Route::post('/pacientes/{id}/asignar', [PsicologoController::class, 'asignar']);
+            Route::post('/pacientes/{id}/solicitar', [PsicologoController::class, 'solicitar']);
+            Route::get('/solicitudes-enviadas', [PsicologoController::class, 'getSolicitudes']);
             Route::delete('/pacientes/{id}/desasignar', [PsicologoController::class, 'desasignar']);
         });
     });
