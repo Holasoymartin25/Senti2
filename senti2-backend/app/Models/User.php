@@ -16,6 +16,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'psicologo_id',
     ];
 
     protected $hidden = [
@@ -49,5 +50,15 @@ class User extends Authenticatable
     public function diaryEntries()
     {
         return $this->hasMany(DiaryEntry::class);
+    }
+
+    public function psicologo()
+    {
+        return $this->belongsTo(User::class, 'psicologo_id');
+    }
+
+    public function pacientes()
+    {
+        return $this->hasMany(User::class, 'psicologo_id');
     }
 }
