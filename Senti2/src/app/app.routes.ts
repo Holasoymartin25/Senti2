@@ -17,6 +17,7 @@ import { DiarioEmocionalComponent } from './pages/area-personal/diario-emocional
 import { ProgramasBienestarComponent } from './pages/area-personal/programas-bienestar/programas-bienestar.component';
 import { TestEjecucionComponent } from './pages/area-personal/test-ejecucion/test-ejecucion.component';
 import { AdminComponent } from './pages/admin/admin.component';
+import { SolicitudesComponent } from './pages/area-personal/solicitudes/solicitudes.component';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'inicio' },
@@ -37,6 +38,7 @@ export const routes: Routes = [
   { path: 'area-personal/recursos-educativos', component: RecursosEducativosComponent, canActivate: [authGuard] },
   { path: 'area-personal/diario-emocional', component: DiarioEmocionalComponent, canActivate: [authGuard] },
   { path: 'area-personal/programas-bienestar', component: ProgramasBienestarComponent, canActivate: [authGuard] },
+  { path: 'area-personal/solicitudes', component: SolicitudesComponent, canActivate: [authGuard] },
 
   { path: 'perfil', component: PerfilComponent, canActivate: [authGuard] },
 

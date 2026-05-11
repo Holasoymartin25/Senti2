@@ -43,6 +43,15 @@
         <p>Programas estructurados de 4 a 8 semanas con contenidos guiados.</p>
         <span class="area-card-link">Entrar</span>
       </a>
+
+      <a routerLink="/area-personal/solicitudes" class="area-card area-card--solicitudes">
+        <div class="area-card-header-row">
+          <h2>Solicitudes de psicólogo</h2>
+          <span *ngIf="solicitudesPendientes > 0" class="solicitudes-badge">{{ solicitudesPendientes }}</span>
+        </div>
+        <p>Revisa y gestiona las solicitudes de psicólogos que quieren acompañarte.</p>
+        <span class="area-card-link">Entrar</span>
+      </a>
     </div>
   </main>
 </div>
