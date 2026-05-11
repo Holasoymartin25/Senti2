@@ -29,7 +29,7 @@ jobs:
       - name: Run tests
         run: php vendor/bin/pest tests/Unit tests/Feature --no-coverage
         env:
-          APP_KEY: base64:test123456789012345678901234567890=
+          APP_KEY: base64:0eKoXIs/XEoClneG9kz6J9ql69/6zCgjddbeHH+PV78=
           DB_CONNECTION: sqlite
           DB_DATABASE: ':memory:'
 
