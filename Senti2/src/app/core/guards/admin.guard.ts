@@ -19,7 +19,7 @@ export const adminGuard: CanActivateFn = async (route, state) => {
     user = await authApi.verifyToken(token);
   }
 
-  if (user?.role === 'admin') {
+  if (user?.role === 'admin' || user?.role === 'psicologo') {
     return true;
   }
 
