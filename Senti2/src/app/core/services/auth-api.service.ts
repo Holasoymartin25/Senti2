@@ -20,6 +20,8 @@ export class AuthApiService {
     private _currentUser = new BehaviorSubject<User | null>(null);
     private tokenKey = 'auth_token';
     private refreshTokenKey = 'refresh_token';
+    private userCacheKey = 'auth_user_cache';
+    private initPromise: Promise<void> = Promise.resolve();
 
     constructor(
         private http: HttpClient,
@@ -30,14 +32,40 @@ export class AuthApiService {
 
     private initSession() {
         const token = this.getToken();
-        if (token) {
+        if (!token) return;
+
+        const cached = this.readUserCache();
+        if (cached) {
+            // Usuario en caché: carga inmediata; verificación en segundo plano
+            this._currentUser.next(cached);
+            this.initPromise = Promise.resolve();
             this.verifyToken(token).then(user => {
-                if (user) {
-                    this._currentUser.next(user);
-                } else {
-                    this.clearAuth();
-                }
+                if (!user) this.clearAuth();
             });
+        } else {
+            // Sin caché: esperar a que el backend confirme el token
+            this.initPromise = this.verifyToken(token).then(() => {});
+        }
+    }
+
+    waitForInit(): Promise<void> {
+        return this.initPromise;
+    }
+
+    private readUserCache(): User | null {
+        try {
+            const raw = sessionStorage.getItem(this.userCacheKey);
+            return raw ? JSON.parse(raw) : null;
+        } catch {
+            return null;
+        }
+    }
+
+    private saveUserCache(user: User | null): void {
+        if (user) {
+            sessionStorage.setItem(this.userCacheKey, JSON.stringify(user));
+        } else {
+            sessionStorage.removeItem(this.userCacheKey);
         }
     }
 
@@ -71,6 +99,7 @@ export class AuthApiService {
             if (response.access_token) {
                 this.setToken(response.access_token);
                 this._currentUser.next(response.user);
+                this.saveUserCache(response.user);
             }
 
             return { data: response, error: null };
@@ -94,6 +123,7 @@ export class AuthApiService {
                     this.setRefreshToken(response.refresh_token);
                 }
                 this._currentUser.next(response.user);
+                this.saveUserCache(response.user);
                 return { data: response, error: null };
             }
 
@@ -139,6 +169,7 @@ export class AuthApiService {
 
             if (response.user) {
                 this._currentUser.next(response.user);
+                this.saveUserCache(response.user);
                 return response.user;
             }
 
@@ -174,8 +205,10 @@ export class AuthApiService {
             }
 
             return null;
-        } catch (error) {
-            this.clearAuth();
+        } catch (error: any) {
+            if (error?.status === 401) {
+                this.clearAuth();
+            }
             return null;
         }
     }
@@ -272,6 +305,7 @@ export class AuthApiService {
     private clearAuth(): void {
         localStorage.removeItem(this.tokenKey);
         localStorage.removeItem(this.refreshTokenKey);
+        this.saveUserCache(null);
         this._currentUser.next(null);
     }
 
