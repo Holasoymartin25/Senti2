@@ -85,6 +85,39 @@
   color: var(--primary-sage-dark);
 }
 
+.area-card-header-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: var(--space-sm);
+}
+
+.area-card-header-row h2 {
+  margin-bottom: 0;
+}
+
+.solicitudes-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.4rem;
+  height: 1.4rem;
+  padding: 0 0.35rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  background: #7c3aed;
+  color: #fff;
+}
+
+.area-card--solicitudes {
+  border-color: #ede9fe;
+}
+
+.area-card--solicitudes:hover {
+  border-color: #7c3aed;
+}
+
 @media (max-width: 768px) {
   .area-header {
     padding: var(--space-lg) var(--space-md);

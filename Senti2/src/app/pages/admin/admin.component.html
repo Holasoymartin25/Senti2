@@ -62,7 +62,10 @@
 
     <div *ngIf="!loadingPsi" class="psi-tabs">
       <button class="psi-tab" [class.active]="psiTab === 'sin-asignar'" (click)="psiTab = 'sin-asignar'">
-        Sin psicólogo <span class="tab-count">{{ sinAsignar.length }}</span>
+        Disponibles <span class="tab-count">{{ sinAsignar.length }}</span>
+      </button>
+      <button class="psi-tab" [class.active]="psiTab === 'solicitudes-enviadas'" (click)="psiTab = 'solicitudes-enviadas'">
+        Solicitudes <span class="tab-count">{{ solicitudesPendientesCount }}</span>
       </button>
       <button class="psi-tab" [class.active]="psiTab === 'mis-pacientes'" (click)="psiTab = 'mis-pacientes'">
         Mis pacientes <span class="tab-count">{{ misPacientes.length }}</span>
@@ -82,12 +85,62 @@
             <td>{{ user.name ?? '—' }}</td>
             <td>{{ user.created_at | date:'dd/MM/yyyy' }}</td>
             <td>
-              <button class="btn-assign" (click)="asignarPaciente(user)">+ Asignar como paciente</button>
+              <ng-container *ngIf="solicitudAbiertaId !== user.id">
+                <button class="btn-assign" (click)="abrirFormSolicitud(user.id)">+ Enviar solicitud</button>
+              </ng-container>
+
+              <div *ngIf="solicitudAbiertaId === user.id" class="solicitud-form">
+                <textarea
+                  class="solicitud-textarea"
+                  [(ngModel)]="solicitudMensaje"
+                  placeholder="Explica al usuario por qué quieres ser su psicólogo…"
+                  rows="3"
+                ></textarea>
+                <div class="solicitud-form-actions">
+                  <button
+                    class="btn-send"
+                    [disabled]="!solicitudMensaje.trim() || enviandoSolicitud"
+                    (click)="enviarSolicitud(user)"
+                  >
+                    {{ enviandoSolicitud ? 'Enviando…' : 'Enviar' }}
+                  </button>
+                  <button class="btn-cancel" (click)="cerrarFormSolicitud()">Cancelar</button>
+                </div>
+              </div>
             </td>
           </tr>
         </tbody>
       </table>
-      <p *ngIf="sinAsignar.length === 0" class="empty">Todos los usuarios tienen psicólogo asignado.</p>
+      <p *ngIf="sinAsignar.length === 0" class="empty">No hay usuarios disponibles sin psicólogo asignado.</p>
+    </div>
+
+    <!-- Solicitudes enviadas -->
+    <div *ngIf="!loadingPsi && psiTab === 'solicitudes-enviadas'" class="table-wrapper">
+      <table class="users-table">
+        <thead>
+          <tr><th>Usuario</th><th>Mensaje enviado</th><th>Fecha</th><th>Estado</th></tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let sol of solicitudesEnviadas">
+            <td>
+              <span class="user-name-cell">{{ sol.user?.name ?? '—' }}</span>
+              <span class="user-email-cell">{{ sol.user?.email }}</span>
+            </td>
+            <td class="msg-cell">{{ sol.message }}</td>
+            <td>{{ sol.created_at | date:'dd/MM/yyyy' }}</td>
+            <td>
+              <span class="status-badge"
+                [class.status-pending]="sol.status === 'pending'"
+                [class.status-accepted]="sol.status === 'accepted'"
+                [class.status-rejected]="sol.status === 'rejected'"
+              >
+                {{ statusLabels[sol.status] }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <p *ngIf="solicitudesEnviadas.length === 0" class="empty">No has enviado ninguna solicitud aún.</p>
     </div>
 
     <!-- Mis pacientes -->

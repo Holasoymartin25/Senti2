@@ -398,6 +398,119 @@
   background: #6d28d9;
 }
 
+/* Formulario inline de solicitud */
+.solicitud-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 260px;
+}
+
+.solicitud-textarea {
+  width: 100%;
+  padding: 0.5rem 0.65rem;
+  border: 1.5px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  resize: vertical;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+
+.solicitud-textarea:focus {
+  outline: none;
+  border-color: #7c3aed;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+}
+
+.solicitud-form-actions {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.btn-send {
+  padding: 0.35rem 0.85rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  background: #7c3aed;
+  color: #fff;
+  transition: background 0.2s;
+}
+
+.btn-send:hover:not(:disabled) {
+  background: #6d28d9;
+}
+
+.btn-send:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-cancel {
+  padding: 0.35rem 0.75rem;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  background: #fff;
+  color: #6b7280;
+  transition: all 0.2s;
+}
+
+.btn-cancel:hover {
+  border-color: #9ca3af;
+  color: #374151;
+}
+
+/* Tabla solicitudes enviadas */
+.user-name-cell {
+  display: block;
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: #1a1a2e;
+}
+
+.user-email-cell {
+  display: block;
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.msg-cell {
+  max-width: 300px;
+  white-space: pre-wrap;
+  font-size: 0.8rem;
+  color: #374151;
+}
+
+/* Badges de estado */
+.status-badge {
+  display: inline-block;
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.status-pending {
+  background: #fef9c3;
+  color: #854d0e;
+}
+
+.status-accepted {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.status-rejected {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
 .btn-unassign {
   padding: 0.35rem 0.75rem;
   border: 1.5px solid #e5e7eb;
