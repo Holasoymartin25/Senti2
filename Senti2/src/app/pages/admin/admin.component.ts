@@ -36,6 +36,14 @@ interface PatientData {
     tests: TestResult[];
 }
 
+interface Solicitud {
+    id: number;
+    user: { id: number; name: string | null; email: string } | null;
+    message: string;
+    status: 'pending' | 'accepted' | 'rejected';
+    created_at: string;
+}
+
 const ROLE_LABELS: Record<string, string> = {
     user: 'Usuario',
     psicologo: 'Psicólogo',
@@ -43,6 +51,12 @@ const ROLE_LABELS: Record<string, string> = {
 };
 
 const ALL_ROLES = ['user', 'psicologo', 'admin'];
+
+const STATUS_LABELS: Record<string, string> = {
+    pending: 'Pendiente',
+    accepted: 'Aceptada',
+    rejected: 'Rechazada',
+};
 
 @Component({
     selector: 'app-admin',
@@ -60,14 +74,21 @@ export class AdminComponent implements OnInit {
     currentUserRole = '';
     readonly roleLabels = ROLE_LABELS;
     readonly allRoles = ALL_ROLES;
+    readonly statusLabels = STATUS_LABELS;
 
     // Vista psicólogo
-    psiTab: 'sin-asignar' | 'mis-pacientes' = 'sin-asignar';
+    psiTab: 'sin-asignar' | 'mis-pacientes' | 'solicitudes-enviadas' = 'sin-asignar';
     sinAsignar: AdminUser[] = [];
     misPacientes: AdminUser[] = [];
+    solicitudesEnviadas: Solicitud[] = [];
     loadingPsi = false;
     selectedPatient: PatientData | null = null;
     loadingPatient = false;
+
+    // Solicitud inline
+    solicitudAbiertaId: number | null = null;
+    solicitudMensaje = '';
+    enviandoSolicitud = false;
 
     private apiUrl = environment.apiUrl;
 
@@ -137,12 +158,14 @@ export class AdminComponent implements OnInit {
         this.loadingPsi = true;
         this.errorMsg = '';
         try {
-            const [sinRes, pacRes]: any[] = await Promise.all([
+            const [sinRes, pacRes, solRes]: any[] = await Promise.all([
                 firstValueFrom(this.http.get(`${this.apiUrl}/psicologo/sin-asignar`, { headers: this.getHeaders() })),
                 firstValueFrom(this.http.get(`${this.apiUrl}/psicologo/pacientes`, { headers: this.getHeaders() })),
+                firstValueFrom(this.http.get(`${this.apiUrl}/psicologo/solicitudes-enviadas`, { headers: this.getHeaders() })),
             ]);
             this.sinAsignar = sinRes.users ?? [];
             this.misPacientes = pacRes.pacientes ?? [];
+            this.solicitudesEnviadas = solRes.solicitudes ?? [];
         } catch (error: any) {
             this.errorMsg = error.error?.error || 'Error al cargar datos';
         } finally {
@@ -150,19 +173,37 @@ export class AdminComponent implements OnInit {
         }
     }
 
-    async asignarPaciente(user: AdminUser): Promise<void> {
+    abrirFormSolicitud(userId: number): void {
+        this.solicitudAbiertaId = userId;
+        this.solicitudMensaje = '';
+    }
+
+    cerrarFormSolicitud(): void {
+        this.solicitudAbiertaId = null;
+        this.solicitudMensaje = '';
+    }
+
+    async enviarSolicitud(user: AdminUser): Promise<void> {
+        if (!this.solicitudMensaje.trim()) return;
         this.errorMsg = '';
         this.successMsg = '';
+        this.enviandoSolicitud = true;
         try {
-            await firstValueFrom(
-                this.http.post(`${this.apiUrl}/psicologo/pacientes/${user.id}/asignar`, {}, { headers: this.getHeaders() })
+            const res: any = await firstValueFrom(
+                this.http.post(
+                    `${this.apiUrl}/psicologo/pacientes/${user.id}/solicitar`,
+                    { message: this.solicitudMensaje },
+                    { headers: this.getHeaders() }
+                )
             );
             this.sinAsignar = this.sinAsignar.filter(u => u.id !== user.id);
-            this.misPacientes.push(user);
-            this.successMsg = `${user.email} añadido como paciente`;
-            this.psiTab = 'mis-pacientes';
+            this.solicitudesEnviadas.unshift(res.solicitud);
+            this.successMsg = `Solicitud enviada a ${user.email}`;
+            this.cerrarFormSolicitud();
         } catch (error: any) {
-            this.errorMsg = error.error?.error || 'Error al asignar paciente';
+            this.errorMsg = error.error?.error || 'Error al enviar la solicitud';
+        } finally {
+            this.enviandoSolicitud = false;
         }
     }
 
@@ -203,5 +244,9 @@ export class AdminComponent implements OnInit {
 
     closePatient(): void {
         this.selectedPatient = null;
+    }
+
+    get solicitudesPendientesCount(): number {
+        return this.solicitudesEnviadas.filter(s => s.status === 'pending').length;
     }
 }
