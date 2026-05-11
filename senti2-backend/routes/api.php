@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\AdminController;
 use App\Http\Controllers\Api\AreaPersonalController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ContactController;
@@ -25,6 +26,9 @@ Route::prefix('v1')->group(function () {
         Route::post('/area-personal/test-results', [AreaPersonalController::class, 'storeTestResult']);
         Route::get('/area-personal/test-results', [AreaPersonalController::class, 'getTestResults']);
         Route::post('/area-personal/diary-entries', [AreaPersonalController::class, 'storeDiaryEntry']);
-        Route::get('/area-personal/diary-entries', [AreaPersonalController::class, 'getDiaryEntries']);
+        Route::get('/area-personal/diary-entries', [AreaPersonalController::class, 'getDiaryEntries']);        Route::middleware('role:admin')->prefix('admin')->group(function () {
+            Route::get('/users', [AdminController::class, 'index']);
+            Route::patch('/users/{id}/role', [AdminController::class, 'updateRole']);
+        });
     });
 });

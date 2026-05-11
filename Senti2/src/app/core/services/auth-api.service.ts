@@ -5,10 +5,11 @@ import { BehaviorSubject, Observable, firstValueFrom } from 'rxjs';
 import { shareReplay } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 
-interface User {
+export interface User {
     id: string;
     email?: string;
-    user_metadata?: any;
+    name?: string;
+    role?: string;
 }
 
 @Injectable({
