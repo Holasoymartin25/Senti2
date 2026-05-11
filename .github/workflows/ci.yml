@@ -26,12 +26,16 @@ jobs:
       - name: Install dependencies
         run: composer install --no-progress --prefer-dist
 
+      - name: Setup environment
+        run: |
+          cp .env.example .env
+          echo "APP_KEY=" >> /dev/null
+          php artisan key:generate
+          echo "DB_CONNECTION=sqlite" >> .env
+          echo "DB_DATABASE=:memory:" >> .env
+
       - name: Run tests
         run: php vendor/bin/pest tests/Unit tests/Feature --no-coverage
-        env:
-          APP_KEY: base64:0eKoXIs/XEoClneG9kz6J9ql69/6zCgjddbeHH+PV78=
-          DB_CONNECTION: sqlite
-          DB_DATABASE: ':memory:'
 
   frontend:
     name: Frontend (Angular)
