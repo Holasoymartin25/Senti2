@@ -8,13 +8,45 @@ terraform {
   }
 }
 
-variable "aws_region"       { type = string; default = "us-west-2" }
-variable "project_name"     { type = string; default = "senti2" }
-variable "instance_type"    { type = string; default = "t3.micro" }
-variable "key_name"         { type = string; default = "labsuser" }
-variable "ssh_allowed_cidr" { type = string; default = "0.0.0.0/0" }
-variable "github_repo_url"  { type = string; default = "https://github.com/Holasoymartin25/Senti2.git" }
-variable "github_branch"    { type = string; default = "main" }
+variable "aws_region" {
+  type    = string
+  default = "us-east-1"
+}
+
+variable "project_name" {
+  type    = string
+  default = "senti2"
+}
+
+variable "instance_type" {
+  type    = string
+  default = "t2.micro"
+}
+
+variable "key_name" {
+  type    = string
+  default = "vockey"
+}
+
+variable "ssh_allowed_cidr" {
+  type    = string
+  default = "0.0.0.0/0"
+}
+
+variable "github_repo_url" {
+  type    = string
+  default = "github.com/Holasoymartin25/Senti2.git"
+}
+
+variable "github_branch" {
+  type    = string
+  default = "main"
+}
+
+variable "github_token" {
+  type      = string
+  sensitive = true
+}
 
 provider "aws" {
   region = var.aws_region
@@ -86,7 +118,7 @@ resource "aws_instance" "app" {
     apt-get install -y docker.io docker-compose-plugin git
     systemctl enable docker
     systemctl start docker
-    git clone --depth 1 --branch ${var.github_branch} ${var.github_repo_url} /app
+    git clone --depth 1 --branch ${var.github_branch} https://${var.github_token}@${var.github_repo_url} /app
     cd /app/Senti2
     docker compose up -d --build
   EOF
