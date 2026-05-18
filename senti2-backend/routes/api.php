@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ContactController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\PsicologoController;
+use App\Http\Controllers\Api\CitasController;
 use App\Http\Controllers\Api\SolicitudController;
 
 Route::prefix('v1')->group(function () {
@@ -51,6 +52,11 @@ Route::prefix('v1')->group(function () {
             Route::post('/pacientes/{id}/solicitar', [PsicologoController::class, 'solicitar']);
             Route::get('/solicitudes-enviadas', [PsicologoController::class, 'getSolicitudes']);
             Route::delete('/pacientes/{id}/desasignar', [PsicologoController::class, 'desasignar']);
+
+            Route::get('/citas', [CitasController::class, 'index']);
+            Route::post('/citas', [CitasController::class, 'store']);
+            Route::patch('/citas/{id}', [CitasController::class, 'update']);
+            Route::delete('/citas/{id}', [CitasController::class, 'destroy']);
         });
     });
 });
