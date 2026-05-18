@@ -1,7 +1,9 @@
 FROM php:8.4-cli-alpine
 
-RUN apk add --no-cache sqlite sqlite-dev libzip-dev libxml2-dev bash icu-dev icu-libs \
-    && docker-php-ext-install pdo_sqlite zip xml bcmath intl sockets mbstring
+COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
+
+RUN apk add --no-cache sqlite bash \
+    && install-php-extensions pdo_sqlite zip xml bcmath intl sockets mbstring
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
