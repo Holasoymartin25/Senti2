@@ -1,0 +1,17 @@
+services:
+  backend:
+    build: ./senti2-backend
+    volumes:
+      - sqlite:/var/www/app/database
+    restart: unless-stopped
+
+  frontend:
+    build: ./Senti2
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  sqlite:
