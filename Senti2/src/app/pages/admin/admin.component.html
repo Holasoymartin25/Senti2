@@ -34,7 +34,7 @@
               <span class="role-badge"
                 [class.admin]="user.role === 'admin'"
                 [class.psicologo]="user.role === 'psicologo'">
-                {{ roleLabels[user.role] ?? user.role }}
+                {{ roleLabels[user.role] || user.role }}
               </span>
             </td>
             <td>{{ user.created_at | date:'dd/MM/yyyy' }}</td>
@@ -69,6 +69,9 @@
       </button>
       <button class="psi-tab" [class.active]="psiTab === 'mis-pacientes'" (click)="psiTab = 'mis-pacientes'">
         Mis pacientes <span class="tab-count">{{ misPacientes.length }}</span>
+      </button>
+      <button class="psi-tab" [class.active]="psiTab === 'citas'" (click)="psiTab = 'citas'">
+        Citas <span class="tab-count">{{ citas.length }}</span>
       </button>
     </div>
 
@@ -208,5 +211,115 @@
         </div>
       </div>
     </div>
+    <!-- ── CITAS ─────────────────────────────────────────── -->
+    <div *ngIf="!loadingPsi && psiTab === 'citas'" class="citas-section">
+
+      <!-- Cabecera con buscador y botón nueva cita -->
+      <div class="citas-header">
+        <input
+          class="citas-search"
+          type="text"
+          placeholder="Buscar por paciente…"
+          [(ngModel)]="filtroPacienteCita"
+        />
+        <button class="btn-new-cita" (click)="abrirFormNuevaCita()">+ Nueva cita</button>
+      </div>
+
+      <!-- Formulario crear / editar -->
+      <div *ngIf="mostrarFormCita" class="cita-form-card">
+        <h3 class="cita-form-title">{{ editandoCita ? 'Editar cita' : 'Nueva cita' }}</h3>
+        <div class="cita-form-grid">
+          <label class="cita-label">
+            Paciente
+            <select class="cita-input" [(ngModel)]="nuevaCita.paciente_id" [disabled]="!!editandoCita">
+              <option value="" disabled>Selecciona un paciente</option>
+              <option *ngFor="let p of misPacientes" [value]="p.id">
+                {{ p.name ?? p.email }}
+              </option>
+            </select>
+          </label>
+          <label class="cita-label">
+            Fecha y hora
+            <input class="cita-input" type="datetime-local" [(ngModel)]="nuevaCita.fecha_hora" />
+          </label>
+          <label class="cita-label">
+            Duración (min)
+            <input class="cita-input" type="number" min="15" max="240" step="15" [(ngModel)]="nuevaCita.duracion" />
+          </label>
+          <label class="cita-label">
+            Modalidad
+            <select class="cita-input" [(ngModel)]="nuevaCita.modalidad">
+              <option value="presencial">Presencial</option>
+              <option value="online">Online</option>
+            </select>
+          </label>
+          <label class="cita-label cita-label-full">
+            Notas
+            <textarea class="cita-input cita-textarea" rows="3" [(ngModel)]="nuevaCita.notas" placeholder="Notas opcionales…"></textarea>
+          </label>
+        </div>
+        <div class="cita-form-actions">
+          <button
+            class="btn-send"
+            [disabled]="!nuevaCita.paciente_id || !nuevaCita.fecha_hora || guardandoCita"
+            (click)="guardarCita()"
+          >
+            {{ guardandoCita ? 'Guardando…' : (editandoCita ? 'Guardar cambios' : 'Crear cita') }}
+          </button>
+          <button class="btn-cancel" (click)="cerrarFormCita()">Cancelar</button>
+        </div>
+      </div>
+
+      <!-- Tabla de citas -->
+      <div class="table-wrapper">
+        <table class="users-table" *ngIf="citasFiltradas.length > 0">
+          <thead>
+            <tr>
+              <th>Paciente</th>
+              <th>Fecha y hora</th>
+              <th>Duración</th>
+              <th>Modalidad</th>
+              <th>Estado</th>
+              <th>Notas</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let cita of citasFiltradas">
+              <td>
+                <span class="user-name-cell">{{ cita.paciente?.name ?? '—' }}</span>
+                <span class="user-email-cell">{{ cita.paciente?.email }}</span>
+              </td>
+              <td>{{ cita.fecha_hora | date:'dd/MM/yyyy HH:mm' }}</td>
+              <td>{{ cita.duracion }} min</td>
+              <td>
+                <span class="modalidad-badge" [class.online]="cita.modalidad === 'online'">
+                  {{ modalidadLabels[cita.modalidad] }}
+                </span>
+              </td>
+              <td>
+                <select
+                  class="estado-select"
+                  [ngModel]="cita.estado"
+                  (ngModelChange)="cambiarEstadoCita(cita, $event)"
+                  [class]="'estado-' + cita.estado"
+                >
+                  <option *ngFor="let e of estadosCita" [value]="e">{{ estadoCitaLabels[e] }}</option>
+                </select>
+              </td>
+              <td class="notas-cell">{{ cita.notas || '—' }}</td>
+              <td class="actions-cell">
+                <button class="btn-view" (click)="abrirFormEditarCita(cita)">Editar</button>
+                <button class="btn-unassign" (click)="eliminarCita(cita)">Eliminar</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <p *ngIf="citasFiltradas.length === 0" class="empty">
+          {{ filtroPacienteCita ? 'No hay citas que coincidan con la búsqueda.' : 'No hay citas registradas aún.' }}
+        </p>
+      </div>
+    </div>
+
   </ng-container>
 </div>
