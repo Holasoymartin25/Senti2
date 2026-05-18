@@ -115,7 +115,8 @@ resource "aws_instance" "app" {
   user_data = <<-EOF
     #!/bin/bash
     apt-get update -y
-    apt-get install -y docker.io docker-compose-plugin git
+    apt-get install -y git curl
+    curl -fsSL https://get.docker.com | sh
     systemctl enable docker
     systemctl start docker
     git clone --depth 1 --branch ${var.github_branch} https://${var.github_token}@${var.github_repo_url} /app
