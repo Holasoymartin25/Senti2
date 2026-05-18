@@ -1,6 +1,66 @@
+# Senti2 en AWS Academy — un solo archivo Terraform.
+# Ajusta las variables de abajo o crea terraform.tfvars (opcional).
+# También necesitas: user-data.sh.tpl y files/nginx-senti2.conf
+
+terraform {
+  required_version = ">= 1.5.0"
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
+  }
+}
+
+# --- Variables (cambia aquí o en terraform.tfvars) ---
+
+variable "aws_region" {
+  type    = string
+  default = "us-west-2"
+}
+
+variable "project_name" {
+  type    = string
+  default = "senti2"
+}
+
+variable "instance_type" {
+  type    = string
+  default = "t3.micro"
+}
+
+variable "key_name" {
+  type    = string
+  default = "labsuser"
+}
+
+variable "ssh_allowed_cidr" {
+  type    = string
+  default = "0.0.0.0/0"
+}
+
+variable "github_repo_url" {
+  type    = string
+  default = "https://github.com/Holasoymartin25/Senti2.git"
+}
+
+variable "github_branch" {
+  type    = string
+  default = "main"
+}
+
+variable "app_install_root" {
+  type    = string
+  default = "/var/www/senti2"
+}
+
+# --- Provider ---
+
 provider "aws" {
   region = var.aws_region
 }
+
+# --- Datos ---
 
 data "aws_vpc" "default" {
   default = true
@@ -20,6 +80,8 @@ data "aws_ami" "ubuntu" {
     values = ["hvm"]
   }
 }
+
+# --- Recursos ---
 
 resource "aws_security_group" "app" {
   name_prefix = "${var.project_name}-"
@@ -49,9 +111,7 @@ resource "aws_security_group" "app" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = {
-    Name = "${var.project_name}-sg"
-  }
+  tags = { Name = "${var.project_name}-sg" }
 }
 
 resource "aws_instance" "app" {
@@ -72,20 +132,29 @@ resource "aws_instance" "app" {
     volume_type = "gp3"
   }
 
-  tags = {
-    Name = "${var.project_name}-app"
-  }
+  tags = { Name = "${var.project_name}-app" }
 }
 
 resource "aws_eip" "app" {
   domain = "vpc"
-
-  tags = {
-    Name = "${var.project_name}-eip"
-  }
+  tags   = { Name = "${var.project_name}-eip" }
 }
 
 resource "aws_eip_association" "app" {
   instance_id   = aws_instance.app.id
   allocation_id = aws_eip.app.id
+}
+
+# --- Salidas ---
+
+output "app_url" {
+  value = "http://${aws_eip.app.public_ip}"
+}
+
+output "public_ip" {
+  value = aws_eip.app.public_ip
+}
+
+output "ssh_command" {
+  value = "ssh -i labsuser.pem ubuntu@${aws_eip.app.public_ip}"
 }
