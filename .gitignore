@@ -1,0 +1,11 @@
+labuser.pem
+*.pem
+DOCUMENTACION.md
+credentials.txt
+credentials
+
+# Terraform
+infra/.terraform/
+infra/.terraform.lock.hcl
+infra/*.tfstate*
+infra/terraform.tfvars
