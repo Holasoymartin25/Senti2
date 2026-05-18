@@ -39,9 +39,7 @@ export class AuthApiService {
             // Usuario en caché: carga inmediata; verificación en segundo plano
             this._currentUser.next(cached);
             this.initPromise = Promise.resolve();
-            this.verifyToken(token).then(user => {
-                if (!user) this.clearAuth();
-            });
+            this.verifyToken(token);
         } else {
             // Sin caché: esperar a que el backend confirme el token
             this.initPromise = this.verifyToken(token).then(() => {});
@@ -153,11 +151,11 @@ export class AuthApiService {
         this.router.navigate(['/inicio']);
     }
 
-    async verifyToken(token?: string): Promise<User | null> {
+    async verifyToken(token?: string): Promise<User | null | false> {
         const tokenToUse = token || this.getToken();
         
         if (!tokenToUse) {
-            return null;
+            return false;
         }
 
         try {
@@ -173,12 +171,14 @@ export class AuthApiService {
                 return response.user;
             }
 
-            return null;
+            return false;
         } catch (error: any) {
-            // Solo borrar sesión si el token es inválido (401). Red o 500 no deben borrar el token.
             if (error?.status === 401) {
+                // Token revocado o inválido: eliminar sesión definitivamente
                 this.clearAuth();
+                return false;
             }
+            // Error de red o servidor: conservar el token, el usuario puede seguir navegando
             return null;
         }
     }
