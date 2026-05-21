@@ -16,7 +16,8 @@ export const adminGuard: CanActivateFn = async (route, state) => {
   let user = authApi.getCurrentUserValue();
 
   if (!user) {
-    user = await authApi.verifyToken(token);
+    const result = await authApi.verifyToken(token);
+    user = result || null;
   }
 
   if (user?.role === 'admin' || user?.role === 'psicologo') {
