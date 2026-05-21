@@ -57,6 +57,12 @@ Route::prefix('v1')->group(function () {
             Route::post('/citas', [CitasController::class, 'store']);
             Route::patch('/citas/{id}', [CitasController::class, 'update']);
             Route::delete('/citas/{id}', [CitasController::class, 'destroy']);
+
+            //Mensajes entre psicólogo y paciente
+            Route::get('/messages/{otherUserId}',     [MessageController::class, 'index']);
+            Route::post('/messages',                   [MessageController::class, 'store']);
+            Route::patch('/messages/{senderId}/read',  [MessageController::class, 'markAsRead']);
+
         });
     });
 });
