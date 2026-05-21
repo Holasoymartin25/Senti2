@@ -44,6 +44,17 @@ interface Solicitud {
     created_at: string;
 }
 
+interface Cita {
+    id: number;
+    paciente: { id: number; name: string | null; email: string } | null;
+    fecha_hora: string;
+    duracion: number;
+    modalidad: 'presencial' | 'online';
+    estado: 'pendiente' | 'confirmada' | 'cancelada' | 'completada';
+    notas: string;
+    created_at: string;
+}
+
 const ROLE_LABELS: Record<string, string> = {
     user: 'Usuario',
     psicologo: 'Psicólogo',
@@ -56,6 +67,18 @@ const STATUS_LABELS: Record<string, string> = {
     pending: 'Pendiente',
     accepted: 'Aceptada',
     rejected: 'Rechazada',
+};
+
+const ESTADO_CITA_LABELS: Record<string, string> = {
+    pendiente:   'Pendiente',
+    confirmada:  'Confirmada',
+    cancelada:   'Cancelada',
+    completada:  'Completada',
+};
+
+const MODALIDAD_LABELS: Record<string, string> = {
+    presencial: 'Presencial',
+    online:     'Online',
 };
 
 @Component({
@@ -77,7 +100,7 @@ export class AdminComponent implements OnInit {
     readonly statusLabels = STATUS_LABELS;
 
     // Vista psicólogo
-    psiTab: 'sin-asignar' | 'mis-pacientes' | 'solicitudes-enviadas' = 'sin-asignar';
+    psiTab: 'sin-asignar' | 'mis-pacientes' | 'solicitudes-enviadas' | 'citas' = 'sin-asignar';
     sinAsignar: AdminUser[] = [];
     misPacientes: AdminUser[] = [];
     solicitudesEnviadas: Solicitud[] = [];
@@ -89,6 +112,24 @@ export class AdminComponent implements OnInit {
     solicitudAbiertaId: number | null = null;
     solicitudMensaje = '';
     enviandoSolicitud = false;
+
+    // Citas
+    citas: Cita[] = [];
+    loadingCitas = false;
+    mostrarFormCita = false;
+    editandoCita: Cita | null = null;
+    guardandoCita = false;
+    filtroPacienteCita = '';
+    nuevaCita = {
+        paciente_id: '',
+        fecha_hora: '',
+        duracion: 60,
+        modalidad: 'presencial' as 'presencial' | 'online',
+        notas: '',
+    };
+    readonly estadoCitaLabels = ESTADO_CITA_LABELS;
+    readonly modalidadLabels = MODALIDAD_LABELS;
+    readonly estadosCita = ['pendiente', 'confirmada', 'cancelada', 'completada'];
 
     private apiUrl = environment.apiUrl;
 
@@ -114,7 +155,7 @@ export class AdminComponent implements OnInit {
         });
     }
 
-    // ── ADMIN ──────────────────────────────────────────────
+    // ADMIN
 
     async loadUsers(): Promise<void> {
         this.loading = true;
@@ -158,14 +199,16 @@ export class AdminComponent implements OnInit {
         this.loadingPsi = true;
         this.errorMsg = '';
         try {
-            const [sinRes, pacRes, solRes]: any[] = await Promise.all([
+            const [sinRes, pacRes, solRes, citasRes]: any[] = await Promise.all([
                 firstValueFrom(this.http.get(`${this.apiUrl}/psicologo/sin-asignar`, { headers: this.getHeaders() })),
                 firstValueFrom(this.http.get(`${this.apiUrl}/psicologo/pacientes`, { headers: this.getHeaders() })),
                 firstValueFrom(this.http.get(`${this.apiUrl}/psicologo/solicitudes-enviadas`, { headers: this.getHeaders() })),
+                firstValueFrom(this.http.get(`${this.apiUrl}/psicologo/citas`, { headers: this.getHeaders() })),
             ]);
             this.sinAsignar = sinRes.users ?? [];
             this.misPacientes = pacRes.pacientes ?? [];
             this.solicitudesEnviadas = solRes.solicitudes ?? [];
+            this.citas = citasRes.citas ?? [];
         } catch (error: any) {
             this.errorMsg = error.error?.error || 'Error al cargar datos';
         } finally {
@@ -248,5 +291,119 @@ export class AdminComponent implements OnInit {
 
     get solicitudesPendientesCount(): number {
         return this.solicitudesEnviadas.filter(s => s.status === 'pending').length;
+    }
+
+    // CITAS
+    async loadCitas(): Promise<void> {
+        this.loadingCitas = true;
+        this.errorMsg = '';
+        try {
+            const res: any = await firstValueFrom(
+                this.http.get(`${this.apiUrl}/psicologo/citas`, { headers: this.getHeaders() })
+            );
+            this.citas = res.citas ?? [];
+        } catch (error: any) {
+            this.errorMsg = error.error?.error || 'Error al cargar las citas';
+        } finally {
+            this.loadingCitas = false;
+        }
+    }
+
+    abrirFormNuevaCita(): void {
+        this.editandoCita = null;
+        this.nuevaCita = { paciente_id: '', fecha_hora: '', duracion: 60, modalidad: 'presencial', notas: '' };
+        this.mostrarFormCita = true;
+    }
+
+    abrirFormEditarCita(cita: Cita): void {
+        this.editandoCita = cita;
+        this.nuevaCita = {
+            paciente_id: String(cita.paciente?.id ?? ''),
+            fecha_hora: cita.fecha_hora,
+            duracion: cita.duracion,
+            modalidad: cita.modalidad,
+            notas: cita.notas,
+        };
+        this.mostrarFormCita = true;
+    }
+
+    cerrarFormCita(): void {
+        this.mostrarFormCita = false;
+        this.editandoCita = null;
+    }
+
+    async guardarCita(): Promise<void> {
+        if (!this.nuevaCita.paciente_id || !this.nuevaCita.fecha_hora) return;
+        this.errorMsg = '';
+        this.successMsg = '';
+        this.guardandoCita = true;
+        try {
+            if (this.editandoCita) {
+                const res: any = await firstValueFrom(
+                    this.http.patch(
+                        `${this.apiUrl}/psicologo/citas/${this.editandoCita.id}`,
+                        { ...this.nuevaCita, paciente_id: undefined },
+                        { headers: this.getHeaders() }
+                    )
+                );
+                const idx = this.citas.findIndex(c => c.id === this.editandoCita!.id);
+                if (idx !== -1) this.citas[idx] = res.cita;
+                this.successMsg = 'Cita actualizada';
+            } else {
+                const res: any = await firstValueFrom(
+                    this.http.post(
+                        `${this.apiUrl}/psicologo/citas`,
+                        { ...this.nuevaCita, paciente_id: Number(this.nuevaCita.paciente_id) },
+                        { headers: this.getHeaders() }
+                    )
+                );
+                this.citas.unshift(res.cita);
+                this.successMsg = 'Cita creada correctamente';
+            }
+            this.cerrarFormCita();
+        } catch (error: any) {
+            this.errorMsg = error.error?.error || 'Error al guardar la cita';
+        } finally {
+            this.guardandoCita = false;
+        }
+    }
+
+    async cambiarEstadoCita(cita: Cita, nuevoEstado: string): Promise<void> {
+        this.errorMsg = '';
+        try {
+            const res: any = await firstValueFrom(
+                this.http.patch(
+                    `${this.apiUrl}/psicologo/citas/${cita.id}`,
+                    { estado: nuevoEstado },
+                    { headers: this.getHeaders() }
+                )
+            );
+            const idx = this.citas.findIndex(c => c.id === cita.id);
+            if (idx !== -1) this.citas[idx] = res.cita;
+        } catch (error: any) {
+            this.errorMsg = error.error?.error || 'Error al actualizar el estado';
+        }
+    }
+
+    async eliminarCita(cita: Cita): Promise<void> {
+        this.errorMsg = '';
+        try {
+            await firstValueFrom(
+                this.http.delete(`${this.apiUrl}/psicologo/citas/${cita.id}`, { headers: this.getHeaders() })
+            );
+            this.citas = this.citas.filter(c => c.id !== cita.id);
+            this.successMsg = 'Cita eliminada';
+        } catch (error: any) {
+            this.errorMsg = error.error?.error || 'Error al eliminar la cita';
+        }
+    }
+
+    get citasFiltradas(): Cita[] {
+        const filtro = this.filtroPacienteCita.toLowerCase();
+        if (!filtro) return this.citas;
+        return this.citas.filter(c =>
+            c.paciente?.name?.toLowerCase().includes(filtro) ||
+            c.paciente?.email?.toLowerCase().includes(filtro)
+        );
     }
 }
