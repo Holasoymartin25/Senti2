@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\PsicologoController;
 use App\Http\Controllers\Api\CitasController;
 use App\Http\Controllers\Api\SolicitudController;
+use App\Http\Controllers\Api\MessageController;
 
 Route::prefix('v1')->group(function () {
     Route::post('/contact', [ContactController::class, 'store']);
@@ -36,6 +37,11 @@ Route::prefix('v1')->group(function () {
         Route::post('/solicitudes/{id}/aceptar', [SolicitudController::class, 'aceptar']);
         Route::post('/solicitudes/{id}/rechazar', [SolicitudController::class, 'rechazar']);
 
+        // Mensajes — accesible por cualquier usuario autenticado
+        Route::get('/messages/{otherUserId}',    [MessageController::class, 'index']);
+        Route::post('/messages',                  [MessageController::class, 'store']);
+        Route::patch('/messages/{senderId}/read', [MessageController::class, 'markAsRead']);
+
         Route::middleware('role:admin,psicologo')->prefix('admin')->group(function () {
             Route::get('/users', [AdminController::class, 'index']);
             Route::get('/users/{id}/data', [AdminController::class, 'getUserData']);
@@ -57,12 +63,6 @@ Route::prefix('v1')->group(function () {
             Route::post('/citas', [CitasController::class, 'store']);
             Route::patch('/citas/{id}', [CitasController::class, 'update']);
             Route::delete('/citas/{id}', [CitasController::class, 'destroy']);
-
-            //Mensajes entre psicólogo y paciente
-            Route::get('/messages/{otherUserId}',     [MessageController::class, 'index']);
-            Route::post('/messages',                   [MessageController::class, 'store']);
-            Route::patch('/messages/{senderId}/read',  [MessageController::class, 'markAsRead']);
-
         });
     });
 });
