@@ -38,9 +38,11 @@ Route::prefix('v1')->group(function () {
         Route::post('/solicitudes/{id}/rechazar', [SolicitudController::class, 'rechazar']);
 
         // Mensajes — accesible por cualquier usuario autenticado
+        Route::get('/messages/unread/count',      [MessageController::class, 'getUnreadCount']);
         Route::get('/messages/{otherUserId}',    [MessageController::class, 'index']);
         Route::post('/messages',                  [MessageController::class, 'store']);
         Route::patch('/messages/{senderId}/read', [MessageController::class, 'markAsRead']);
+        Route::get('/mi-psicologo',               [AuthController::class, 'miPsicologo']);
 
         Route::middleware('role:admin,psicologo')->prefix('admin')->group(function () {
             Route::get('/users', [AdminController::class, 'index']);
@@ -63,8 +65,6 @@ Route::prefix('v1')->group(function () {
             Route::post('/citas', [CitasController::class, 'store']);
             Route::patch('/citas/{id}', [CitasController::class, 'update']);
             Route::delete('/citas/{id}', [CitasController::class, 'destroy']);
-
-            Route::get('/mi-psicologo', [App\Http\Controllers\Api\AuthController::class, 'miPsicologo']);
         });
     });
 });

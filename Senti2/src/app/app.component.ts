@@ -5,6 +5,7 @@ import { FooterComponent } from './components/footer/footer.component';
 import { CommonModule } from '@angular/common';
 import { filter } from 'rxjs/operators';
 import { NotificationService } from './core/services/notification.service';
+import { MessageService } from './core/services/message.service';
 
 @Component({
   selector: 'app-root',
@@ -24,7 +25,8 @@ export class AppComponent implements OnInit {
   constructor(
     private router: Router,
     public notificationService: NotificationService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private messageService: MessageService
   ) {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)

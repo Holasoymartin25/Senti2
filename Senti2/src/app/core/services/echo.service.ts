@@ -10,6 +10,11 @@ export class EchoService {
   private echo: Echo<any> | null = null;
 
   init(token: string) {
+    if (this.echo) {
+      try {
+        this.echo.disconnect();
+      } catch (_) {}
+    }
     this.echo = new Echo({
       broadcaster: 'reverb',
       key: environment.reverb.key,
@@ -36,6 +41,18 @@ export class EchoService {
   leaveChat(id1: number, id2: number) {
     if (!this.echo) return;
     const channelName = `chat.${Math.min(id1, id2)}.${Math.max(id1, id2)}`;
+    this.echo.leave(channelName);
+  }
+
+  listenToUserNotifications(userId: number, callback: (event: any) => void) {
+    if (!this.echo) return;
+    const channelName = `App.Models.User.${userId}`;
+    this.echo.private(channelName).listen('MessageSent', callback);
+  }
+
+  leaveUserNotifications(userId: number) {
+    if (!this.echo) return;
+    const channelName = `App.Models.User.${userId}`;
     this.echo.leave(channelName);
   }
 

@@ -22,6 +22,7 @@ class MessageSent implements ShouldBroadcast
         $ids = collect([$this->message->sender_id, $this->message->receiver_id])->sort()->values();
         return [
             new PrivateChannel("chat.{$ids[0]}.{$ids[1]}"),
+            new PrivateChannel("App.Models.User.{$this->message->receiver_id}"),
         ];
     }
 

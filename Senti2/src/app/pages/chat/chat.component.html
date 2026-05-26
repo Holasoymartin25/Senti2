@@ -1,31 +1,133 @@
-<div class="chat-container">
-
-  <div class="chat-header">
-    <h3>Chat</h3>
-  </div>
-
-  <div class="messages-container" #messagesContainer>
-    <div *ngIf="loading" class="loading">Cargando mensajes...</div>
-
-    <div
-      *ngFor="let msg of messages"
-      class="message"
-      [ngClass]="msg.sender_id === currentUserId ? 'message-own' : 'message-other'"
-    >
-      <span class="message-sender">{{ msg.sender.name }}</span>
-      <p class="message-content">{{ msg.content }}</p>
-      <span class="message-time">{{ msg.created_at | date:'HH:mm' }}</span>
+<div class="chat-page-container">
+  <div class="chat-window card">
+    
+    <!-- Chat Header -->
+    <div class="chat-header">
+      <button class="btn-back" (click)="goBack()" title="Volver al panel">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        <span class="btn-back-text">Volver</span>
+      </button>
+      
+      <div class="partner-profile" *ngIf="!loading || partnerName !== 'Cargando...'">
+        <div class="partner-avatar">
+          {{ getInitials(partnerName) }}
+        </div>
+        <div class="partner-details">
+          <div class="partner-name">{{ partnerName }}</div>
+          <div class="partner-meta">
+            <svg class="meta-icon" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+            <span class="partner-role">{{ partnerRole }}</span>
+            <span class="separator">•</span>
+            <span class="status-dot"></span>
+            <span class="status-text">Activo</span>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
 
-  <div class="chat-input">
-    <input
-      type="text"
-      [(ngModel)]="newMessage"
-      placeholder="Escribe un mensaje..."
-      (keyup.enter)="send()"
-    />
-    <button (click)="send()">Enviar</button>
-  </div>
+    <!-- Messages Container -->
+    <div class="messages-container" #messagesContainer>
+      
+      <!-- Skeleton Loading State -->
+      <div class="skeleton-wrapper" *ngIf="loading">
+        <div class="skeleton-bubble left animate-pulse">
+          <div class="skeleton-line short"></div>
+          <div class="skeleton-line long"></div>
+        </div>
+        <div class="skeleton-bubble right animate-pulse">
+          <div class="skeleton-line long"></div>
+          <div class="skeleton-line medium"></div>
+        </div>
+        <div class="skeleton-bubble left animate-pulse">
+          <div class="skeleton-line medium"></div>
+        </div>
+        <div class="skeleton-bubble right animate-pulse">
+          <div class="skeleton-line short"></div>
+        </div>
+      </div>
 
+      <!-- Empty State -->
+      <div class="empty-state animate-fade-in" *ngIf="!loading && groupedMessages.length === 0">
+        <div class="empty-icon-box">
+          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+          </svg>
+        </div>
+        <h4>Tu espacio de confianza</h4>
+        <p>Escribe tu primer mensaje a continuación para iniciar el diálogo. Todo lo que hables aquí es confidencial y seguro.</p>
+      </div>
+
+      <!-- Grouped Messages -->
+      <div class="messages-list" *ngIf="!loading && groupedMessages.length > 0">
+        <div *ngFor="let group of groupedMessages" class="message-group">
+          
+          <!-- Date Separator -->
+          <div class="date-separator">
+            <span>{{ group.date }}</span>
+          </div>
+
+          <!-- Individual Messages -->
+          <div
+            *ngFor="let msg of group.messages"
+            class="message-item"
+            [ngClass]="msg.sender_id === currentUserId ? 'message-own' : 'message-other'"
+          >
+            <div class="message-bubble">
+              <p class="message-content">{{ msg.content }}</p>
+              <div class="message-meta">
+                <span class="message-time">{{ msg.created_at | date:'HH:mm' }}</span>
+                
+                <!-- Status Checkmark for Own Messages -->
+                <span class="message-status" *ngIf="msg.sender_id === currentUserId">
+                  <!-- Unread: Single Gray Check -->
+                  <svg *ngIf="!msg.read" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                  <!-- Read: Double Green Checks -->
+                  <svg *ngIf="msg.read" class="read-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17 5L9.5 12.5L6 9" />
+                    <path d="M22 5L14.5 12.5" />
+                  </svg>
+                </span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Chat Input Area -->
+    <div class="chat-input-area" *ngIf="!loading || partnerName !== 'Cargando...'">
+      <div class="input-wrapper">
+        <input
+          type="text"
+          [(ngModel)]="newMessage"
+          [placeholder]="'Escribe un mensaje para ' + partnerName + '...'"
+          (keyup.enter)="send()"
+          [disabled]="loading"
+          class="chat-input-field"
+        />
+        <button 
+          (click)="send()" 
+          [disabled]="!newMessage.trim() || loading" 
+          class="btn-send"
+          aria-label="Enviar mensaje"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+  </div>
 </div>

@@ -71,10 +71,18 @@ class PsicologoController extends Controller
     /** Pacientes asignados al psicólogo autenticado */
     public function getPacientes(Request $request): JsonResponse
     {
-        $pacientes = User::where('psicologo_id', $request->user()->id)
+        $psicologoId = $request->user()->id;
+        $pacientes = User::where('psicologo_id', $psicologoId)
             ->orderBy('id')
             ->get()
-            ->map(fn($u) => $this->formatUser($u));
+            ->map(function($u) use ($psicologoId) {
+                $formatted = $this->formatUser($u);
+                $formatted['unread_count'] = \App\Models\Message::where('sender_id', $u->id)
+                    ->where('receiver_id', $psicologoId)
+                    ->where('read', false)
+                    ->count();
+                return $formatted;
+            });
 
         return response()->json(['pacientes' => $pacientes]);
     }

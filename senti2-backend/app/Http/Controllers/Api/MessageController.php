@@ -70,4 +70,17 @@ class MessageController extends Controller
 
         return response()->json(['message' => 'Mensajes marcados como leídos']);
     }
+
+    /**
+     * Obtener el total de mensajes no leídos del usuario autenticado
+     */
+    public function getUnreadCount(Request $request)
+    {
+        $userId = Auth::id();
+        $count = Message::where('receiver_id', $userId)
+                        ->where('read', false)
+                        ->count();
+
+        return response()->json(['unread_count' => $count]);
+    }
 }
