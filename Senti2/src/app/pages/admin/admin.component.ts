@@ -5,6 +5,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { AuthApiService } from '../../core/services/auth-api.service';
 import { environment } from '../../../environments/environment';
+import { RouterModule } from '@angular/router';
 
 interface AdminUser {
     id: number;
@@ -84,7 +85,7 @@ const MODALIDAD_LABELS: Record<string, string> = {
 @Component({
     selector: 'app-admin',
     standalone: true,
-    imports: [CommonModule, FormsModule],
+    imports: [CommonModule, FormsModule, RouterModule],
     templateUrl: './admin.component.html',
     styleUrls: ['./admin.component.css']
 })

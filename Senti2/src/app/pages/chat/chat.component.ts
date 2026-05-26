@@ -31,9 +31,9 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.otherUserId = Number(this.route.snapshot.paramMap.get('userId'));
-    const user = this.authService.getCurrentUser();
-    this.currentUserId = user.id;
-
+    const user = this.authService.getCurrentUserValue();
+    this.currentUserId = Number(user?.id);
+    
     const token = localStorage.getItem('token') || '';
     this.echoService.init(token);
 

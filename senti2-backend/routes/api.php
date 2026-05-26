@@ -63,6 +63,8 @@ Route::prefix('v1')->group(function () {
             Route::post('/citas', [CitasController::class, 'store']);
             Route::patch('/citas/{id}', [CitasController::class, 'update']);
             Route::delete('/citas/{id}', [CitasController::class, 'destroy']);
+
+            Route::get('/mi-psicologo', [App\Http\Controllers\Api\AuthController::class, 'miPsicologo']);
         });
     });
 });

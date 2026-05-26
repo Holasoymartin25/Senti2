@@ -116,4 +116,20 @@ class AuthController extends Controller
             'role'  => $user->role ?? 'user',
         ];
     }
+
+    public function miPsicologo(Request $request): \Illuminate\Http\JsonResponse
+{
+    $user = $request->user();
+    if (!$user->psicologo_id) {
+        return response()->json(['psicologo' => null]);
+    }
+    $psicologo = \App\Models\User::find($user->psicologo_id);
+    return response()->json([
+        'psicologo' => [
+            'id'    => $psicologo->id,
+            'name'  => $psicologo->name,
+            'email' => $psicologo->email,
+        ]
+    ]);
+}
 }

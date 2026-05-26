@@ -672,3 +672,18 @@
   font-size: 0.8rem;
   color: #6b7280;
 }
+
+.btn-chat {
+  padding: 6px 14px;
+  background: #6c63ff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: background 0.2s;
+}
+
+.btn-chat:hover {
+  background: #574fd6;
+}

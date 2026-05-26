@@ -14,11 +14,11 @@
         <span class="area-card-link">Entrar</span>
       </a>
 
-      <a routerLink="/area-personal/chat-apoyo" class="area-card">
-        <h2>Chat de Apoyo</h2>
-        <p>Sistema de chat seguro para conectar con profesionales de salud mental.</p>
-        <span class="area-card-link">Entrar</span>
-      </a>
+      <div class="area-card" [class.area-card--disabled]="!psicologoId" (click)="irAlChat()">
+      <h2>Chat con mi Psicólogo</h2>
+      <p>{{ psicologoId ? 'Conecta con tu psicólogo asignado.' : 'Aún no tienes psicólogo asignado.' }}</p>
+      <span class="area-card-link">{{ psicologoId ? 'Entrar' : 'No disponible' }}</span>
+      </div>
 
       <a routerLink="/area-personal/estadisticas" class="area-card">
         <h2>Estadísticas y Seguimiento</h2>
