@@ -1,0 +1,31 @@
+<div class="chat-container">
+
+  <div class="chat-header">
+    <h3>Chat</h3>
+  </div>
+
+  <div class="messages-container" #messagesContainer>
+    <div *ngIf="loading" class="loading">Cargando mensajes...</div>
+
+    <div
+      *ngFor="let msg of messages"
+      class="message"
+      [ngClass]="msg.sender_id === currentUserId ? 'message-own' : 'message-other'"
+    >
+      <span class="message-sender">{{ msg.sender.name }}</span>
+      <p class="message-content">{{ msg.content }}</p>
+      <span class="message-time">{{ msg.created_at | date:'HH:mm' }}</span>
+    </div>
+  </div>
+
+  <div class="chat-input">
+    <input
+      type="text"
+      [(ngModel)]="newMessage"
+      placeholder="Escribe un mensaje..."
+      (keyup.enter)="send()"
+    />
+    <button (click)="send()">Enviar</button>
+  </div>
+
+</div>
