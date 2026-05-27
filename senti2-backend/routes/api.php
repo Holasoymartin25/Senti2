@@ -24,7 +24,6 @@ Route::prefix('v1')->group(function () {
         Route::get('/auth/user', [AuthController::class, 'getCurrentUser']);
 
         Route::get('/profile', [ProfileController::class, 'show']);
-        Route::put('/profile', [ProfileController::class, 'update']);
         Route::patch('/profile', [ProfileController::class, 'update']);
 
         Route::post('/area-personal/test-results', [AreaPersonalController::class, 'storeTestResult']);
