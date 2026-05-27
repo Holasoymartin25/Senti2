@@ -826,3 +826,42 @@
   from { transform: scale(0); opacity: 0; }
   to { transform: scale(1.05); opacity: 1; }
 }
+
+/* Cabecera de gestión de usuarios */
+.admin-users-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.admin-users-count {
+  font-size: 0.875rem;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+/* Confirmación de eliminación inline */
+.confirm-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #b91c1c;
+  margin-right: 0.25rem;
+}
+
+.btn-cancel-sm {
+  padding: 0.3rem 0.6rem;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  background: #fff;
+  color: #6b7280;
+  transition: all 0.2s;
+}
+
+.btn-cancel-sm:hover {
+  border-color: #9ca3af;
+  color: #374151;
+}

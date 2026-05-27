@@ -1,23 +1,38 @@
 name: Deploy
 
 on:
-  push:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
     branches: [main]
   workflow_dispatch:
 
 jobs:
-  deploy-frontend:
-    name: Deploy Frontend (Vercel)
+  deploy-aws:
+    name: Deploy AWS (EC2 + Docker)
     runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    env:
+      GH_DEPLOY_TOKEN: ${{ secrets.GH_DEPLOY_TOKEN }}
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Install Vercel CLI
-        run: npm install -g vercel@latest
-
-      - name: Deploy to Vercel
-        env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROYECT_ID }}
-        run: vercel --prod --token=$VERCEL_TOKEN
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.2.2
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          envs: GH_DEPLOY_TOKEN
+          script: |
+            set -e
+            sudo git config --global --add safe.directory /app
+            cd /app
+            if [ -n "$GH_DEPLOY_TOKEN" ]; then
+              sudo git remote set-url origin "https://x-access-token:${GH_DEPLOY_TOKEN}@github.com/Holasoymartin25/Senti2.git"
+            fi
+            sudo git fetch origin
+            sudo git reset --hard origin/main
+            cd /app/Senti2
+            sudo docker compose down --remove-orphans || true
+            sudo docker compose up -d --build
+            sudo docker compose ps
+            curl -fsI http://localhost | head -1

@@ -13,7 +13,49 @@
   <ng-container *ngIf="currentUserRole === 'admin'">
     <div *ngIf="loading" class="loading">Cargando usuarios…</div>
 
-    <div *ngIf="!loading" class="table-wrapper">
+    <div *ngIf="!loading">
+
+      <div class="admin-users-header">
+        <span class="admin-users-count">{{ users.length }} usuario{{ users.length !== 1 ? 's' : '' }}</span>
+        <button class="btn-new-cita" (click)="abrirFormNuevoUsuario()">+ Crear usuario</button>
+      </div>
+
+      <div *ngIf="mostrarFormUsuario" class="cita-form-card">
+        <h3 class="cita-form-title">{{ editandoUsuario ? 'Editar usuario' : 'Nuevo usuario' }}</h3>
+        <div class="cita-form-grid">
+          <label class="cita-label">
+            Nombre
+            <input class="cita-input" type="text" [(ngModel)]="nuevoUsuario.name" placeholder="Nombre (opcional)" />
+          </label>
+          <label class="cita-label">
+            Email
+            <input class="cita-input" type="email" [(ngModel)]="nuevoUsuario.email" placeholder="correo@ejemplo.com" />
+          </label>
+          <label class="cita-label">
+            {{ editandoUsuario ? 'Nueva contraseña (vacío para no cambiar)' : 'Contraseña' }}
+            <input class="cita-input" type="password" [(ngModel)]="nuevoUsuario.password"
+              [placeholder]="editandoUsuario ? 'Nueva contraseña…' : 'Mínimo 8 caracteres'" />
+          </label>
+          <label class="cita-label">
+            Rol
+            <select class="cita-input" [(ngModel)]="nuevoUsuario.role">
+              <option *ngFor="let r of allRoles" [value]="r">{{ roleLabels[r] }}</option>
+            </select>
+          </label>
+        </div>
+        <div class="cita-form-actions">
+          <button
+            class="btn-send"
+            [disabled]="!nuevoUsuario.email || (!editandoUsuario && !nuevoUsuario.password) || guardandoUsuario"
+            (click)="guardarUsuario()"
+          >
+            {{ guardandoUsuario ? 'Guardando…' : (editandoUsuario ? 'Guardar cambios' : 'Crear usuario') }}
+          </button>
+          <button class="btn-cancel" (click)="cerrarFormUsuario()">Cancelar</button>
+        </div>
+      </div>
+
+      <div class="table-wrapper">
       <table class="users-table">
         <thead>
           <tr>
@@ -22,7 +64,7 @@
             <th>Nombre</th>
             <th>Rol</th>
             <th>Miembro desde</th>
-            <th>Acción</th>
+            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -38,7 +80,7 @@
               </span>
             </td>
             <td>{{ user.created_at | date:'dd/MM/yyyy' }}</td>
-            <td>
+            <td class="actions-cell">
               <select
                 class="role-select"
                 [ngModel]="user.role"
@@ -48,11 +90,21 @@
                   {{ roleLabels[r] }}
                 </option>
               </select>
+              <button class="btn-view" (click)="abrirFormEditarUsuario(user)">Editar</button>
+              <ng-container *ngIf="confirmandoEliminar !== user.id">
+                <button class="btn-unassign" (click)="pedirConfirmacionEliminar(user.id)">Eliminar</button>
+              </ng-container>
+              <ng-container *ngIf="confirmandoEliminar === user.id">
+                <span class="confirm-label">¿Confirmar?</span>
+                <button class="btn-unassign" (click)="eliminarUsuario(user)">Sí</button>
+                <button class="btn-cancel-sm" (click)="cancelarEliminar()">No</button>
+              </ng-container>
             </td>
           </tr>
         </tbody>
       </table>
       <p *ngIf="users.length === 0" class="empty">No hay usuarios registrados.</p>
+    </div>
     </div>
   </ng-container>
 

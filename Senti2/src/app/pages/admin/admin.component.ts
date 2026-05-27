@@ -17,6 +17,13 @@ interface AdminUser {
     unread_count?: number;
 }
 
+interface UserForm {
+    name: string;
+    email: string;
+    password: string;
+    role: string;
+}
+
 interface DiaryEntry {
     id: number;
     date: string;
@@ -102,6 +109,13 @@ export class AdminComponent implements OnInit, OnDestroy {
     readonly roleLabels = ROLE_LABELS;
     readonly allRoles = ALL_ROLES;
     readonly statusLabels = STATUS_LABELS;
+
+    // CRUD usuarios
+    mostrarFormUsuario = false;
+    editandoUsuario: AdminUser | null = null;
+    guardandoUsuario = false;
+    nuevoUsuario: UserForm = { name: '', email: '', password: '', role: 'user' };
+    confirmandoEliminar: number | null = null;
 
     // Vista psicólogo
     psiTab: 'sin-asignar' | 'mis-pacientes' | 'solicitudes-enviadas' | 'citas' = 'sin-asignar';
@@ -211,6 +225,90 @@ export class AdminComponent implements OnInit, OnDestroy {
         } catch (error: any) {
             user.role = previousRole;
             this.errorMsg = error.error?.error || 'Error al cambiar el rol';
+        }
+    }
+
+    abrirFormNuevoUsuario(): void {
+        this.editandoUsuario = null;
+        this.nuevoUsuario = { name: '', email: '', password: '', role: 'user' };
+        this.mostrarFormUsuario = true;
+        this.confirmandoEliminar = null;
+    }
+
+    abrirFormEditarUsuario(user: AdminUser): void {
+        this.editandoUsuario = user;
+        this.nuevoUsuario = { name: user.name ?? '', email: user.email, password: '', role: user.role };
+        this.mostrarFormUsuario = true;
+        this.confirmandoEliminar = null;
+    }
+
+    cerrarFormUsuario(): void {
+        this.mostrarFormUsuario = false;
+        this.editandoUsuario = null;
+    }
+
+    async guardarUsuario(): Promise<void> {
+        if (!this.nuevoUsuario.email) return;
+        this.errorMsg = '';
+        this.successMsg = '';
+        this.guardandoUsuario = true;
+        try {
+            if (this.editandoUsuario) {
+                const payload: any = {
+                    name:  this.nuevoUsuario.name || null,
+                    email: this.nuevoUsuario.email,
+                    role:  this.nuevoUsuario.role,
+                };
+                if (this.nuevoUsuario.password) payload.password = this.nuevoUsuario.password;
+                const res: any = await firstValueFrom(
+                    this.http.put(`${this.apiUrl}/admin/users/${this.editandoUsuario.id}`, payload, { headers: this.getHeaders() })
+                );
+                const idx = this.users.findIndex(u => u.id === this.editandoUsuario!.id);
+                if (idx !== -1) this.users[idx] = res.user;
+                this.successMsg = `Usuario ${res.user.email} actualizado`;
+            } else {
+                if (!this.nuevoUsuario.password) return;
+                const res: any = await firstValueFrom(
+                    this.http.post(`${this.apiUrl}/admin/users`, {
+                        name:     this.nuevoUsuario.name || null,
+                        email:    this.nuevoUsuario.email,
+                        password: this.nuevoUsuario.password,
+                        role:     this.nuevoUsuario.role,
+                    }, { headers: this.getHeaders() })
+                );
+                this.users.push(res.user);
+                this.successMsg = `Usuario ${res.user.email} creado correctamente`;
+            }
+            this.cerrarFormUsuario();
+        } catch (error: any) {
+            this.errorMsg = error.error?.error
+                ? JSON.stringify(error.error.error)
+                : 'Error al guardar el usuario';
+        } finally {
+            this.guardandoUsuario = false;
+        }
+    }
+
+    pedirConfirmacionEliminar(id: number): void {
+        this.confirmandoEliminar = id;
+    }
+
+    cancelarEliminar(): void {
+        this.confirmandoEliminar = null;
+    }
+
+    async eliminarUsuario(user: AdminUser): Promise<void> {
+        this.errorMsg = '';
+        this.successMsg = '';
+        try {
+            await firstValueFrom(
+                this.http.delete(`${this.apiUrl}/admin/users/${user.id}`, { headers: this.getHeaders() })
+            );
+            this.users = this.users.filter(u => u.id !== user.id);
+            this.successMsg = `Usuario ${user.email} eliminado`;
+            this.confirmandoEliminar = null;
+        } catch (error: any) {
+            this.errorMsg = error.error?.error || 'Error al eliminar el usuario';
         }
     }
 
