@@ -14,6 +14,8 @@ jobs:
     if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
     env:
       GH_DEPLOY_TOKEN: ${{ secrets.GH_DEPLOY_TOKEN }}
+      APP_KEY: ${{ secrets.APP_KEY }}
+      NEON_DATABASE_URL: ${{ secrets.NEON_DATABASE_URL }}
     steps:
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.2.2
@@ -21,7 +23,7 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
-          envs: GH_DEPLOY_TOKEN
+          envs: GH_DEPLOY_TOKEN,APP_KEY,NEON_DATABASE_URL
           script: |
             set -e
             sudo git config --global --add safe.directory /app
@@ -32,6 +34,24 @@ jobs:
             sudo git fetch origin
             sudo git reset --hard origin/main
             cd /app/Senti2
+            EC2_HOST="${{ secrets.EC2_HOST }}"
+            {
+              echo "APP_NAME=Senti2"
+              echo "APP_ENV=production"
+              echo "APP_KEY=${APP_KEY}"
+              echo "APP_DEBUG=false"
+              echo "APP_URL=http://${EC2_HOST}"
+              echo "APP_TIMEZONE=UTC"
+              echo "FRONTEND_URL=http://${EC2_HOST}"
+              echo "LOG_CHANNEL=stack"
+              echo "DB_CONNECTION=pgsql"
+              echo "DB_URL=${NEON_DATABASE_URL}"
+              echo "MAIL_MAILER=log"
+              echo "BROADCAST_CONNECTION=log"
+              echo "SESSION_DRIVER=file"
+              echo "CACHE_STORE=file"
+              echo "QUEUE_CONNECTION=sync"
+            } | sudo tee senti2-backend/.env > /dev/null
             sudo docker compose down --remove-orphans || true
             sudo docker compose up -d --build
             sudo docker compose ps

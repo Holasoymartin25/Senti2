@@ -2,8 +2,8 @@ FROM php:8.4-cli-alpine
 
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
 
-RUN apk add --no-cache sqlite bash \
-    && install-php-extensions pdo_sqlite zip xml bcmath intl sockets mbstring
+RUN apk add --no-cache bash \
+    && install-php-extensions pdo_pgsql pgsql zip xml bcmath intl sockets mbstring
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
@@ -11,19 +11,11 @@ WORKDIR /var/www/app
 COPY . .
 
 RUN composer install --no-dev --optimize-autoloader --no-interaction \
-    && cp .env.example .env \
-    && sed -i 's|^APP_ENV=.*|APP_ENV=production|'           .env \
-    && sed -i 's|^APP_DEBUG=.*|APP_DEBUG=false|'             .env \
-    && sed -i 's|^APP_URL=.*|APP_URL=http://localhost|'      .env \
-    && sed -i 's|^FRONTEND_URL=.*|FRONTEND_URL=http://localhost|' .env \
-    && sed -i 's|^DB_CONNECTION=.*|DB_CONNECTION=sqlite|'    .env \
-    && sed -i 's|^DB_DATABASE=.*|DB_DATABASE=/var/www/app/database/database.sqlite|' .env \
-    && sed -i 's|^MAIL_MAILER=.*|MAIL_MAILER=log|'          .env \
-    && php artisan key:generate \
-    && touch database/database.sqlite \
-    && php artisan migrate --force \
-    && php artisan db:seed --force \
-    && chown -R www-data:www-data storage bootstrap/cache database
+    && chown -R www-data:www-data storage bootstrap/cache
+
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 EXPOSE 8000
+ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]

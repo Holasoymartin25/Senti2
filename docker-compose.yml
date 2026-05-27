@@ -1,8 +1,8 @@
 services:
   backend:
     build: ./senti2-backend
-    volumes:
-      - sqlite:/var/www/app/database
+    env_file:
+      - ./senti2-backend/.env
     restart: unless-stopped
 
   frontend:
@@ -12,6 +12,3 @@ services:
     depends_on:
       - backend
     restart: unless-stopped
-
-volumes:
-  sqlite:

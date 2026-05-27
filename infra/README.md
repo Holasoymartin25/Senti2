@@ -7,7 +7,8 @@
 | Región | us-east-1 |
 | Instancia | t2.micro (key pair: `vockey`) |
 | IP pública | Ver output de `terraform output app_url` |
-| Contenedores | frontend (Nginx + Angular) + backend (Laravel + SQLite) |
+| Contenedores | frontend (Nginx + Angular) + backend (Laravel) |
+| Base de datos | Neon PostgreSQL (externa, no en la EC2) |
 
 ---
 
@@ -144,6 +145,33 @@ Configura estos **secrets** en el repo
 | `EC2_HOST` | IP pública (ej. `44.193.230.31`) |
 | `EC2_SSH_KEY` | Contenido completo del archivo `labsuser.pem` |
 | `GH_DEPLOY_TOKEN` | PAT de GitHub con permiso `repo` (repo privado) |
+| `NEON_DATABASE_URL` | Connection string de Neon (`postgresql://...?sslmode=require`) |
+| `APP_KEY` | Clave Laravel (`php artisan key:generate --show`) |
+
+El workflow crea `senti2-backend/.env` en la EC2 con Neon antes de levantar Docker.
+
+### Primera vez en la EC2 (sin GitHub Actions)
+
+Copia la plantilla y rellena valores:
+
+```bash
+cd /app/Senti2/senti2-backend
+sudo cp .env.docker.example .env
+sudo nano .env   # APP_KEY + DB_URL de Neon
+cd /app/Senti2
+sudo docker compose up -d --build
+```
+
+SQL del esquema (opcional, si no usas `php artisan migrate`):  
+`senti2-backend/database/neon_schema.sql`
+
+Datos de prueba:
+
+```bash
+sudo docker compose exec backend php artisan db:seed --force
+```
+
+**Neon pooler:** si `DB_URL` contiene `-pooler`, Laravel desactiva prepared statements del servidor (evita `cached plan must not change result type`). Para migrate/seed local también puedes usar la URL **directa** de Neon (sin `-pooler`).
 
 También puedes lanzarlo a mano: **Actions → Deploy → Run workflow**.
 
