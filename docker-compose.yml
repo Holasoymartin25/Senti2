@@ -5,10 +5,20 @@ services:
       - ./senti2-backend/.env
     restart: unless-stopped
 
+  reverb:
+    build: ./senti2-backend
+    env_file:
+      - ./senti2-backend/.env
+    entrypoint: ["php", "artisan", "reverb:start", "--host=0.0.0.0", "--port=8080"]
+    depends_on:
+      - backend
+    restart: unless-stopped
+
   frontend:
     build: ./Senti2
     ports:
-      - "80:80"
+      - "8080:80"
     depends_on:
       - backend
+      - reverb
     restart: unless-stopped
