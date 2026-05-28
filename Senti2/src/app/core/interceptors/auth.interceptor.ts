@@ -1,12 +1,10 @@
 import { HttpInterceptorFn, HttpRequest, HttpHandlerFn, HttpErrorResponse } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { catchError, from, switchMap, throwError } from 'rxjs';
+import { catchError, throwError } from 'rxjs';
 import { AuthApiService } from '../services/auth-api.service';
 import { NotificationService } from '../services/notification.service';
 import { environment } from '../../../environments/environment';
-
-let refreshInProgress: Promise<boolean> | null = null;
 
 export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, next: HttpHandlerFn) => {
   const auth = inject(AuthApiService);
@@ -30,36 +28,10 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, ne
           if (req.url.includes('diary-entries')) {
             return throwError(() => err);
           }
-          if (!refreshInProgress) {
-            refreshInProgress = auth.refreshAccessToken();
-          }
-          return from(refreshInProgress).pipe(
-            switchMap((ok) => {
-              refreshInProgress = null;
-              if (ok) {
-                return next(isApiRequest(req) ? addToken(req, auth.getToken()) : req);
-              }
-              if (auth.getToken()) {
-                notifications.error('No se pudo renovar la sesión. Comprueba tu conexión e inténtalo de nuevo.');
-                return throwError(() => err);
-              }
-              notifications.error(notifications.messageForStatus(401, ''));
-              const redirect = router.url.startsWith('/login') ? '/inicio' : router.url;
-              router.navigate(['/login'], { queryParams: { redirect } });
-              return throwError(() => err);
-            }),
-            catchError(() => {
-              refreshInProgress = null;
-              if (auth.getToken()) {
-                notifications.error('No se pudo renovar la sesión. Comprueba tu conexión.');
-                return throwError(() => err);
-              }
-              notifications.error(notifications.messageForStatus(401, ''));
-              const redirect = router.url.startsWith('/login') ? '/inicio' : router.url;
-              router.navigate(['/login'], { queryParams: { redirect } });
-              return throwError(() => err);
-            })
-          );
+          notifications.error(notifications.messageForStatus(401, ''));
+          const redirect = router.url.startsWith('/login') ? '/inicio' : router.url;
+          router.navigate(['/login'], { queryParams: { redirect } });
+          return throwError(() => err);
         }
       }
       return throwError(() => err);

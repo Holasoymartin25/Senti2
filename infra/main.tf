@@ -121,7 +121,8 @@ resource "aws_instance" "app" {
     systemctl start docker
     git clone --depth 1 --branch ${var.github_branch} https://${var.github_token}@${var.github_repo_url} /app
     cd /app/Senti2
-    docker compose up -d --build
+    cp senti2-backend/.env.docker.example senti2-backend/.env
+    echo "Primera vez: edita senti2-backend/.env con APP_KEY y DB_URL de Neon antes de usar la app."
   EOF
 
   tags = { Name = "${var.project_name}-app" }

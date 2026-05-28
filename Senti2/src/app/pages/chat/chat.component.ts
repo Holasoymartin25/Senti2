@@ -58,9 +58,11 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.loadChatPartnerDetails();
 
     this.echoService.listenToChat(this.currentUserId, this.otherUserId, (msg: Message) => {
-      this.messages.push(msg);
-      this.groupMessages();
-      this.scrollToBottom();
+      const wasAdded = this.addMessageIfMissing(msg);
+      if (wasAdded) {
+        this.groupMessages();
+        this.scrollToBottom();
+      }
       
       // Si el mensaje es del otro usuario, marcarlo como leído inmediatamente
       if (msg.sender_id === this.otherUserId) {
@@ -134,12 +136,19 @@ export class ChatComponent implements OnInit, OnDestroy {
     if (!this.newMessage.trim()) return;
     this.messageService.sendMessage(this.otherUserId, this.newMessage).subscribe({
       next: (msg) => {
-        this.messages.push(msg);
+        this.addMessageIfMissing(msg);
         this.groupMessages();
         this.newMessage = '';
         this.scrollToBottom();
       }
     });
+  }
+
+  private addMessageIfMissing(message: Message): boolean {
+    const exists = this.messages.some((m) => m.id === message.id);
+    if (exists) return false;
+    this.messages.push(message);
+    return true;
   }
 
   groupMessages() {

@@ -24,7 +24,6 @@ Route::prefix('v1')->group(function () {
         Route::get('/auth/user', [AuthController::class, 'getCurrentUser']);
 
         Route::get('/profile', [ProfileController::class, 'show']);
-        Route::put('/profile', [ProfileController::class, 'update']);
         Route::patch('/profile', [ProfileController::class, 'update']);
 
         Route::post('/area-personal/test-results', [AreaPersonalController::class, 'storeTestResult']);
@@ -50,7 +49,10 @@ Route::prefix('v1')->group(function () {
         });
 
         Route::middleware('role:admin')->prefix('admin')->group(function () {
+            Route::post('/users', [AdminController::class, 'store']);
+            Route::put('/users/{id}', [AdminController::class, 'update']);
             Route::patch('/users/{id}/role', [AdminController::class, 'updateRole']);
+            Route::delete('/users/{id}', [AdminController::class, 'destroy']);
         });
 
         Route::middleware('role:psicologo')->prefix('psicologo')->group(function () {

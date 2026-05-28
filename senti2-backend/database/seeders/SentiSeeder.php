@@ -13,8 +13,8 @@ class SentiSeeder extends Seeder
     {
         // ── ADMINS ────────────────────────────────────────────
         $admins = [
-            ['name' => 'Admin Principal', 'email' => 'admin@senti2.com'],
-            ['name' => 'Admin Secundario', 'email' => 'admin2@senti2.com'],
+            ['name' => 'Admin 1', 'email' => 'admin1@admin.com'],
+            ['name' => 'Admin 2', 'email' => 'admin2@admin.com'],
         ];
 
         foreach ($admins as $data) {
@@ -32,10 +32,10 @@ class SentiSeeder extends Seeder
         // ── PSICÓLOGOS ────────────────────────────────────────
         $psicologos = [];
         $psicologoData = [
-            ['name' => 'Dra. Laura Gómez',    'email' => 'laura.gomez@senti2.com'],
-            ['name' => 'Dr. Carlos Ruiz',     'email' => 'carlos.ruiz@senti2.com'],
-            ['name' => 'Dra. Marta Pérez',    'email' => 'marta.perez@senti2.com'],
-            ['name' => 'Dr. Javier Morales',  'email' => 'javier.morales@senti2.com'],
+            ['name' => 'Dra. Laura Gomez',   'email' => 'psicologo1@admin.com'],
+            ['name' => 'Dr. Carlos Ruiz',    'email' => 'psicologo2@admin.com'],
+            ['name' => 'Dra. Marta Perez',   'email' => 'psicologo3@admin.com'],
+            ['name' => 'Dr. Javier Morales', 'email' => 'psicologo4@admin.com'],
         ];
 
         foreach ($psicologoData as $data) {
@@ -54,9 +54,9 @@ class SentiSeeder extends Seeder
         // ── USUARIOS ──────────────────────────────────────────
         // 3 asignados al psicólogo 1
         $usuarios1 = [
-            ['name' => 'Ana Martínez',   'email' => 'ana.martinez@mail.com'],
-            ['name' => 'Luis Fernández', 'email' => 'luis.fernandez@mail.com'],
-            ['name' => 'Sofía Torres',   'email' => 'sofia.torres@mail.com'],
+            ['name' => 'David Hormigo',  'email' => 'usuario1@admin.com'],
+            ['name' => 'J Mayorga',      'email' => 'usuario2@admin.com'],
+            ['name' => 'Antonio Sanchez','email' => 'usuario3@admin.com'],
         ];
 
         foreach ($usuarios1 as $data) {
@@ -74,9 +74,9 @@ class SentiSeeder extends Seeder
 
         // 3 asignados al psicólogo 2
         $usuarios2 = [
-            ['name' => 'Pablo Díaz',     'email' => 'pablo.diaz@mail.com'],
-            ['name' => 'Elena Sánchez',  'email' => 'elena.sanchez@mail.com'],
-            ['name' => 'David López',    'email' => 'david.lopez@mail.com'],
+            ['name' => 'Eva Perales',    'email' => 'usuario4@admin.com'],
+            ['name' => 'Pablo Diaz',     'email' => 'usuario5@admin.com'],
+            ['name' => 'Elena Sanchez',  'email' => 'usuario6@admin.com'],
         ];
 
         foreach ($usuarios2 as $data) {
@@ -94,10 +94,10 @@ class SentiSeeder extends Seeder
 
         // 4 sin asignar
         $sinAsignar = [
-            ['name' => 'Carmen Vega',    'email' => 'carmen.vega@mail.com'],
-            ['name' => 'Marcos Gil',     'email' => 'marcos.gil@mail.com'],
-            ['name' => 'Irene Castro',   'email' => 'irene.castro@mail.com'],
-            ['name' => 'Tomás Herrera',  'email' => 'tomas.herrera@mail.com'],
+            ['name' => 'David Lopez',    'email' => 'usuario7@admin.com'],
+            ['name' => 'Carmen Vega',    'email' => 'usuario8@admin.com'],
+            ['name' => 'Marcos Gil',     'email' => 'usuario9@admin.com'],
+            ['name' => 'Irene Castro',   'email' => 'usuario10@admin.com'],
         ];
 
         foreach ($sinAsignar as $data) {

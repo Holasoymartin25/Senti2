@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
-import { environment } from '../../../environments/environment.aws';
+import { environment } from '../../../environments/environment';
 
 (window as any).Pusher = Pusher;
 
@@ -10,6 +10,18 @@ export class EchoService {
   private echo: Echo<any> | null = null;
 
   init(token: string) {
+    const isHttps = window.location.protocol === 'https:';
+    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    
+    const wsHost = isLocalhost ? (environment.reverb?.host || 'localhost') : window.location.hostname;
+    const wsPort = isLocalhost ? (environment.reverb?.port || 8080) : (window.location.port ? Number(window.location.port) : (isHttps ? 443 : 80));
+    const forceTLS = isLocalhost ? (environment.reverb?.scheme === 'https') : isHttps;
+
+    const apiHost = environment.apiUrl.includes('://')
+      ? environment.apiUrl.split('/api/v1')[0]
+      : '';
+    const authEndpoint = `${apiHost}/broadcasting/auth`;
+
     if (this.echo) {
       try {
         this.echo.disconnect();
@@ -17,13 +29,13 @@ export class EchoService {
     }
     this.echo = new Echo({
       broadcaster: 'reverb',
-      key: environment.reverb.key,
-      wsHost: environment.reverb.host,
-      wsPort: environment.reverb.port,
-      wssPort: environment.reverb.port,
-      forceTLS: environment.reverb.scheme === 'https',
+      key: environment.reverb?.key || 'senti2-key',
+      wsHost: wsHost,
+      wsPort: wsPort,
+      wssPort: wsPort,
+      forceTLS: forceTLS,
       enabledTransports: ['ws', 'wss'],
-      authEndpoint: `${environment.apiUrl}/broadcasting/auth`,
+      authEndpoint: authEndpoint,
       auth: {
         headers: {
           Authorization: `Bearer ${token}`,

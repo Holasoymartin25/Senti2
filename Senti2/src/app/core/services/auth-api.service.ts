@@ -19,7 +19,6 @@ export class AuthApiService {
     private apiUrl = environment.apiUrl;
     private _currentUser = new BehaviorSubject<User | null>(null);
     private tokenKey = 'auth_token';
-    private refreshTokenKey = 'refresh_token';
     private userCacheKey = 'auth_user_cache';
     private initPromise: Promise<void> = Promise.resolve();
 
@@ -117,9 +116,6 @@ export class AuthApiService {
 
             if (response.access_token) {
                 this.setToken(response.access_token);
-                if (response.refresh_token) {
-                    this.setRefreshToken(response.refresh_token);
-                }
                 this._currentUser.next(response.user);
                 this.saveUserCache(response.user);
                 return { data: response, error: null };
@@ -268,43 +264,12 @@ export class AuthApiService {
         return localStorage.getItem(this.tokenKey);
     }
 
-    getRefreshToken(): string | null {
-        return localStorage.getItem(this.refreshTokenKey);
-    }
-
     private setToken(token: string): void {
         localStorage.setItem(this.tokenKey, token);
     }
 
-    private setRefreshToken(token: string): void {
-        localStorage.setItem(this.refreshTokenKey, token);
-    }
-
-    async refreshAccessToken(): Promise<boolean> {
-        const refreshToken = this.getRefreshToken();
-        if (!refreshToken) return false;
-        try {
-            const response: any = await firstValueFrom(
-                this.http.post<any>(`${this.apiUrl}/auth/refresh`, { refresh_token: refreshToken })
-            );
-            if (response?.access_token) {
-                this.setToken(response.access_token);
-                if (response.refresh_token) this.setRefreshToken(response.refresh_token);
-                if (response.user) this._currentUser.next(response.user);
-                return true;
-            }
-        } catch (error: any) {
-            // Solo borrar sesión si el refresh token es inválido (401). Errores de red no deben borrar.
-            if (error?.status === 401) {
-                this.clearAuth();
-            }
-        }
-        return false;
-    }
-
     private clearAuth(): void {
         localStorage.removeItem(this.tokenKey);
-        localStorage.removeItem(this.refreshTokenKey);
         this.saveUserCache(null);
         this._currentUser.next(null);
     }
