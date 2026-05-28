@@ -79,7 +79,7 @@ class PsicologoController extends Controller
                 $formatted = $this->formatUser($u);
                 $formatted['unread_count'] = \App\Models\Message::where('sender_id', $u->id)
                     ->where('receiver_id', $psicologoId)
-                    ->where('read', false)
+                    ->whereRaw('"read" = false')
                     ->count();
                 return $formatted;
             });

@@ -65,7 +65,7 @@ class MessageController extends Controller
 
         Message::where('sender_id', $senderId)
                ->where('receiver_id', $userId)
-               ->where('read', false)
+               ->whereRaw('"read" = false')
                ->update(['read' => true]);
 
         return response()->json(['message' => 'Mensajes marcados como leídos']);
@@ -78,7 +78,7 @@ class MessageController extends Controller
     {
         $userId = Auth::id();
         $count = Message::where('receiver_id', $userId)
-                        ->where('read', false)
+                        ->whereRaw('"read" = false')
                         ->count();
 
         return response()->json(['unread_count' => $count]);
