@@ -1,0 +1,107 @@
+[33m54cf90f[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;31mentrega/main[m[33m)[m Rediseño de chat, notificaciones Reverb y validación de citas
+[33m2b3723f[m Update chatt
+[33m55f90c7[m feat: añadir sistema de mensajería con Reverb
+[33m125b986[m Update api
+[33me7da496[m Update Routes Api
+[33ma3611fc[m Ajustando respuesta de WebSocket
+[33me6a6db1[m Ajustando migraciones de la bbdd
+[33m88b9b75[m Añadir modelo Message, migración y evento MessageSent
+[33m8ca9644[m Instalar Laravel Reverb para WebSockets
+[33m3bc917e[m Merge origin/main - resolve conflicts
+[33m9159d2e[m usar install-php-extensions para extensiones pre-compiladas
+[33m8336f7f[m fix(docker): añadir icu-dev para extensión intl de PHP en Alpine
+[33m1dcae65[m fix(infra): simplificar a main.tf único con Docker, vockey y us-east-1
+[33md09a39e[m main.tf simplificado
+[33m5cf2f02[m docker para backend y frontend
+[33mecc5777[m terraform oara despliegue en AWS
+[33mb2f55c1[m mejorado manejo de verifyToken y panel de admin
+[33m88198a9[m añadido gestión de citas
+[33mbe755d6[m Añadido seeders y migraciones al workflow
+[33ma2ab003[m Añadido seeders y migraciones al workflow
+[33mf54275c[m Creado modelo PatientRequest y migración tabla patient_requests
+[33mf6bfd7e[m Creado modelo PatientRequest y migración tabla patient_requests
+[33m1f3fc98[m Actualizar AdminComponent, AreaPersonal y rutas
+[33md40afa8[m Actualizar AdminComponent, AreaPersonal y rutas
+[33mc013ce1[m Componente SolicitudesComponent para aceptar/rechazar solicitudes de psicólogo
+[33m79275d7[m Componente SolicitudesComponent para aceptar/rechazar solicitudes de psicólogo
+[33m7ff7512[m SolicitudController y rutas para gestión de solicitudes psicólogo-paciente
+[33m81e4e29[m SolicitudController y rutas para gestión de solicitudes psicólogo-paciente
+[33m89de9b7[m  panel admin con selector de rol y vista psicólogo
+[33m4ae9b81[m  panel admin con selector de rol y vista psicólogo
+[33m26bff9f[m cache de sesión, waitForInit y fix para el token
+[33m442e392[m cache de sesión, waitForInit y fix para el token
+[33mafe41c8[m controladores Admin y Psicólogo con rutas protegidas por rol
+[33m438bd9c[m controladores Admin y Psicólogo con rutas protegidas por rol
+[33me59966b[m roles, relación psicólogo-paciente y seeder
+[33m480329a[m roles, relación psicólogo-paciente y seeder
+[33m92ba453[m Mejorado el UserFlowTest y añadido playwright para tests en --headed
+[33m6b020a5[m Mejorado el UserFlowTest y añadido playwright para tests en --headed
+[33m2b02c3b[m Añadido .env en el workflow
+[33mffffd1e[m Añadido .env en el workflow
+[33mef8c23d[m Cambiada la APP_KEY
+[33m6450170[m Cambiada la APP_KEY
+[33m249e215[m Eliminada la ruta duplicada
+[33m765b922[m Eliminada la ruta duplicada
+[33m484933a[m Version mas reciente de vercel
+[33md66a18c[m Version mas reciente de vercel
+[33m8a9066c[m Cambiado nombre de variable
+[33mf5c32a2[m Cambiado nombre de variable
+[33m45a0c5d[m Creada migración para roles y logica
+[33m495ba3d[m Creada migración para roles y logica
+[33m67ea92c[m eliminado supabaseservice
+[33m19e2f72[m eliminado supabaseservice
+[33m4ba2708[m migracion de supabase a neon
+[33m9b65b6a[m migracion de supabase a neon
+[33m3a426af[m updated
+[33m830f651[m updated
+[33mcc7f712[m Hecho workflow para github actions y modificada las urls
+[33mcaef235[m Hecho workflow para github actions y modificada las urls
+[33m75a4e21[m updated api url
+[33m81f7b26[m updated api url
+[33m615e630[m Actualizar composer.json
+[33mc22c110[m Actualizar composer.json
+[33mfce6454[m Merge pull request #2 from Holasoymartin25/master
+[33m465d820[m Merge pull request #2 from Holasoymartin25/master
+[33m40fe84b[m Tests creados con Pest Browser y Playwright
+[33m98ff379[m Tests creados con Pest Browser y Playwright
+[33m618b13e[m Mejorado login y area personal
+[33m1e625c8[m Mejorado login y area personal
+[33m5550b8d[m Revert "Mejoras UX: página 404 personalizada y spinner en formulario de contacto"
+[33mc78f7ee[m Revert "Mejoras UX: página 404 personalizada y spinner en formulario de contacto"
+[33m608d09c[m Mejoras UX: página 404 personalizada y spinner en formulario de contacto
+[33m16f7b47[m Mejoras UX: página 404 personalizada y spinner en formulario de contacto
+[33m57e5ceb[m Area personal: tests, diario y API Supabase
+[33m0dff6b0[m Area personal: tests, diario y API Supabase
+[33mc82f6cb[m Mejoras UX, contacto, auth e inicio por defecto
+[33m40c2bdf[m Mejoras UX, contacto, auth e inicio por defecto
+[33mf57556f[m Logica del login en laravel tambien
+[33mcf8b4da[m Logica del login en laravel tambien
+[33m44a535d[m Lógica pasada al backend (Laravel)
+[33mfcd0da5[m Lógica pasada al backend (Laravel)
+[33m71503ff[m Merge branch 'master' of https://github.com/Holasoymartin25/Senti2
+[33md597891[m Merge branch 'master' of https://github.com/Holasoymartin25/Senti2
+[33mb3b721b[m Adjunto de archivos CV
+[33m7d0a44a[m Adjunto de archivos CV
+[33meceb7b0[m Hecho loggin en backend
+[33mbf5ecf1[m Hecho loggin en backend
+[33m2399795[m Estructura backend laravel creado
+[33m290befb[m Estructura backend laravel creado
+[33m87ed9d4[m Gmail funcionando
+[33m61f2f7a[m Gmail funcionando
+[33mf48e0a5[m Arreglado conflicto con package-lock
+[33m738ef0a[m Arreglado conflicto con package-lock
+[33mbd9bd28[m perfil de usuarios creado
+[33m9f1f599[m perfil de usuarios creado
+[33m52efa72[m Responsive: ajustes para móvil y tablet
+[33mc09ec2c[m Responsive: ajustes para móvil y tablet
+[33m49e19ab[m actualizacion dia 23 del 1
+[33m3f12b85[m actualizacion dia 23 del 1
+[33m5aae520[m año 2026
+[33m94208d8[m año 2026
+[33m527ad57[m Actualización de diseño
+[33mf612fa5[m Actualización de diseño
+[33mae67930[m Merge branch 'master'
+[33m6cbff67[m Merge branch 'master'
+[33mddbf6c9[m Senti2
+[33m3e51e73[m Initial commit
+[33m3379ce5[m Initial commit

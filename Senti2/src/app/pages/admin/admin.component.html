@@ -65,10 +65,10 @@
         Disponibles <span class="tab-count">{{ sinAsignar.length }}</span>
       </button>
       <button class="psi-tab" [class.active]="psiTab === 'solicitudes-enviadas'" (click)="psiTab = 'solicitudes-enviadas'">
-        Solicitudes <span class="tab-count">{{ solicitudesPendientesCount }}</span>
+        Solicitudes <span class="tab-count" [class.badge-alert-pending]="solicitudesPendientesCount > 0">{{ solicitudesPendientesCount }}</span>
       </button>
       <button class="psi-tab" [class.active]="psiTab === 'mis-pacientes'" (click)="psiTab = 'mis-pacientes'">
-        Mis pacientes <span class="tab-count">{{ misPacientes.length }}</span>
+        Mis pacientes <span class="tab-count" [class.badge-alert-unread]="totalPacientesUnreadMessages > 0">{{ totalPacientesUnreadMessages > 0 ? totalPacientesUnreadMessages : misPacientes.length }}</span>
       </button>
       <button class="psi-tab" [class.active]="psiTab === 'citas'" (click)="psiTab = 'citas'">
         Citas <span class="tab-count">{{ citas.length }}</span>
@@ -160,11 +160,15 @@
               <td>{{ user.name ?? '—' }}</td>
               <td>{{ user.created_at | date:'dd/MM/yyyy' }}</td>
               <td class="actions-cell">
-                <button class="btn-view" [class.active]="selectedPatient?.user?.id === user.id" (click)="verDatosPaciente(user)">
-                  {{ selectedPatient?.user?.id === user.id ? 'Ocultar' : 'Ver datos' }}
-                </button>
-                <button class="btn-unassign" (click)="desasignarPaciente(user)">Desvincular</button>
-              </td>
+              <button class="btn-view" [class.active]="selectedPatient?.user?.id === user.id" (click)="verDatosPaciente(user)">
+                {{ selectedPatient?.user?.id === user.id ? 'Ocultar' : 'Ver datos' }}
+              </button>
+              <button class="btn-chat" [routerLink]="['/chat', user.id]">
+                Chat
+                <span *ngIf="user.unread_count && user.unread_count > 0" class="btn-chat-badge">{{ user.unread_count }}</span>
+              </button>
+              <button class="btn-unassign" (click)="desasignarPaciente(user)">Desvincular</button>
+            </td>
             </tr>
           </tbody>
         </table>

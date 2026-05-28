@@ -60,6 +60,19 @@ class CitasController extends Controller
             return response()->json(['error' => 'Paciente no encontrado o no asignado a usted'], 422);
         }
 
+        // Validar solapamiento (asumiendo que dura 1 hora)
+        $start = \Carbon\Carbon::parse($data['fecha_hora']);
+        $startLimit = $start->copy()->subMinutes(59);
+        $endLimit = $start->copy()->addMinutes(59);
+
+        $exists = Appointment::where('psicologo_id', $request->user()->id)
+            ->whereBetween('fecha_hora', [$startLimit, $endLimit])
+            ->exists();
+
+        if ($exists) {
+            return response()->json(['error' => 'Ya existe una cita programada en esa franja horaria.'], 422);
+        }
+
         $cita = Appointment::create([
             'psicologo_id' => $request->user()->id,
             'paciente_id'  => $data['paciente_id'],
@@ -96,6 +109,21 @@ class CitasController extends Controller
             'estado'     => 'sometimes|in:pendiente,confirmada,cancelada,completada',
             'notas'      => 'nullable|string|max:2000',
         ]);
+
+        if (isset($data['fecha_hora'])) {
+            $start = \Carbon\Carbon::parse($data['fecha_hora']);
+            $startLimit = $start->copy()->subMinutes(59);
+            $endLimit = $start->copy()->addMinutes(59);
+
+            $exists = Appointment::where('psicologo_id', $request->user()->id)
+                ->where('id', '!=', $id)
+                ->whereBetween('fecha_hora', [$startLimit, $endLimit])
+                ->exists();
+
+            if ($exists) {
+                return response()->json(['error' => 'Ya existe una cita programada en esa franja horaria.'], 422);
+            }
+        }
 
         $cita->update($data);
         $cita->load('paciente');

@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\PsicologoController;
 use App\Http\Controllers\Api\CitasController;
 use App\Http\Controllers\Api\SolicitudController;
+use App\Http\Controllers\Api\MessageController;
 
 Route::prefix('v1')->group(function () {
     Route::post('/contact', [ContactController::class, 'store']);
@@ -35,6 +36,13 @@ Route::prefix('v1')->group(function () {
         Route::get('/solicitudes', [SolicitudController::class, 'index']);
         Route::post('/solicitudes/{id}/aceptar', [SolicitudController::class, 'aceptar']);
         Route::post('/solicitudes/{id}/rechazar', [SolicitudController::class, 'rechazar']);
+
+        // Mensajes — accesible por cualquier usuario autenticado
+        Route::get('/messages/unread/count',      [MessageController::class, 'getUnreadCount']);
+        Route::get('/messages/{otherUserId}',    [MessageController::class, 'index']);
+        Route::post('/messages',                  [MessageController::class, 'store']);
+        Route::patch('/messages/{senderId}/read', [MessageController::class, 'markAsRead']);
+        Route::get('/mi-psicologo',               [AuthController::class, 'miPsicologo']);
 
         Route::middleware('role:admin,psicologo')->prefix('admin')->group(function () {
             Route::get('/users', [AdminController::class, 'index']);

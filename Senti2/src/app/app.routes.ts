@@ -18,6 +18,7 @@ import { ProgramasBienestarComponent } from './pages/area-personal/programas-bie
 import { TestEjecucionComponent } from './pages/area-personal/test-ejecucion/test-ejecucion.component';
 import { AdminComponent } from './pages/admin/admin.component';
 import { SolicitudesComponent } from './pages/area-personal/solicitudes/solicitudes.component';
+import { ChatComponent } from './pages/chat/chat.component';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'inicio' },
@@ -43,6 +44,9 @@ export const routes: Routes = [
   { path: 'perfil', component: PerfilComponent, canActivate: [authGuard] },
 
   { path: 'admin', component: AdminComponent, canActivate: [adminGuard] },
+
+  // Chat entre psicólogo y paciente
+  { path: 'chat/:userId', component: ChatComponent, canActivate: [authGuard] },
 
   { path: '**', redirectTo: 'inicio' }
 ];

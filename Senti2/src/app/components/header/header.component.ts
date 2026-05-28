@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthApiService } from '../../core/services/auth-api.service';
+import { MessageService } from '../../core/services/message.service';
 import { from, Subscription } from 'rxjs';
 import { switchMap, catchError, shareReplay } from 'rxjs/operators';
 import { of } from 'rxjs';
@@ -18,10 +19,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
   displayName = 'Mi Perfil';
   userEmail = '';
   userRole = '';
+  unreadMessagesCount = 0;
   private subs: Subscription[] = [];
 
   constructor(
-    public authApi: AuthApiService
+    public authApi: AuthApiService,
+    public messageService: MessageService
   ) { }
 
   ngOnInit() {
@@ -46,6 +49,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
     );
     this.subs.push(
       userName$.subscribe((name) => { this.displayName = name as string; })
+    );
+    this.subs.push(
+      this.messageService.unreadCount$.subscribe((count) => {
+        this.unreadMessagesCount = count;
+      })
     );
   }
 

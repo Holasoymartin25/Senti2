@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, Subscription } from 'rxjs';
 import { AuthApiService } from '../../core/services/auth-api.service';
+import { MessageService } from '../../core/services/message.service';
 import { environment } from '../../../environments/environment';
+import { RouterModule } from '@angular/router';
 
 interface AdminUser {
     id: number;
@@ -12,6 +14,7 @@ interface AdminUser {
     email: string;
     role: string;
     created_at: string;
+    unread_count?: number;
 }
 
 interface DiaryEntry {
@@ -84,17 +87,18 @@ const MODALIDAD_LABELS: Record<string, string> = {
 @Component({
     selector: 'app-admin',
     standalone: true,
-    imports: [CommonModule, FormsModule],
+    imports: [CommonModule, FormsModule, RouterModule],
     templateUrl: './admin.component.html',
     styleUrls: ['./admin.component.css']
 })
-export class AdminComponent implements OnInit {
+export class AdminComponent implements OnInit, OnDestroy {
     // Vista admin
     users: AdminUser[] = [];
     loading = true;
     errorMsg = '';
     successMsg = '';
     currentUserRole = '';
+    private messageSubscription!: Subscription;
     readonly roleLabels = ROLE_LABELS;
     readonly allRoles = ALL_ROLES;
     readonly statusLabels = STATUS_LABELS;
@@ -135,7 +139,8 @@ export class AdminComponent implements OnInit {
 
     constructor(
         private http: HttpClient,
-        private authApi: AuthApiService
+        private authApi: AuthApiService,
+        private messageService: MessageService
     ) {}
 
     ngOnInit(): void {
@@ -144,6 +149,22 @@ export class AdminComponent implements OnInit {
             this.loadUsers();
         } else if (this.currentUserRole === 'psicologo') {
             this.loadPsiData();
+        }
+
+        // Suscribirse a mensajes entrantes en tiempo real para actualizar badges de pacientes
+        this.messageSubscription = this.messageService.messageReceived$.subscribe((msg) => {
+            if (this.currentUserRole === 'psicologo') {
+                const paciente = this.misPacientes.find(p => p.id === msg.sender_id);
+                if (paciente) {
+                    paciente.unread_count = (paciente.unread_count || 0) + 1;
+                }
+            }
+        });
+    }
+
+    ngOnDestroy(): void {
+        if (this.messageSubscription) {
+            this.messageSubscription.unsubscribe();
         }
     }
 
@@ -293,6 +314,10 @@ export class AdminComponent implements OnInit {
         return this.solicitudesEnviadas.filter(s => s.status === 'pending').length;
     }
 
+    get totalPacientesUnreadMessages(): number {
+        return this.misPacientes.reduce((sum, p) => sum + (p.unread_count || 0), 0);
+    }
+
     // CITAS
     async loadCitas(): Promise<void> {
         this.loadingCitas = true;
@@ -362,7 +387,11 @@ export class AdminComponent implements OnInit {
             }
             this.cerrarFormCita();
         } catch (error: any) {
-            this.errorMsg = error.error?.error || 'Error al guardar la cita';
+            if (error.status === 422 || error.status === 409) {
+                this.errorMsg = error.error?.error || 'Ya existe una cita programada en esa franja horaria';
+            } else {
+                this.errorMsg = error.error?.error || 'Error al guardar la cita';
+            }
         } finally {
             this.guardandoCita = false;
         }

@@ -10,9 +10,15 @@
 
     @if (isAuthenticated) {
     @if (userRole === 'admin' || userRole === 'psicologo') {
-    <a routerLink="/admin" routerLinkActive="active">Panel Admin</a>
+    <a routerLink="/admin" routerLinkActive="active" class="nav-link-with-badge">
+      Panel Admin
+      <span *ngIf="unreadMessagesCount > 0" class="nav-badge">{{ unreadMessagesCount }}</span>
+    </a>
     }
-    <a routerLink="/area-personal" routerLinkActive="active">Área Personal</a>
+    <a routerLink="/area-personal" routerLinkActive="active" class="nav-link-with-badge">
+      Área Personal
+      <span *ngIf="unreadMessagesCount > 0 && userRole !== 'psicologo' && userRole !== 'admin'" class="nav-badge">{{ unreadMessagesCount }}</span>
+    </a>
     <a routerLink="/perfil" routerLinkActive="active" class="profile-link">
       <span class="user-name" [title]="userEmail || 'Mi Perfil'">
         {{ displayName }}
