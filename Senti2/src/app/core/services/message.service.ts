@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject, Subscription, Subject } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { environment } from '../../../environments/environment.aws';
+import { environment } from '../../../environments/environment';
 import { AuthApiService } from './auth-api.service';
 import { EchoService } from './echo.service';
 

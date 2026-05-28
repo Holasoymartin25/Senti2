@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
-import { environment } from '../../../environments/environment.aws';
+import { environment } from '../../../environments/environment';
 
 (window as any).Pusher = Pusher;
 
