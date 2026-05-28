@@ -10,6 +10,11 @@ export class EchoService {
   private echo: Echo<any> | null = null;
 
   init(token: string) {
+    const isHttps = window.location.protocol === 'https:';
+    const currentPort = window.location.port
+      ? Number(window.location.port)
+      : (isHttps ? 443 : 80);
+
     if (this.echo) {
       try {
         this.echo.disconnect();
@@ -18,12 +23,12 @@ export class EchoService {
     this.echo = new Echo({
       broadcaster: 'reverb',
       key: environment.reverb.key,
-      wsHost: environment.reverb.host,
-      wsPort: environment.reverb.port,
-      wssPort: environment.reverb.port,
-      forceTLS: environment.reverb.scheme === 'https',
+      wsHost: window.location.hostname || environment.reverb.host,
+      wsPort: currentPort || environment.reverb.port,
+      wssPort: currentPort || environment.reverb.port,
+      forceTLS: isHttps,
       enabledTransports: ['ws', 'wss'],
-      authEndpoint: `${environment.apiUrl}/broadcasting/auth`,
+      authEndpoint: '/broadcasting/auth',
       auth: {
         headers: {
           Authorization: `Bearer ${token}`,

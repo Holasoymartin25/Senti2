@@ -3,7 +3,7 @@ FROM php:8.4-cli-alpine
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
 
 RUN apk add --no-cache bash \
-    && install-php-extensions pdo_pgsql pgsql zip xml bcmath intl sockets mbstring
+    && install-php-extensions pdo_pgsql pgsql zip xml bcmath intl sockets mbstring pcntl
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
