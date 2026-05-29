@@ -26,4 +26,10 @@ class Message extends Model
     {
         return $this->belongsTo(User::class, 'receiver_id');
     }
+
+    /** PostgreSQL: evitar comparar boolean con 0/1 en SQL. */
+    public function scopeUnread($query)
+    {
+        return $query->whereRaw('"read" = false');
+    }
 }
