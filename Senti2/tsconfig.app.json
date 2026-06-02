@@ -10,7 +10,6 @@
     "src/main.ts"
   ],
   "include": [
-    "src/**/*.d.ts",
-    "src/laravel-echo-iife.d.ts"
+    "src/**/*.d.ts"
   ]
 }

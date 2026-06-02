@@ -1,22 +1,15 @@
 import { Injectable } from '@angular/core';
-import Echo from 'laravel-echo/iife';
+import Echo from 'laravel-echo';
+import Pusher from 'pusher-js';
 import { environment } from '../../../environments/environment';
 
-/** Pusher se carga como script global (angular.json) para evitar ESM en producción. */
-declare const Pusher: new (key: string, options: Record<string, unknown>) => unknown;
+(window as unknown as { Pusher: typeof Pusher }).Pusher = Pusher;
 
 @Injectable({ providedIn: 'root' })
 export class EchoService {
   private echo: Echo<any> | null = null;
 
   init(token: string) {
-    if (typeof Pusher === 'undefined') {
-      console.warn('Pusher no está cargado; el chat en tiempo real no estará disponible.');
-      return;
-    }
-
-    (window as unknown as { Pusher: typeof Pusher }).Pusher = Pusher;
-
     const isHttps = window.location.protocol === 'https:';
     const isLocalhost =
       window.location.hostname === 'localhost' ||
