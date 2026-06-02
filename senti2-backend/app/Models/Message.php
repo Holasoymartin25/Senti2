@@ -27,9 +27,14 @@ class Message extends Model
         return $this->belongsTo(User::class, 'receiver_id');
     }
 
-    /** PostgreSQL/Neon: columna reservada "read"; evitar binding 0/1. */
+    /**
+     * PostgreSQL/Neon: la columna "read" es reservada; where('read', false) enlaza 0
+     * y provoca "operator does not exist: boolean = integer".
+     */
     public function scopeUnread($query)
     {
-        return $query->where($query->getModel()->qualifyColumn('read'), false);
+        $column = $query->getModel()->qualifyColumn('read');
+
+        return $query->whereRaw("{$column} IS FALSE");
     }
 }
