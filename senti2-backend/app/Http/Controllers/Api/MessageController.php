@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Message;
 use App\Events\MessageSent;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 
 class MessageController extends Controller
@@ -38,29 +37,34 @@ class MessageController extends Controller
      */
     public function store(Request $request)
     {
-        $user = $this->requireUser($request);
-
-        $validated = $request->validate([
-            'receiver_id' => 'required|exists:users,id',
-            'content'     => 'required|string|max:2000',
-        ]);
-
-        $message = Message::create([
-            'sender_id'   => $user->id,
-            'receiver_id' => (int) $validated['receiver_id'],
-            'content'     => $validated['content'],
-            'read'        => false,
-        ]);
-
-        $message->load('sender:id,name,email');
-
         try {
-            broadcast(new MessageSent($message))->toOthers();
-        } catch (\Throwable $e) {
-            Log::warning('Broadcast MessageSent failed', ['error' => $e->getMessage()]);
-        }
+            $user = $this->requireUser($request);
 
-        return response()->json($message, 201);
+            $validated = $request->validate([
+                'receiver_id' => 'required|exists:users,id',
+                'content'     => 'required|string|max:2000',
+            ]);
+
+            // No enviar 'read' en el INSERT: en PostgreSQL false puede enlazarse como 0
+            // y fallar en columna boolean. El default de la migración es false.
+            $message = Message::create([
+                'sender_id'   => $user->id,
+                'receiver_id' => (int) $validated['receiver_id'],
+                'content'     => $validated['content'],
+            ]);
+
+            $message->load('sender:id,name,email');
+
+            broadcast(new MessageSent($message))->toOthers();
+
+            return response()->json($message, 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => $e->getMessage(),
+                'file'  => $e->getFile(),
+                'line'  => $e->getLine(),
+            ], 500);
+        }
     }
 
     /**
