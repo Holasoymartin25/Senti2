@@ -73,6 +73,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Image registry owner (lowercase)
+        id: image
+        run: echo "owner=$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_OUTPUT"
+
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
         with:
@@ -85,11 +89,11 @@ jobs:
         with:
           context: ./senti2-backend
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/senti2-backend:latest
+          tags: ghcr.io/${{ steps.image.outputs.owner }}/senti2-backend:latest
 
       - name: Build & push frontend image
         uses: docker/build-push-action@v6
         with:
           context: ./Senti2
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/senti2-frontend:latest
+          tags: ghcr.io/${{ steps.image.outputs.owner }}/senti2-frontend:latest
