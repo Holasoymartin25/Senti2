@@ -16,9 +16,6 @@ export class EchoService {
       window.location.hostname === '127.0.0.1';
     const sameOriginApi = !environment.apiUrl.includes('://');
 
-    // Reverb expone WebSockets en /app (nginx en AWS hace proxy de /app → reverb:8080).
-    const wsPath = '/app';
-
     let wsHost: string;
     let wsPort: number;
     let forceTLS: boolean;
@@ -58,7 +55,6 @@ export class EchoService {
       wsHost,
       wsPort,
       wssPort: wsPort,
-      wsPath,
       forceTLS,
       enabledTransports: ['ws', 'wss'],
       authEndpoint,
