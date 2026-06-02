@@ -72,18 +72,22 @@ class MessageController extends Controller
      */
     public function markAsRead(Request $request, $senderId)
     {
-        $userId = $this->requireUser($request)->id;
+        try {
+            $userId = $this->requireUser($request)->id;
 
-        Message::where('sender_id', $senderId)
-            ->where('receiver_id', $userId)
-            ->unread()
-            ->get()
-            ->each(function (Message $message) {
-                $message->read = true;
-                $message->save();
-            });
+            $updated = Message::markThreadAsRead((int) $senderId, (int) $userId);
 
-        return response()->json(['message' => 'Mensajes marcados como leídos']);
+            return response()->json([
+                'message' => 'Mensajes marcados como leídos',
+                'updated' => $updated,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => $e->getMessage(),
+                'file'  => $e->getFile(),
+                'line'  => $e->getLine(),
+            ], 500);
+        }
     }
 
     /**

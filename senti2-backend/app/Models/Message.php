@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Message extends Model
 {
@@ -36,5 +37,20 @@ class Message extends Model
         $column = $query->getModel()->qualifyColumn('read');
 
         return $query->whereRaw("{$column} IS FALSE");
+    }
+
+    /**
+     * Marcar como leídos sin update(['read' => true]) — en PostgreSQL true puede enlazarse como 1.
+     */
+    public static function markThreadAsRead(int $senderId, int $receiverId): int
+    {
+        return static::query()
+            ->where('sender_id', $senderId)
+            ->where('receiver_id', $receiverId)
+            ->unread()
+            ->update([
+                'read'       => DB::raw('TRUE'),
+                'updated_at' => now(),
+            ]);
     }
 }
