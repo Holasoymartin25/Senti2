@@ -11,15 +11,39 @@ export class EchoService {
 
   init(token: string) {
     const isHttps = window.location.protocol === 'https:';
-    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-    
-    const wsHost = isLocalhost ? (environment.reverb?.host || 'localhost') : window.location.hostname;
-    const wsPort = isLocalhost ? (environment.reverb?.port || 8080) : (window.location.port ? Number(window.location.port) : (isHttps ? 443 : 80));
-    const forceTLS = isLocalhost ? (environment.reverb?.scheme === 'https') : isHttps;
+    const isLocalhost =
+      window.location.hostname === 'localhost' ||
+      window.location.hostname === '127.0.0.1';
+    const sameOriginApi = !environment.apiUrl.includes('://');
+
+    // Reverb expone WebSockets en /app (nginx en AWS hace proxy de /app → reverb:8080).
+    const wsPath = '/app';
+
+    let wsHost: string;
+    let wsPort: number;
+    let forceTLS: boolean;
+
+    if (isLocalhost && environment.reverb?.host) {
+      // Desarrollo: conexión directa a `php artisan reverb:start` (puerto 8080).
+      wsHost = environment.reverb.host;
+      wsPort = environment.reverb.port ?? 8080;
+      forceTLS = environment.reverb.scheme === 'https';
+    } else {
+      // Producción (AWS): mismo host que el front; nginx termina TLS y enruta /app.
+      wsHost = window.location.hostname;
+      wsPort = window.location.port
+        ? Number(window.location.port)
+        : isHttps
+          ? 443
+          : 80;
+      forceTLS = isHttps;
+    }
 
     const apiHost = environment.apiUrl.includes('://')
       ? environment.apiUrl.split('/api/v1')[0]
-      : '';
+      : sameOriginApi
+        ? ''
+        : '';
     const authEndpoint = `${apiHost}/broadcasting/auth`;
 
     if (this.echo) {
@@ -27,15 +51,17 @@ export class EchoService {
         this.echo.disconnect();
       } catch (_) {}
     }
+
     this.echo = new Echo({
       broadcaster: 'reverb',
       key: environment.reverb?.key || 'senti2-key',
-      wsHost: wsHost,
-      wsPort: wsPort,
+      wsHost,
+      wsPort,
       wssPort: wsPort,
-      forceTLS: forceTLS,
+      wsPath,
+      forceTLS,
       enabledTransports: ['ws', 'wss'],
-      authEndpoint: authEndpoint,
+      authEndpoint,
       auth: {
         headers: {
           Authorization: `Bearer ${token}`,
