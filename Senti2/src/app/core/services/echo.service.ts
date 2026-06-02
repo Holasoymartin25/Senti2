@@ -1,29 +1,36 @@
 import { Injectable } from '@angular/core';
-import Echo from 'laravel-echo';
-import Pusher from 'pusher-js';
+import Echo from 'laravel-echo/iife';
 import { environment } from '../../../environments/environment';
 
-(window as any).Pusher = Pusher;
+/** Pusher se carga como script global (angular.json) para evitar ESM en producción. */
+declare const Pusher: new (key: string, options: Record<string, unknown>) => unknown;
 
 @Injectable({ providedIn: 'root' })
 export class EchoService {
   private echo: Echo<any> | null = null;
 
   init(token: string) {
+    if (typeof Pusher === 'undefined') {
+      console.warn('Pusher no está cargado; el chat en tiempo real no estará disponible.');
+      return;
+    }
+
+    (window as unknown as { Pusher: typeof Pusher }).Pusher = Pusher;
+
     const isHttps = window.location.protocol === 'https:';
     const isLocalhost =
       window.location.hostname === 'localhost' ||
       window.location.hostname === '127.0.0.1';
-    const sameOriginApi = !environment.apiUrl.includes('://');
 
     let wsHost: string;
     let wsPort: number;
     let forceTLS: boolean;
 
-    if (isLocalhost && environment.reverb?.host) {
-      wsHost = environment.reverb.host;
-      wsPort = environment.reverb.port ?? 8080;
-      forceTLS = environment.reverb.scheme === 'https';
+    const reverbHost = environment.reverb?.host?.trim();
+    if (isLocalhost && reverbHost) {
+      wsHost = reverbHost;
+      wsPort = environment.reverb?.port ?? 8080;
+      forceTLS = environment.reverb?.scheme === 'https';
     } else {
       wsHost = window.location.hostname;
       wsPort = window.location.port
@@ -36,9 +43,7 @@ export class EchoService {
 
     const apiHost = environment.apiUrl.includes('://')
       ? environment.apiUrl.split('/api/v1')[0]
-      : sameOriginApi
-        ? ''
-        : '';
+      : '';
     const authEndpoint = `${apiHost}/broadcasting/auth`;
 
     if (this.echo) {
@@ -47,11 +52,10 @@ export class EchoService {
       } catch (_) {}
     }
 
-    // No establecer wsPath: Reverb/Pusher ya usan el prefijo /app.
-    // Añadir wsPath: '/app' provoca /app/app/... detrás del proxy nginx.
     this.echo = new Echo({
       broadcaster: 'reverb',
       key: environment.reverb?.key || 'senti2-key',
+      cluster: '',
       wsHost,
       wsPort,
       wssPort: wsPort,

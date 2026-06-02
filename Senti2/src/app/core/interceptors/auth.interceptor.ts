@@ -40,17 +40,36 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, ne
 };
 
 function isApiRequest(req: HttpRequest<unknown>): boolean {
-  return req.url.startsWith(environment.apiUrl);
+  const api = environment.apiUrl;
+  const url = req.url ?? '';
+
+  if (typeof api === 'string' && api.length > 0 && url.startsWith(api)) {
+    return true;
+  }
+
+  if (url.includes('/api/v1')) {
+    return true;
+  }
+
+  try {
+    const path = new URL(url, window.location.origin).pathname;
+    return path.startsWith('/api/v1');
+  } catch {
+    return false;
+  }
 }
 
 function skipRefreshFor(req: HttpRequest<unknown>): boolean {
-  const u = req.url;
+  const u = req.url ?? '';
   return u.includes('/auth/refresh') || u.includes('/auth/signin') || u.includes('/auth/signup') || u.includes('/auth/verify');
 }
 
 function addToken(req: HttpRequest<unknown>, token: string | null): HttpRequest<unknown> {
-  if (!token) return req;
+  const trimmed = token?.trim();
+  if (!trimmed) {
+    return req;
+  }
   return req.clone({
-    setHeaders: { Authorization: `Bearer ${token}` },
+    setHeaders: { Authorization: `Bearer ${trimmed}` },
   });
 }

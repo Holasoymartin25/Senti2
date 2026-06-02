@@ -7,6 +7,7 @@ use App\Models\Message;
 use App\Events\MessageSent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Symfony\Component\HttpFoundation\Response;
 
 class MessageController extends Controller
 {
@@ -15,7 +16,7 @@ class MessageController extends Controller
      */
     public function index(Request $request, $otherUserId)
     {
-        $userId = $request->user()->id;
+        $userId = $this->requireUser($request)->id;
 
         $messages = Message::where(function ($q) use ($userId, $otherUserId) {
                 $q->where('sender_id', $userId)
@@ -37,15 +38,17 @@ class MessageController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $user = $this->requireUser($request);
+
+        $validated = $request->validate([
             'receiver_id' => 'required|exists:users,id',
             'content'     => 'required|string|max:2000',
         ]);
 
         $message = Message::create([
-            'sender_id'   => $request->user()->id,
-            'receiver_id' => $request->integer('receiver_id'),
-            'content'     => $request->string('content')->toString(),
+            'sender_id'   => $user->id,
+            'receiver_id' => (int) $validated['receiver_id'],
+            'content'     => $validated['content'],
             'read'        => false,
         ]);
 
@@ -65,12 +68,16 @@ class MessageController extends Controller
      */
     public function markAsRead(Request $request, $senderId)
     {
-        $userId = $request->user()->id;
+        $userId = $this->requireUser($request)->id;
 
         Message::where('sender_id', $senderId)
-               ->where('receiver_id', $userId)
-               ->unread()
-               ->update(['read' => true]);
+            ->where('receiver_id', $userId)
+            ->unread()
+            ->get()
+            ->each(function (Message $message) {
+                $message->read = true;
+                $message->save();
+            });
 
         return response()->json(['message' => 'Mensajes marcados como leídos']);
     }
@@ -80,11 +87,21 @@ class MessageController extends Controller
      */
     public function getUnreadCount(Request $request)
     {
-        $userId = $request->user()->id;
+        $userId = $this->requireUser($request)->id;
         $count = Message::where('receiver_id', $userId)
-                        ->unread()
-                        ->count();
+            ->unread()
+            ->count();
 
         return response()->json(['unread_count' => $count]);
+    }
+
+    private function requireUser(Request $request)
+    {
+        $user = $request->user();
+        if (!$user) {
+            abort(Response::HTTP_UNAUTHORIZED, 'No autenticado');
+        }
+
+        return $user;
     }
 }

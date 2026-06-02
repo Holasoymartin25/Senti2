@@ -27,9 +27,9 @@ class Message extends Model
         return $this->belongsTo(User::class, 'receiver_id');
     }
 
-    /** PostgreSQL/Neon: no usar where('read', false) — Laravel enlaza 0 y falla boolean = integer. */
+    /** PostgreSQL/Neon: columna reservada "read"; evitar binding 0/1. */
     public function scopeUnread($query)
     {
-        return $query->whereRaw($query->getModel()->qualifyColumn('read') . ' = false');
+        return $query->where($query->getModel()->qualifyColumn('read'), false);
     }
 }

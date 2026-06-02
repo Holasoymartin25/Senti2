@@ -4,8 +4,8 @@ export const environment = {
   apiUrl: '/api/v1',
   reverb: {
     key: 'senti2-key',
-    // EchoService usa window.location en producción; estos valores no se usan en AWS.
-    host: '',
+    // En local: localhost. En AWS Echo usa window.location (no este host).
+    host: 'localhost',
     port: 80,
     scheme: 'http',
   },
