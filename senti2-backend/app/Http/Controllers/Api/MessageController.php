@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Message;
 use App\Events\MessageSent;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class MessageController extends Controller
 {
@@ -15,7 +15,7 @@ class MessageController extends Controller
      */
     public function index(Request $request, $otherUserId)
     {
-        $userId = Auth::id();
+        $userId = $request->user()->id;
 
         $messages = Message::where(function ($q) use ($userId, $otherUserId) {
                 $q->where('sender_id', $userId)
@@ -43,15 +43,19 @@ class MessageController extends Controller
         ]);
 
         $message = Message::create([
-            'sender_id'   => Auth::id(),
-            'receiver_id' => $request->receiver_id,
-            'content'     => $request->content,
+            'sender_id'   => $request->user()->id,
+            'receiver_id' => $request->integer('receiver_id'),
+            'content'     => $request->string('content')->toString(),
             'read'        => false,
         ]);
 
         $message->load('sender:id,name,email');
 
-        broadcast(new MessageSent($message))->toOthers();
+        try {
+            broadcast(new MessageSent($message))->toOthers();
+        } catch (\Throwable $e) {
+            Log::warning('Broadcast MessageSent failed', ['error' => $e->getMessage()]);
+        }
 
         return response()->json($message, 201);
     }
@@ -59,9 +63,9 @@ class MessageController extends Controller
     /**
      * Marcar como leídos los mensajes de un remitente hacia el usuario autenticado
      */
-    public function markAsRead($senderId)
+    public function markAsRead(Request $request, $senderId)
     {
-        $userId = Auth::id();
+        $userId = $request->user()->id;
 
         Message::where('sender_id', $senderId)
                ->where('receiver_id', $userId)
@@ -76,7 +80,7 @@ class MessageController extends Controller
      */
     public function getUnreadCount(Request $request)
     {
-        $userId = Auth::id();
+        $userId = $request->user()->id;
         $count = Message::where('receiver_id', $userId)
                         ->unread()
                         ->count();

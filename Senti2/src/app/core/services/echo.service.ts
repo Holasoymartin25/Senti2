@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import Echo from 'laravel-echo';
+import Echo from 'laravel-echo/dist/echo.common.js';
 import Pusher from 'pusher-js';
 import { environment } from '../../../environments/environment';
 
@@ -16,20 +16,15 @@ export class EchoService {
       window.location.hostname === '127.0.0.1';
     const sameOriginApi = !environment.apiUrl.includes('://');
 
-    // Reverb expone WebSockets en /app (nginx en AWS hace proxy de /app → reverb:8080).
-    const wsPath = '/app';
-
     let wsHost: string;
     let wsPort: number;
     let forceTLS: boolean;
 
     if (isLocalhost && environment.reverb?.host) {
-      // Desarrollo: conexión directa a `php artisan reverb:start` (puerto 8080).
       wsHost = environment.reverb.host;
       wsPort = environment.reverb.port ?? 8080;
       forceTLS = environment.reverb.scheme === 'https';
     } else {
-      // Producción (AWS): mismo host que el front; nginx termina TLS y enruta /app.
       wsHost = window.location.hostname;
       wsPort = window.location.port
         ? Number(window.location.port)
@@ -52,13 +47,14 @@ export class EchoService {
       } catch (_) {}
     }
 
+    // No establecer wsPath: Reverb/Pusher ya usan el prefijo /app.
+    // Añadir wsPath: '/app' provoca /app/app/... detrás del proxy nginx.
     this.echo = new Echo({
       broadcaster: 'reverb',
       key: environment.reverb?.key || 'senti2-key',
       wsHost,
       wsPort,
       wssPort: wsPort,
-      wsPath,
       forceTLS,
       enabledTransports: ['ws', 'wss'],
       authEndpoint,

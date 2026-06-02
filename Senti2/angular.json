@@ -29,7 +29,11 @@
             "styles": [
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [],
+            "allowedCommonJsDependencies": [
+              "laravel-echo",
+              "pusher-js"
+            ]
           },
             "configurations": {
             "production": {

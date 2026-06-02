@@ -27,9 +27,9 @@ class Message extends Model
         return $this->belongsTo(User::class, 'receiver_id');
     }
 
-    /** PostgreSQL: evitar comparar boolean con 0/1 en SQL. */
+    /** PostgreSQL/Neon: columna reservada "read"; comparar como booleano. */
     public function scopeUnread($query)
     {
-        return $query->whereRaw('"read" = false');
+        return $query->where($query->getModel()->qualifyColumn('read'), false);
     }
 }
