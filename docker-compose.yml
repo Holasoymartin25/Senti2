@@ -1,12 +1,12 @@
 services:
   backend:
-    build: ./senti2-backend
+    image: ghcr.io/holasoymartin25/senti2-backend:latest
     env_file:
       - ./senti2-backend/.env
     restart: unless-stopped
 
   reverb:
-    build: ./senti2-backend
+    image: ghcr.io/holasoymartin25/senti2-backend:latest
     env_file:
       - ./senti2-backend/.env
     entrypoint: ["php", "artisan", "reverb:start", "--host=0.0.0.0", "--port=8080"]
@@ -15,7 +15,7 @@ services:
     restart: unless-stopped
 
   frontend:
-    build: ./Senti2
+    image: ghcr.io/holasoymartin25/senti2-frontend:latest
     ports:
       - "8080:80"
     depends_on:

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import Echo from 'laravel-echo/dist/echo.common.js';
+import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
 import { environment } from '../../../environments/environment';
 
