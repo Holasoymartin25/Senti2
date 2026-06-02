@@ -48,6 +48,16 @@ variable "github_token" {
   sensitive = true
 }
 
+variable "app_key" {
+  type      = string
+  sensitive = true
+}
+
+variable "neon_database_url" {
+  type      = string
+  sensitive = true
+}
+
 provider "aws" {
   region = var.aws_region
 }
@@ -114,11 +124,13 @@ resource "aws_instance" "app" {
 
   user_data = <<-EOF
     #!/bin/bash
+    set -eux
     apt-get update -y
     apt-get install -y git curl
     curl -fsSL https://get.docker.com | sh
     systemctl enable docker
     systemctl start docker
+    rm -rf /app
     git clone --depth 1 --branch ${var.github_branch} https://${var.github_token}@${var.github_repo_url} /app
     cd /app/Senti2
     cp senti2-backend/.env.docker.example senti2-backend/.env
