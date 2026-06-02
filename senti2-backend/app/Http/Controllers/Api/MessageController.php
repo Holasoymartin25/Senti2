@@ -7,6 +7,7 @@ use App\Models\Message;
 use App\Events\MessageSent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class MessageController extends Controller
 {
@@ -46,7 +47,7 @@ class MessageController extends Controller
             'sender_id'   => Auth::id(),
             'receiver_id' => $request->receiver_id,
             'content'     => $request->content,
-            'read'        => false,
+            'read'        => DB::raw('false'),
         ]);
 
         $message->load('sender:id,name,email');
@@ -66,7 +67,7 @@ class MessageController extends Controller
         Message::where('sender_id', $senderId)
                ->where('receiver_id', $userId)
                ->unread()
-               ->update(['read' => true]);
+               ->update(['read' => DB::raw('true')]);
 
         return response()->json(['message' => 'Mensajes marcados como leídos']);
     }

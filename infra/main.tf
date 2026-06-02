@@ -48,6 +48,16 @@ variable "github_token" {
   sensitive = true
 }
 
+variable "app_key" {
+  type      = string
+  sensitive = true
+}
+
+variable "neon_database_url" {
+  type      = string
+  sensitive = true
+}
+
 provider "aws" {
   region = var.aws_region
 }
@@ -114,15 +124,41 @@ resource "aws_instance" "app" {
 
   user_data = <<-EOF
     #!/bin/bash
+    set -eux
     apt-get update -y
     apt-get install -y git curl
     curl -fsSL https://get.docker.com | sh
     systemctl enable docker
     systemctl start docker
+    rm -rf /app
     git clone --depth 1 --branch ${var.github_branch} https://${var.github_token}@${var.github_repo_url} /app
-    cd /app/Senti2
-    cp senti2-backend/.env.docker.example senti2-backend/.env
-    echo "Primera vez: edita senti2-backend/.env con APP_KEY y DB_URL de Neon antes de usar la app."
+    cd /app
+    cat > senti2-backend/.env <<ENVEOF
+    APP_NAME=Senti2
+    APP_ENV=production
+    APP_KEY=${var.app_key}
+    APP_DEBUG=false
+    APP_URL=http://${aws_eip.app.public_ip}
+    APP_TIMEZONE=UTC
+    FRONTEND_URL=http://${aws_eip.app.public_ip}
+    LOG_CHANNEL=stack
+    DB_CONNECTION=pgsql
+    DB_URL=${var.neon_database_url}
+    MAIL_MAILER=log
+    MAIL_CONTACT_TO=senti2soporte@gmail.com
+    BROADCAST_CONNECTION=reverb
+    REVERB_APP_ID=senti2
+    REVERB_APP_KEY=senti2-key
+    REVERB_APP_SECRET=senti2-secret
+    REVERB_HOST=${aws_eip.app.public_ip}
+    REVERB_PORT=80
+    REVERB_SCHEME=http
+    SESSION_DRIVER=file
+    CACHE_STORE=file
+    QUEUE_CONNECTION=sync
+    ENVEOF
+    sed -i 's/"8080:80"/"80:80"/' docker-compose.yml
+    docker compose up -d --build
   EOF
 
   tags = { Name = "${var.project_name}-app" }
