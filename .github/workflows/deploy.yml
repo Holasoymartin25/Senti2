@@ -33,7 +33,7 @@ jobs:
             fi
             sudo git fetch origin
             sudo git reset --hard origin/main
-            cd /app/Senti2
+            cd /app
             EC2_HOST="${{ secrets.EC2_HOST }}"
             {
               echo "APP_NAME=Senti2"
@@ -47,6 +47,7 @@ jobs:
               echo "DB_CONNECTION=pgsql"
               echo "DB_URL=${NEON_DATABASE_URL}"
               echo "MAIL_MAILER=log"
+              echo "MAIL_CONTACT_TO=senti2soporte@gmail.com"
               echo "BROADCAST_CONNECTION=reverb"
               echo "REVERB_APP_ID=senti2"
               echo "REVERB_APP_KEY=senti2-key"
@@ -58,6 +59,7 @@ jobs:
               echo "CACHE_STORE=file"
               echo "QUEUE_CONNECTION=sync"
             } | sudo tee senti2-backend/.env > /dev/null
+            sudo sed -i 's/"8080:80"/"80:80"/' docker-compose.yml
             sudo docker compose down --remove-orphans || true
             sudo docker compose up -d --build
             sudo docker compose ps
