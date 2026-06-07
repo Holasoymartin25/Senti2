@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -60,6 +61,24 @@ class AdminAuthController extends Controller
         return redirect()
             ->route('admin.login')
             ->withCookie($this->localeCookie($locale));
+    }
+
+    /** Puente: token Sanctum (app Angular) → sesión web (panel Blade). */
+    public function sessionFromToken(Request $request): JsonResponse
+    {
+        $user = $request->user('sanctum');
+
+        if (! $user?->isAdmin()) {
+            return response()->json(['message' => __('admin.access_denied')], 403);
+        }
+
+        Auth::guard('web')->login($user);
+        $request->session()->regenerate();
+        $this->storeLocale($request, $this->resolveLocale($request));
+
+        return response()->json([
+            'redirect' => route('admin.users.index'),
+        ])->withCookie($this->localeCookie($this->resolveLocale($request)));
     }
 
     private function resolveLocale(Request $request): string

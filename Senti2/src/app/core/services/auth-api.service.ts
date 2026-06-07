@@ -274,5 +274,16 @@ export class AuthApiService {
         this._currentUser.next(null);
     }
 
+    /** Crea sesión web en el panel Blade tras login API con rol admin. */
+    async openAdminPanel(): Promise<void> {
+        const response: any = await firstValueFrom(
+            this.http.post<{ redirect: string }>('/panel-admin/session-from-token', {}, {
+                headers: this.getHeaders(),
+                withCredentials: true,
+            })
+        );
+        window.location.href = response.redirect || '/panel-admin/users';
+    }
+
 }
 

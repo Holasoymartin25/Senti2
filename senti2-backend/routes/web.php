@@ -7,6 +7,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', '/panel-admin/login');
 
+Route::post('panel-admin/session-from-token', [AdminAuthController::class, 'sessionFromToken'])
+    ->middleware('auth:sanctum')
+    ->name('admin.session-from-token');
+
 Route::get('panel-admin/css/admin.css', function () {
     return response()->file(public_path('css/admin.css'), [
         'Content-Type' => 'text/css; charset=UTF-8',

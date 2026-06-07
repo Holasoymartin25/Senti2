@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { AuthApiService } from '../../core/services/auth-api.service';
-import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -75,7 +74,7 @@ export class LoginComponent implements OnInit {
       } else {
         const role = this.auth.getCurrentUserValue()?.role;
         if (role === 'admin') {
-          window.location.href = environment.adminPanelUrl;
+          await this.auth.openAdminPanel();
           return;
         }
         this.router.navigateByUrl(role === 'psicologo' ? '/admin' : '/inicio');

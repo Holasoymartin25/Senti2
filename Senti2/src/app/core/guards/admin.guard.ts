@@ -1,7 +1,6 @@
 import { CanActivateFn, Router } from '@angular/router';
 import { inject } from '@angular/core';
 import { AuthApiService } from '../services/auth-api.service';
-import { environment } from '../../../environments/environment';
 
 export const adminGuard: CanActivateFn = async () => {
   const authApi = inject(AuthApiService);
@@ -24,7 +23,7 @@ export const adminGuard: CanActivateFn = async () => {
   }
 
   if (user?.role === 'admin') {
-    window.location.href = environment.adminPanelUrl;
+    await authApi.openAdminPanel();
     return false;
   }
 

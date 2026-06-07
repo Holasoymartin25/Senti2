@@ -100,3 +100,24 @@ test('signout revoca el token', function () {
         'tokenable_id' => $user->id,
     ]);
 });
+
+test('session from token crea sesión web para admin', function () {
+    $admin = User::factory()->create(['role' => 'admin']);
+    $token = $admin->createToken('api')->plainTextToken;
+
+    $this->withHeaders(['Authorization' => "Bearer {$token}"])
+        ->post('/panel-admin/session-from-token')
+        ->assertOk()
+        ->assertJsonStructure(['redirect']);
+
+    $this->assertAuthenticatedAs($admin, 'web');
+});
+
+test('session from token rechaza usuarios no admin', function () {
+    $user = User::factory()->create(['role' => 'user']);
+    $token = $user->createToken('api')->plainTextToken;
+
+    $this->withHeaders(['Authorization' => "Bearer {$token}"])
+        ->post('/panel-admin/session-from-token')
+        ->assertForbidden();
+});
