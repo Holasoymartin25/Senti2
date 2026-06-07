@@ -30,8 +30,6 @@ Senti2 es una plataforma web de bienestar emocional que conecta pacientes con ps
 | UI Kit | https://www.figma.com/design/DEruwgHUcU4dyW1NMLYmQF/Proyecto-Senti2-UiKit |
 | FigJam | https://www.figma.com/board/l3mHfWrikJh4IhvWt1w6Yr/FigJam_Senti2 |
 | PDF presentación | [docs/Senti2_Presentacion.pdf](docs/Senti2_Presentacion.pdf) |
-
-_Pendiente: Notion (anteproyecto) · capturas en `docs/capturas/`_
 ---
 
 ## Stack
@@ -58,7 +56,7 @@ Paloma — backend Laravel, base de datos, despliegue.
 
 Esquema entidad–relación (PostgreSQL):
 
-![Esquema E/R Senti2](./docs/er-diagrama.png)
+<img width="1507" height="1173" alt="image" src="https://github.com/user-attachments/assets/ca8f2344-7de3-457c-8880-0cf42fdebefe" />
 
 ---
 
@@ -67,8 +65,7 @@ Esquema entidad–relación (PostgreSQL):
 - **Paciente:** `usuario1@admin.com` / `password` → tests, diario, chat
 - **Psicólogo:** `/admin` → `psicologo1@admin.com` / `password`
 - **Admin:** `/panel-admin/login` → `admin1@admin.com` / `password` (también accesible desde login Angular si el rol es admin)
-- **Landing local:** desde `Senti2/` → `npm run landing` (puerto 5500)
-- **Landing producción:** `/landing/`
+- **Landing page:** `/landing/`
 
 ---
 
