@@ -1,9 +1,14 @@
 <?php
 
+use App\Http\Middleware\CheckRole;
+use App\Http\Middleware\SetLocale;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Middleware\HandleCors;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -19,18 +24,35 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->api(prepend: [
-            \Illuminate\Http\Middleware\HandleCors::class,
+            HandleCors::class,
         ]);
 
-        $middleware->redirectGuestsTo(fn (Request $request) => ($request->is('api/*') || $request->is('broadcasting/*')) ? null : '/');
+        $middleware->api(append: [
+            SetLocale::class,
+        ]);
+
+        $middleware->web(append: [
+            SetLocale::class,
+        ]);
+
+        $middleware->redirectGuestsTo(function (Request $request) {
+            if ($request->is('api/*') || $request->is('broadcasting/*')) {
+                return null;
+            }
+            if ($request->is('panel-admin') || $request->is('panel-admin/*')) {
+                return route('admin.login');
+            }
+
+            return '/';
+        });
 
         $middleware->alias([
-            'role' => \App\Http\Middleware\CheckRole::class,
+            'role' => CheckRole::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        $exceptions->render(function (\Throwable $e, Request $request): ?Response {
-            if (!$request->is('api/*') && !$request->is('broadcasting/*')) {
+        $exceptions->render(function (Throwable $e, Request $request): ?Response {
+            if (! $request->is('api/*') && ! $request->is('broadcasting/*')) {
                 return null;
             }
             $allowedOrigins = array_values(array_filter(
@@ -38,19 +60,20 @@ return Application::configure(basePath: dirname(__DIR__))
             ));
             $origin = $request->header('Origin');
             $allowOrigin = in_array($origin, $allowedOrigins) ? $origin : ($allowedOrigins[0] ?? '*');
-            if ($e instanceof \Illuminate\Validation\ValidationException) {
+            if ($e instanceof ValidationException) {
                 return response()->json([
                     'message' => 'Error de validación',
                     'errors' => $e->errors(),
                 ], 422)
                     ->withHeaders(['Access-Control-Allow-Origin' => $allowOrigin]);
             }
-            if ($e instanceof \Illuminate\Auth\AuthenticationException) {
+            if ($e instanceof AuthenticationException) {
                 return response()->json(['error' => 'No autenticado'], 401)
                     ->withHeaders(['Access-Control-Allow-Origin' => $allowOrigin]);
             }
             $status = method_exists($e, 'getStatusCode') ? $e->getStatusCode() : 500;
             $message = config('app.debug') ? $e->getMessage() : 'Error interno del servidor';
+
             return response()->json(['message' => $message, 'error' => $message], $status)
                 ->withHeaders([
                     'Access-Control-Allow-Origin' => $allowOrigin,

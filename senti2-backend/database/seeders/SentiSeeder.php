@@ -21,9 +21,9 @@ class SentiSeeder extends Seeder
             $user = User::firstOrCreate(
                 ['email' => $data['email']],
                 [
-                    'name'     => $data['name'],
+                    'name' => $data['name'],
                     'password' => Hash::make('password'),
-                    'role'     => 'admin',
+                    'role' => 'admin',
                 ]
             );
             Profile::firstOrCreate(['user_id' => $user->id]);
@@ -42,9 +42,9 @@ class SentiSeeder extends Seeder
             $psi = User::firstOrCreate(
                 ['email' => $data['email']],
                 [
-                    'name'     => $data['name'],
+                    'name' => $data['name'],
                     'password' => Hash::make('password'),
-                    'role'     => 'psicologo',
+                    'role' => 'psicologo',
                 ]
             );
             Profile::firstOrCreate(['user_id' => $psi->id]);
@@ -56,17 +56,17 @@ class SentiSeeder extends Seeder
         $usuarios1 = [
             ['name' => 'David Hormigo',  'email' => 'usuario1@admin.com'],
             ['name' => 'J Mayorga',      'email' => 'usuario2@admin.com'],
-            ['name' => 'Antonio Sanchez','email' => 'usuario3@admin.com'],
+            ['name' => 'Antonio Sanchez', 'email' => 'usuario3@admin.com'],
         ];
 
         foreach ($usuarios1 as $data) {
             $user = User::firstOrCreate(
                 ['email' => $data['email']],
                 [
-                    'name'          => $data['name'],
-                    'password'      => Hash::make('password'),
-                    'role'          => 'user',
-                    'psicologo_id'  => $psicologos[0]->id,
+                    'name' => $data['name'],
+                    'password' => Hash::make('password'),
+                    'role' => 'user',
+                    'psicologo_id' => $psicologos[0]->id,
                 ]
             );
             Profile::firstOrCreate(['user_id' => $user->id]);
@@ -83,10 +83,10 @@ class SentiSeeder extends Seeder
             $user = User::firstOrCreate(
                 ['email' => $data['email']],
                 [
-                    'name'          => $data['name'],
-                    'password'      => Hash::make('password'),
-                    'role'          => 'user',
-                    'psicologo_id'  => $psicologos[1]->id,
+                    'name' => $data['name'],
+                    'password' => Hash::make('password'),
+                    'role' => 'user',
+                    'psicologo_id' => $psicologos[1]->id,
                 ]
             );
             Profile::firstOrCreate(['user_id' => $user->id]);
@@ -104,9 +104,9 @@ class SentiSeeder extends Seeder
             $user = User::firstOrCreate(
                 ['email' => $data['email']],
                 [
-                    'name'     => $data['name'],
+                    'name' => $data['name'],
                     'password' => Hash::make('password'),
-                    'role'     => 'user',
+                    'role' => 'user',
                 ]
             );
             Profile::firstOrCreate(['user_id' => $user->id]);

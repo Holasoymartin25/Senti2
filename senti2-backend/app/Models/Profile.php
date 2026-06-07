@@ -12,6 +12,8 @@ class Profile extends Model
         'apellidos',
         'telefono',
         'fecha_nacimiento',
+        'avatar_path',
+        'private_document_path',
     ];
 
     protected $casts = [

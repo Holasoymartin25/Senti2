@@ -1,15 +1,15 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AdminController;
 use App\Http\Controllers\Api\AreaPersonalController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\CitasController;
 use App\Http\Controllers\Api\ContactController;
+use App\Http\Controllers\Api\MessageController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\PsicologoController;
-use App\Http\Controllers\Api\CitasController;
 use App\Http\Controllers\Api\SolicitudController;
-use App\Http\Controllers\Api\MessageController;
+use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function () {
     Route::post('/contact', [ContactController::class, 'store']);
@@ -25,6 +25,9 @@ Route::prefix('v1')->group(function () {
 
         Route::get('/profile', [ProfileController::class, 'show']);
         Route::patch('/profile', [ProfileController::class, 'update']);
+        Route::post('/profile/avatar', [ProfileController::class, 'uploadAvatar']);
+        Route::post('/profile/document', [ProfileController::class, 'uploadPrivateDocument']);
+        Route::get('/profile/document', [ProfileController::class, 'downloadPrivateDocument']);
 
         Route::post('/area-personal/test-results', [AreaPersonalController::class, 'storeTestResult']);
         Route::get('/area-personal/test-results', [AreaPersonalController::class, 'getTestResults']);
@@ -37,11 +40,11 @@ Route::prefix('v1')->group(function () {
         Route::post('/solicitudes/{id}/rechazar', [SolicitudController::class, 'rechazar']);
 
         // Mensajes — accesible por cualquier usuario autenticado
-        Route::get('/messages/unread/count',      [MessageController::class, 'getUnreadCount']);
-        Route::get('/messages/{otherUserId}',    [MessageController::class, 'index']);
-        Route::post('/messages',                  [MessageController::class, 'store']);
+        Route::get('/messages/unread/count', [MessageController::class, 'getUnreadCount']);
+        Route::get('/messages/{otherUserId}', [MessageController::class, 'index']);
+        Route::post('/messages', [MessageController::class, 'store']);
         Route::patch('/messages/{senderId}/read', [MessageController::class, 'markAsRead']);
-        Route::get('/mi-psicologo',               [AuthController::class, 'miPsicologo']);
+        Route::get('/mi-psicologo', [AuthController::class, 'miPsicologo']);
 
         Route::middleware('role:admin,psicologo')->prefix('admin')->group(function () {
             Route::get('/users', [AdminController::class, 'index']);

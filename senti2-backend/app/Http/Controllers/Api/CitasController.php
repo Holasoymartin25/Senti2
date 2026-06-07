@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Appointment;
 use App\Models\User;
+use App\Support\PaginationHelper;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -13,17 +15,17 @@ class CitasController extends Controller
     private function formatCita(Appointment $c): array
     {
         return [
-            'id'         => $c->id,
-            'paciente'   => $c->paciente ? [
-                'id'    => $c->paciente->id,
-                'name'  => $c->paciente->name,
+            'id' => $c->id,
+            'paciente' => $c->paciente ? [
+                'id' => $c->paciente->id,
+                'name' => $c->paciente->name,
                 'email' => $c->paciente->email,
             ] : null,
             'fecha_hora' => $c->fecha_hora->format('Y-m-d\TH:i'),
-            'duracion'   => $c->duracion,
-            'modalidad'  => $c->modalidad,
-            'estado'     => $c->estado,
-            'notas'      => $c->notas ?? '',
+            'duracion' => $c->duracion,
+            'modalidad' => $c->modalidad,
+            'estado' => $c->estado,
+            'notas' => $c->notas ?? '',
             'created_at' => $c->created_at->toDateString(),
         ];
     }
@@ -31,13 +33,17 @@ class CitasController extends Controller
     /** Listado de citas del psicólogo autenticado */
     public function index(Request $request): JsonResponse
     {
-        $citas = Appointment::where('psicologo_id', $request->user()->id)
+        $perPage = min(max((int) $request->query('per_page', 15), 1), 50);
+
+        $paginator = Appointment::where('psicologo_id', $request->user()->id)
             ->with('paciente')
             ->orderByDesc('fecha_hora')
-            ->get()
-            ->map(fn($c) => $this->formatCita($c));
+            ->paginate($perPage)
+            ->withQueryString();
 
-        return response()->json(['citas' => $citas]);
+        $paginator->getCollection()->transform(fn ($c) => $this->formatCita($c));
+
+        return PaginationHelper::wrap($paginator, 'citas');
     }
 
     /** Crear una cita con uno de los pacientes asignados */
@@ -45,10 +51,10 @@ class CitasController extends Controller
     {
         $data = $request->validate([
             'paciente_id' => 'required|integer',
-            'fecha_hora'  => 'required|date|after:now',
-            'duracion'    => 'integer|min:15|max:240',
-            'modalidad'   => 'in:presencial,online',
-            'notas'       => 'nullable|string|max:2000',
+            'fecha_hora' => 'required|date|after:now',
+            'duracion' => 'integer|min:15|max:240',
+            'modalidad' => 'in:presencial,online',
+            'notas' => 'nullable|string|max:2000',
         ]);
 
         // Solo se puede crear cita con pacientes asignados a este psicólogo
@@ -56,12 +62,12 @@ class CitasController extends Controller
             ->where('psicologo_id', $request->user()->id)
             ->first();
 
-        if (!$paciente) {
+        if (! $paciente) {
             return response()->json(['error' => 'Paciente no encontrado o no asignado a usted'], 422);
         }
 
         // Validar solapamiento (asumiendo que dura 1 hora)
-        $start = \Carbon\Carbon::parse($data['fecha_hora']);
+        $start = Carbon::parse($data['fecha_hora']);
         $startLimit = $start->copy()->subMinutes(59);
         $endLimit = $start->copy()->addMinutes(59);
 
@@ -75,19 +81,19 @@ class CitasController extends Controller
 
         $cita = Appointment::create([
             'psicologo_id' => $request->user()->id,
-            'paciente_id'  => $data['paciente_id'],
-            'fecha_hora'   => $data['fecha_hora'],
-            'duracion'     => $data['duracion'] ?? 60,
-            'modalidad'    => $data['modalidad'] ?? 'presencial',
-            'estado'       => 'pendiente',
-            'notas'        => $data['notas'] ?? null,
+            'paciente_id' => $data['paciente_id'],
+            'fecha_hora' => $data['fecha_hora'],
+            'duracion' => $data['duracion'] ?? 60,
+            'modalidad' => $data['modalidad'] ?? 'presencial',
+            'estado' => 'pendiente',
+            'notas' => $data['notas'] ?? null,
         ]);
 
         $cita->load('paciente');
 
         return response()->json([
             'message' => 'Cita creada correctamente',
-            'cita'    => $this->formatCita($cita),
+            'cita' => $this->formatCita($cita),
         ], 201);
     }
 
@@ -98,20 +104,20 @@ class CitasController extends Controller
             ->where('psicologo_id', $request->user()->id)
             ->first();
 
-        if (!$cita) {
+        if (! $cita) {
             return response()->json(['error' => 'Cita no encontrada'], 404);
         }
 
         $data = $request->validate([
             'fecha_hora' => 'sometimes|date|after:now',
-            'duracion'   => 'sometimes|integer|min:15|max:240',
-            'modalidad'  => 'sometimes|in:presencial,online',
-            'estado'     => 'sometimes|in:pendiente,confirmada,cancelada,completada',
-            'notas'      => 'nullable|string|max:2000',
+            'duracion' => 'sometimes|integer|min:15|max:240',
+            'modalidad' => 'sometimes|in:presencial,online',
+            'estado' => 'sometimes|in:pendiente,confirmada,cancelada,completada',
+            'notas' => 'nullable|string|max:2000',
         ]);
 
         if (isset($data['fecha_hora'])) {
-            $start = \Carbon\Carbon::parse($data['fecha_hora']);
+            $start = Carbon::parse($data['fecha_hora']);
             $startLimit = $start->copy()->subMinutes(59);
             $endLimit = $start->copy()->addMinutes(59);
 
@@ -130,7 +136,7 @@ class CitasController extends Controller
 
         return response()->json([
             'message' => 'Cita actualizada',
-            'cita'    => $this->formatCita($cita),
+            'cita' => $this->formatCita($cita),
         ]);
     }
 
@@ -141,7 +147,7 @@ class CitasController extends Controller
             ->where('psicologo_id', $request->user()->id)
             ->first();
 
-        if (!$cita) {
+        if (! $cita) {
             return response()->json(['error' => 'Cita no encontrada'], 404);
         }
 

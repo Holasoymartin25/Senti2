@@ -9,9 +9,12 @@
     <a routerLink="/contacto" routerLinkActive="active">Contacto</a>
 
     @if (isAuthenticated) {
-    @if (userRole === 'admin' || userRole === 'psicologo') {
+    @if (userRole === 'admin') {
+    <a [href]="adminPanelUrl" class="nav-link-with-badge">Panel Admin</a>
+    }
+    @if (userRole === 'psicologo') {
     <a routerLink="/admin" routerLinkActive="active" class="nav-link-with-badge">
-      Panel Admin
+      Panel Psicólogo
       <span *ngIf="unreadMessagesCount > 0" class="nav-badge">{{ unreadMessagesCount }}</span>
     </a>
     }

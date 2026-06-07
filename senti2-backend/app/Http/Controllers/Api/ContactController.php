@@ -46,7 +46,7 @@ class ContactController extends Controller
         if ($request->hasFile('cv')) {
             $file = $request->file('cv');
             $cvPath = $file->store('contact-cv', 'local');
-            $cvPath = storage_path('app/' . $cvPath);
+            $cvPath = storage_path('app/'.$cvPath);
             $cvOriginalName = $file->getClientOriginalName();
         }
 
@@ -66,6 +66,7 @@ class ContactController extends Controller
                 @unlink($cvPath);
             }
             report($e);
+
             return response()->json([
                 'message' => 'No se pudo enviar el mensaje. Inténtalo de nuevo más tarde.',
             ], 500);

@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Message;
 use App\Models\PatientRequest;
 use App\Models\User;
+use App\Support\PaginationHelper;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -13,10 +15,10 @@ class PsicologoController extends Controller
     private function formatUser(User $u): array
     {
         return [
-            'id'         => $u->id,
-            'name'       => $u->name,
-            'email'      => $u->email,
-            'role'       => $u->role,
+            'id' => $u->id,
+            'name' => $u->name,
+            'email' => $u->email,
+            'role' => $u->role,
             'created_at' => $u->created_at->toDateString(),
         ];
     }
@@ -26,12 +28,12 @@ class PsicologoController extends Controller
         return $u->diaryEntries()
             ->orderByDesc('date')
             ->get()
-            ->map(fn($e) => [
-                'id'       => $e->id,
-                'date'     => $e->date->format('Y-m-d'),
-                'mood'     => $e->mood,
+            ->map(fn ($e) => [
+                'id' => $e->id,
+                'date' => $e->date->format('Y-m-d'),
+                'mood' => $e->mood,
                 'emotions' => $e->emotions ?? [],
-                'note'     => $e->note ?? '',
+                'note' => $e->note ?? '',
             ])->all();
     }
 
@@ -40,12 +42,12 @@ class PsicologoController extends Controller
         return $u->testResults()
             ->orderByDesc('created_at')
             ->get()
-            ->map(fn($r) => [
-                'testTitle'    => $r->test_title,
+            ->map(fn ($r) => [
+                'testTitle' => $r->test_title,
                 'displayScore' => $r->display_score,
-                'displayMax'   => $r->display_max,
-                'level'        => $r->level,
-                'date'         => $r->created_at->toDateString(),
+                'displayMax' => $r->display_max,
+                'level' => $r->level,
+                'date' => $r->created_at->toDateString(),
             ])->all();
     }
 
@@ -58,33 +60,42 @@ class PsicologoController extends Controller
             ->where('status', 'pending')
             ->pluck('user_id');
 
-        $users = User::whereNull('psicologo_id')
+        $perPage = min(max((int) $request->query('per_page', 15), 1), 50);
+
+        $paginator = User::whereNull('psicologo_id')
             ->where('role', 'user')
             ->whereNotIn('id', $conSolicitudPendiente)
             ->orderBy('id')
-            ->get()
-            ->map(fn($u) => $this->formatUser($u));
+            ->paginate($perPage)
+            ->withQueryString();
 
-        return response()->json(['users' => $users]);
+        $paginator->getCollection()->transform(fn ($u) => $this->formatUser($u));
+
+        return PaginationHelper::wrap($paginator, 'users');
     }
 
     /** Pacientes asignados al psicólogo autenticado */
     public function getPacientes(Request $request): JsonResponse
     {
         $psicologoId = $request->user()->id;
-        $pacientes = User::where('psicologo_id', $psicologoId)
-            ->orderBy('id')
-            ->get()
-            ->map(function($u) use ($psicologoId) {
-                $formatted = $this->formatUser($u);
-                $formatted['unread_count'] = \App\Models\Message::where('sender_id', $u->id)
-                    ->where('receiver_id', $psicologoId)
-                    ->unread()
-                    ->count();
-                return $formatted;
-            });
+        $perPage = min(max((int) $request->query('per_page', 15), 1), 50);
 
-        return response()->json(['pacientes' => $pacientes]);
+        $paginator = User::where('psicologo_id', $psicologoId)
+            ->orderBy('id')
+            ->paginate($perPage)
+            ->withQueryString();
+
+        $paginator->getCollection()->transform(function ($u) use ($psicologoId) {
+            $formatted = $this->formatUser($u);
+            $formatted['unread_count'] = Message::where('sender_id', $u->id)
+                ->where('receiver_id', $psicologoId)
+                ->unread()
+                ->count();
+
+            return $formatted;
+        });
+
+        return PaginationHelper::wrap($paginator, 'pacientes');
     }
 
     /** Datos completos de un paciente (solo si está asignado a este psicólogo) */
@@ -94,12 +105,12 @@ class PsicologoController extends Controller
             ->where('psicologo_id', $request->user()->id)
             ->first();
 
-        if (!$paciente) {
+        if (! $paciente) {
             return response()->json(['error' => 'Paciente no encontrado o no asignado a usted'], 404);
         }
 
         return response()->json([
-            'user'  => $this->formatUser($paciente),
+            'user' => $this->formatUser($paciente),
             'diary' => $this->formatDiary($paciente),
             'tests' => $this->formatTests($paciente),
         ]);
@@ -117,7 +128,7 @@ class PsicologoController extends Controller
             ->whereNull('psicologo_id')
             ->first();
 
-        if (!$user) {
+        if (! $user) {
             return response()->json(['error' => 'Usuario no encontrado o ya tiene psicólogo asignado'], 422);
         }
 
@@ -131,13 +142,13 @@ class PsicologoController extends Controller
 
         $solicitud = PatientRequest::create([
             'psicologo_id' => $request->user()->id,
-            'user_id'      => $id,
-            'message'      => $request->input('message'),
-            'status'       => 'pending',
+            'user_id' => $id,
+            'message' => $request->input('message'),
+            'status' => 'pending',
         ]);
 
         return response()->json([
-            'message'   => 'Solicitud enviada correctamente',
+            'message' => 'Solicitud enviada correctamente',
             'solicitud' => $this->formatSolicitud($solicitud),
         ], 201);
     }
@@ -149,7 +160,7 @@ class PsicologoController extends Controller
             ->with('usuario')
             ->orderByDesc('created_at')
             ->get()
-            ->map(fn($s) => $this->formatSolicitud($s));
+            ->map(fn ($s) => $this->formatSolicitud($s));
 
         return response()->json(['solicitudes' => $solicitudes]);
     }
@@ -161,7 +172,7 @@ class PsicologoController extends Controller
             ->where('psicologo_id', $request->user()->id)
             ->first();
 
-        if (!$user) {
+        if (! $user) {
             return response()->json(['error' => 'Paciente no encontrado o no asignado a usted'], 404);
         }
 
@@ -178,14 +189,14 @@ class PsicologoController extends Controller
     private function formatSolicitud(PatientRequest $s): array
     {
         return [
-            'id'         => $s->id,
-            'user'       => $s->usuario ? [
-                'id'    => $s->usuario->id,
-                'name'  => $s->usuario->name,
+            'id' => $s->id,
+            'user' => $s->usuario ? [
+                'id' => $s->usuario->id,
+                'name' => $s->usuario->name,
                 'email' => $s->usuario->email,
             ] : null,
-            'message'    => $s->message,
-            'status'     => $s->status,
+            'message' => $s->message,
+            'status' => $s->status,
             'created_at' => $s->created_at->toDateString(),
         ];
     }

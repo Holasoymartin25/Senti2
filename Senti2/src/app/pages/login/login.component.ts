@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { AuthApiService } from '../../core/services/auth-api.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -73,7 +74,11 @@ export class LoginComponent implements OnInit {
         this.router.navigateByUrl(redirect);
       } else {
         const role = this.auth.getCurrentUserValue()?.role;
-        this.router.navigateByUrl(role === 'admin' || role === 'psicologo' ? '/admin' : '/inicio');
+        if (role === 'admin') {
+          window.location.href = environment.adminPanelUrl;
+          return;
+        }
+        this.router.navigateByUrl(role === 'psicologo' ? '/admin' : '/inicio');
       }
     } catch (error: any) {
       this.errorMessage = error.message || 'Error al iniciar sesión. Por favor, verifica tus credenciales.';

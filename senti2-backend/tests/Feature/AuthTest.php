@@ -19,7 +19,7 @@ test('signup con password menor a 6 caracteres devuelve 422', function () {
 
 test('signup correcto crea usuario y devuelve token', function () {
     $response = $this->postJson('/api/v1/auth/signup', [
-        'email'    => 'nuevo@example.com',
+        'email' => 'nuevo@example.com',
         'password' => 'password123',
     ]);
 
@@ -34,10 +34,10 @@ test('signup con email duplicado devuelve 422', function () {
     User::factory()->create(['email' => 'duplicado@example.com']);
 
     $this->postJson('/api/v1/auth/signup', [
-        'email'    => 'duplicado@example.com',
+        'email' => 'duplicado@example.com',
         'password' => 'password123',
     ])->assertStatus(422)
-      ->assertJsonValidationErrors(['email']);
+        ->assertJsonValidationErrors(['email']);
 });
 
 test('signin sin email devuelve 422', function () {
@@ -56,7 +56,7 @@ test('signin con credenciales inválidas devuelve 401', function () {
     User::factory()->create(['email' => 'user@example.com', 'password' => bcrypt('correctpassword')]);
 
     $this->postJson('/api/v1/auth/signin', [
-        'email'    => 'user@example.com',
+        'email' => 'user@example.com',
         'password' => 'wrongpassword',
     ])->assertStatus(422);
 });
@@ -65,7 +65,7 @@ test('signin correcto devuelve access_token y user', function () {
     User::factory()->create(['email' => 'user@example.com', 'password' => bcrypt('password123')]);
 
     $response = $this->postJson('/api/v1/auth/signin', [
-        'email'    => 'user@example.com',
+        'email' => 'user@example.com',
         'password' => 'password123',
     ]);
 
@@ -79,7 +79,7 @@ test('ruta protegida sin token devuelve 401', function () {
 });
 
 test('ruta protegida con token válido devuelve el usuario', function () {
-    $user  = User::factory()->create();
+    $user = User::factory()->create();
     $token = $user->createToken('api')->plainTextToken;
 
     $this->getJson('/api/v1/auth/user', ['Authorization' => "Bearer {$token}"])
@@ -88,9 +88,9 @@ test('ruta protegida con token válido devuelve el usuario', function () {
 });
 
 test('signout revoca el token', function () {
-    $user      = User::factory()->create();
+    $user = User::factory()->create();
     $tokenData = $user->createToken('api');
-    $plain     = $tokenData->plainTextToken;
+    $plain = $tokenData->plainTextToken;
 
     $this->withHeaders(['Authorization' => "Bearer {$plain}"])
         ->postJson('/api/v1/auth/signout')

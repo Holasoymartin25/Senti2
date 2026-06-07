@@ -94,6 +94,7 @@ jobs:
       - name: Build & push frontend image
         uses: docker/build-push-action@v6
         with:
-          context: ./Senti2
+          context: .
+          file: ./Senti2/Dockerfile
           push: true
           tags: ghcr.io/${{ steps.image.outputs.owner }}/senti2-frontend:latest

@@ -47,6 +47,25 @@ return [
             'report' => false,
         ],
 
+        /** Fotos de perfil (acceso público vía /storage). */
+        'profile_photos' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/profile-photos'),
+            'url' => rtrim(env('APP_URL', 'http://localhost'), '/').'/storage/profile-photos',
+            'visibility' => 'public',
+            'throw' => false,
+            'report' => false,
+        ],
+
+        /** Documentos privados del usuario (solo descarga autenticada). */
+        'private_documents' => [
+            'driver' => 'local',
+            'root' => storage_path('app/private/documents'),
+            'visibility' => 'private',
+            'throw' => false,
+            'report' => false,
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),

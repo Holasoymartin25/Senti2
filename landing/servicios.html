@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Servicios de Senti2: tests, diario emocional, citas y mensajería segura.">
+  <title>Servicios — Senti2</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+  <a class="skip-link" href="#contenido-principal">Saltar al contenido</a>
+
+  <header class="header" role="banner">
+    <div class="container header__inner">
+      <a class="header__brand" href="index.html">
+        <img class="header__logo" src="assets/logo.svg" alt="" width="40" height="40">
+        Senti2
+      </a>
+      <nav class="header__nav" aria-label="Navegación principal">
+        <a class="header__link" href="index.html">Inicio</a>
+        <a class="header__link header__link--active" href="servicios.html" aria-current="page">Servicios</a>
+        <a class="header__link" href="psicologos.html">Psicólogos</a>
+        <a class="header__link" href="origen.html">Origen</a>
+        <a class="header__link" href="contacto.html">Contacto</a>
+        <a class="header__link btn btn--primary" href="/">Entrar a la app</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="contenido-principal">
+    <header class="page-header">
+      <div class="container">
+        <h1 class="page-header__title reveal">Servicios</h1>
+        <p class="page-header__subtitle reveal">Herramientas diseñadas con criterios de usabilidad y accesibilidad WCAG 2.</p>
+      </div>
+    </header>
+
+    <section class="section">
+      <div class="container layout-with-sidebar">
+        <div>
+          <div class="grid grid--2 reveal">
+            <article class="card" id="tests">
+              <h2 class="card__title">Tests psicológicos</h2>
+              <p class="card__text">Cuestionarios breves (ansiedad, estrés, bienestar) con resultados interpretados y recomendaciones.</p>
+            </article>
+            <article class="card" id="diario">
+              <h2 class="card__title">Diario emocional</h2>
+              <p class="card__text">Registro diario con etiquetas, notas y gráficas de evolución emocional en el tiempo.</p>
+            </article>
+            <article class="card">
+              <h2 class="card__title">Gestión de citas</h2>
+              <p class="card__text">Solicita, confirma y recuerda sesiones con tu psicólogo asignado desde un mismo panel.</p>
+            </article>
+            <article class="card">
+              <h2 class="card__title">Mensajería segura</h2>
+              <p class="card__text">Chat en tiempo real con indicadores de lectura y historial protegido por autenticación.</p>
+            </article>
+          </div>
+
+          <div class="tension-block tension-block--reverse reveal stack-top-xl">
+            <div class="tension-block__content">
+              <h2 class="card__title">Privacidad por diseño</h2>
+              <p class="card__text">Documentos clínicos en almacenamiento privado; avatares públicos opcionales. Contraste de texto verificado AA.</p>
+            </div>
+            <div class="tension-block__accent" aria-hidden="true"></div>
+          </div>
+        </div>
+
+        <aside class="sidebar" aria-label="Barra lateral de navegación">
+          <h2 class="sidebar__title">En esta sección</h2>
+          <ul class="sidebar__nav">
+            <li><a class="sidebar__link" href="#tests">Tests</a></li>
+            <li><a class="sidebar__link" href="#diario">Diario</a></li>
+            <li><a class="sidebar__link" href="psicologos.html">Para psicólogos</a></li>
+            <li><a class="sidebar__link" href="contacto.html">Solicitar demo</a></li>
+          </ul>
+          <svg class="sidebar__graphic" viewBox="0 0 120 120" width="100%" aria-hidden="true">
+            <circle cx="60" cy="60" r="50" fill="none" stroke="#87A96B" stroke-width="3"/>
+            <path d="M35 70 Q60 30 85 70" fill="none" stroke="#B8A9D9" stroke-width="4" stroke-linecap="round"/>
+          </svg>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer" role="contentinfo">
+    <div class="container footer__grid">
+      <div>
+        <p class="footer__brand">Senti2</p>
+        <p class="footer__text">Servicios de bienestar emocional digital.</p>
+      </div>
+      <div>
+        <p class="footer__heading">Explorar</p>
+        <ul class="footer__links">
+          <li><a href="index.html">Inicio</a></li>
+          <li><a href="psicologos.html">Psicólogos</a></li>
+          <li><a href="origen.html">Origen</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="footer__heading">Acceso</p>
+        <ul class="footer__links">
+          <li><a href="/">Aplicación web</a></li>
+          <li><a href="contacto.html">Contacto</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="container footer__bottom">
+      <p>&copy; 2025–2026 Senti2</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.2/lib/anime.min.js" defer></script>
+  <script src="js/main.js" defer></script>
+</body>
+</html>

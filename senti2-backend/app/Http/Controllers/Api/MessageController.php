@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\MessageSent;
 use App\Http\Controllers\Controller;
 use App\Models\Message;
-use App\Events\MessageSent;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -18,12 +18,12 @@ class MessageController extends Controller
         $userId = $this->requireUser($request)->id;
 
         $messages = Message::where(function ($q) use ($userId, $otherUserId) {
-                $q->where('sender_id', $userId)
-                  ->where('receiver_id', $otherUserId);
-            })
+            $q->where('sender_id', $userId)
+                ->where('receiver_id', $otherUserId);
+        })
             ->orWhere(function ($q) use ($userId, $otherUserId) {
                 $q->where('sender_id', $otherUserId)
-                  ->where('receiver_id', $userId);
+                    ->where('receiver_id', $userId);
             })
             ->with('sender:id,name,email')
             ->orderBy('created_at', 'asc')
@@ -42,15 +42,15 @@ class MessageController extends Controller
 
             $validated = $request->validate([
                 'receiver_id' => 'required|exists:users,id',
-                'content'     => 'required|string|max:2000',
+                'content' => 'required|string|max:2000',
             ]);
 
             // No enviar 'read' en el INSERT: en PostgreSQL false puede enlazarse como 0
             // y fallar en columna boolean. El default de la migración es false.
             $message = Message::create([
-                'sender_id'   => $user->id,
+                'sender_id' => $user->id,
                 'receiver_id' => (int) $validated['receiver_id'],
-                'content'     => $validated['content'],
+                'content' => $validated['content'],
             ]);
 
             $message->load('sender:id,name,email');
@@ -61,8 +61,8 @@ class MessageController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'error' => $e->getMessage(),
-                'file'  => $e->getFile(),
-                'line'  => $e->getLine(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
             ], 500);
         }
     }
@@ -84,8 +84,8 @@ class MessageController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'error' => $e->getMessage(),
-                'file'  => $e->getFile(),
-                'line'  => $e->getLine(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
             ], 500);
         }
     }
@@ -106,7 +106,7 @@ class MessageController extends Controller
     private function requireUser(Request $request)
     {
         $user = $request->user();
-        if (!$user) {
+        if (! $user) {
             abort(Response::HTTP_UNAUTHORIZED, 'No autenticado');
         }
 

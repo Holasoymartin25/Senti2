@@ -13,12 +13,12 @@ class AreaPersonalController extends Controller
     public function storeTestResult(Request $request)
     {
         $validated = $request->validate([
-            'test_id'       => 'required|string|max:64',
-            'test_title'    => 'required|string|max:255',
-            'score'         => 'required|integer|min:0',
+            'test_id' => 'required|string|max:64',
+            'test_title' => 'required|string|max:255',
+            'score' => 'required|integer|min:0',
             'display_score' => 'required|integer|min:0',
-            'display_max'   => 'required|integer|min:1',
-            'level'         => 'required|string|max:64',
+            'display_max' => 'required|integer|min:1',
+            'level' => 'required|string|max:64',
         ]);
 
         $result = TestResult::create([
@@ -27,7 +27,7 @@ class AreaPersonalController extends Controller
         ]);
 
         return response()->json([
-            'id'   => $result->id,
+            'id' => $result->id,
             'date' => $result->created_at->toIso8601String(),
         ], 201);
     }
@@ -37,14 +37,14 @@ class AreaPersonalController extends Controller
         $results = TestResult::where('user_id', $request->user()->id)
             ->orderByDesc('created_at')
             ->get()
-            ->map(fn($r) => [
-                'testId'       => $r->test_id,
-                'testTitle'    => $r->test_title,
-                'score'        => $r->score,
+            ->map(fn ($r) => [
+                'testId' => $r->test_id,
+                'testTitle' => $r->test_title,
+                'score' => $r->score,
                 'displayScore' => $r->display_score,
-                'displayMax'   => $r->display_max,
-                'level'        => $r->level,
-                'date'         => $r->created_at->toIso8601String(),
+                'displayMax' => $r->display_max,
+                'level' => $r->level,
+                'date' => $r->created_at->toIso8601String(),
             ]);
 
         return response()->json(['data' => $results]);
@@ -53,23 +53,23 @@ class AreaPersonalController extends Controller
     public function storeDiaryEntry(Request $request)
     {
         $validated = $request->validate([
-            'date'       => 'required|date',
-            'mood'       => 'required|integer|min:1|max:10',
-            'emotions'   => 'nullable|array',
+            'date' => 'required|date',
+            'mood' => 'required|integer|min:1|max:10',
+            'emotions' => 'nullable|array',
             'emotions.*' => 'string|max:64',
-            'note'       => 'nullable|string|max:5000',
+            'note' => 'nullable|string|max:5000',
         ]);
 
         $entry = DiaryEntry::create([
-            'user_id'  => $request->user()->id,
-            'date'     => Carbon::parse($validated['date'])->format('Y-m-d'),
-            'mood'     => $validated['mood'],
+            'user_id' => $request->user()->id,
+            'date' => Carbon::parse($validated['date'])->format('Y-m-d'),
+            'mood' => $validated['mood'],
             'emotions' => $validated['emotions'] ?? [],
-            'note'     => $validated['note'] ?? '',
+            'note' => $validated['note'] ?? '',
         ]);
 
         return response()->json([
-            'id'        => $entry->id,
+            'id' => $entry->id,
             'createdAt' => $entry->created_at->toIso8601String(),
         ], 201);
     }
@@ -79,12 +79,12 @@ class AreaPersonalController extends Controller
         $entries = DiaryEntry::where('user_id', $request->user()->id)
             ->orderByDesc('date')
             ->get()
-            ->map(fn($e) => [
-                'id'        => $e->id,
-                'date'      => $e->date->format('Y-m-d'),
-                'mood'      => $e->mood,
-                'emotions'  => $e->emotions ?? [],
-                'note'      => $e->note ?? '',
+            ->map(fn ($e) => [
+                'id' => $e->id,
+                'date' => $e->date->format('Y-m-d'),
+                'mood' => $e->mood,
+                'emotions' => $e->emotions ?? [],
+                'note' => $e->note ?? '',
                 'createdAt' => $e->created_at->toIso8601String(),
             ]);
 

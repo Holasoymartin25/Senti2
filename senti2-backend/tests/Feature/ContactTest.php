@@ -1,5 +1,6 @@
 <?php
 
+use App\Mail\ContactFormMail;
 use Illuminate\Support\Facades\Mail;
 
 test('contacto sin nombre devuelve 422', function () {
@@ -35,5 +36,5 @@ test('contacto con todos los campos válidos envía correo y devuelve 200', func
 
     $response->assertOk();
     $response->assertJsonPath('message', 'Mensaje enviado correctamente. Te responderemos lo antes posible.');
-    Mail::assertSent(\App\Mail\ContactFormMail::class);
+    Mail::assertSent(ContactFormMail::class);
 });

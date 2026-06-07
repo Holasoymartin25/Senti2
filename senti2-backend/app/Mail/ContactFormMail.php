@@ -4,9 +4,9 @@ namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
-use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Queue\SerializesModels;
 
 class ContactFormMail extends Mailable
@@ -40,9 +40,10 @@ class ContactFormMail extends Mailable
 
     public function attachments(): array
     {
-        if (!$this->cvPath || !is_file($this->cvPath)) {
+        if (! $this->cvPath || ! is_file($this->cvPath)) {
             return [];
         }
+
         return [
             Attachment::fromPath($this->cvPath)
                 ->as($this->cvOriginalName ?? 'cv_adjunto.pdf'),

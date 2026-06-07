@@ -3,6 +3,7 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthApiService } from '../../core/services/auth-api.service';
 import { MessageService } from '../../core/services/message.service';
+import { environment } from '../../../environments/environment';
 import { from, Subscription } from 'rxjs';
 import { switchMap, catchError, shareReplay } from 'rxjs/operators';
 import { of } from 'rxjs';
@@ -20,6 +21,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   userEmail = '';
   userRole = '';
   unreadMessagesCount = 0;
+  adminPanelUrl = environment.adminPanelUrl;
   private subs: Subscription[] = [];
 
   constructor(

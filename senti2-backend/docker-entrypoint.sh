@@ -7,5 +7,6 @@ if [ -z "$APP_KEY" ] && [ ! -f .env ]; then
 fi
 
 php artisan migrate --force
+php artisan storage:link --force 2>/dev/null || true
 
 exec "$@"

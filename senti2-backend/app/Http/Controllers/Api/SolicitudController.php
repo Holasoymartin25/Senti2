@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\PatientRequest;
+use App\Support\PaginationHelper;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -12,23 +13,27 @@ class SolicitudController extends Controller
     /** Solicitudes pendientes recibidas por el usuario autenticado */
     public function index(Request $request): JsonResponse
     {
-        $solicitudes = PatientRequest::where('user_id', $request->user()->id)
+        $perPage = min(max((int) $request->query('per_page', 15), 1), 50);
+
+        $paginator = PatientRequest::where('user_id', $request->user()->id)
             ->where('status', 'pending')
             ->with('psicologo')
             ->orderByDesc('created_at')
-            ->get()
-            ->map(fn($s) => [
-                'id'      => $s->id,
-                'message' => $s->message,
-                'psicologo' => [
-                    'id'    => $s->psicologo->id,
-                    'name'  => $s->psicologo->name,
-                    'email' => $s->psicologo->email,
-                ],
-                'created_at' => $s->created_at->toDateString(),
-            ]);
+            ->paginate($perPage)
+            ->withQueryString();
 
-        return response()->json(['solicitudes' => $solicitudes]);
+        $paginator->getCollection()->transform(fn ($s) => [
+            'id' => $s->id,
+            'message' => $s->message,
+            'psicologo' => [
+                'id' => $s->psicologo->id,
+                'name' => $s->psicologo->name,
+                'email' => $s->psicologo->email,
+            ],
+            'created_at' => $s->created_at->toDateString(),
+        ]);
+
+        return PaginationHelper::wrap($paginator, 'solicitudes');
     }
 
     /** Aceptar una solicitud pendiente */
@@ -39,7 +44,7 @@ class SolicitudController extends Controller
             ->where('status', 'pending')
             ->first();
 
-        if (!$solicitud) {
+        if (! $solicitud) {
             return response()->json(['error' => 'Solicitud no encontrada'], 404);
         }
 
@@ -63,7 +68,7 @@ class SolicitudController extends Controller
             ->where('status', 'pending')
             ->first();
 
-        if (!$solicitud) {
+        if (! $solicitud) {
             return response()->json(['error' => 'Solicitud no encontrada'], 404);
         }
 

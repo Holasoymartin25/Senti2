@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Contacto Senti2 — solicita información o accede a la aplicación.">
+  <title>Contacto — Senti2</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+  <a class="skip-link" href="#contenido-principal">Saltar al contenido</a>
+
+  <header class="header" role="banner">
+    <div class="container header__inner">
+      <a class="header__brand" href="index.html">
+        <img class="header__logo" src="assets/logo.svg" alt="" width="40" height="40">
+        Senti2
+      </a>
+      <nav class="header__nav" aria-label="Navegación principal">
+        <a class="header__link" href="index.html">Inicio</a>
+        <a class="header__link" href="servicios.html">Servicios</a>
+        <a class="header__link" href="psicologos.html">Psicólogos</a>
+        <a class="header__link" href="origen.html">Origen</a>
+        <a class="header__link header__link--active" href="contacto.html" aria-current="page">Contacto</a>
+        <a class="header__link btn btn--primary" href="/">Entrar a la app</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="contenido-principal">
+    <header class="page-header">
+      <div class="container">
+        <h1 class="page-header__title reveal">Contacto</h1>
+        <p class="page-header__subtitle reveal">Escríbenos o accede directamente a la aplicación desplegada.</p>
+      </div>
+    </header>
+
+    <section class="section">
+      <div class="container layout-with-sidebar">
+        <div>
+          <form class="form reveal" action="#" method="post" aria-label="Formulario de contacto">
+            <div class="form__group">
+              <label class="form__label" for="nombre">Nombre</label>
+              <input class="form__input" type="text" id="nombre" name="nombre" required autocomplete="name">
+            </div>
+            <div class="form__group">
+              <label class="form__label" for="email">Correo electrónico</label>
+              <input class="form__input" type="email" id="email" name="email" required autocomplete="email">
+            </div>
+            <div class="form__group">
+              <label class="form__label" for="mensaje">Mensaje</label>
+              <textarea class="form__textarea" id="mensaje" name="mensaje" required></textarea>
+            </div>
+            <button class="btn btn--primary" type="submit">Enviar mensaje</button>
+          </form>
+
+          <div class="login-card stack-top-xl reveal">
+            <article class="card">
+              <h2 class="card__title">¿Ya tienes cuenta?</h2>
+              <p class="card__text">Inicia sesión en la aplicación para usar tests, diario y chat.</p>
+              <a class="btn btn--outline stack-top" href="/">Ir al login</a>
+            </article>
+          </div>
+        </div>
+
+        <aside class="sidebar reveal" aria-label="Información de contacto">
+          <h2 class="sidebar__title">Datos</h2>
+          <ul class="sidebar__nav">
+            <li><span class="sidebar__link">Proyecto TFC Senti2</span></li>
+            <li><span class="sidebar__link">CPIFP Alan Turing</span></li>
+            <li><a class="sidebar__link" href="https://senti2.duckdns.org">senti2.duckdns.org</a></li>
+          </ul>
+          <div class="info-box info-box--sidebar">
+            <h3 class="info-box__title">Producción</h3>
+            <p class="info-box__text">Landing: <code>/landing/</code> · App: <code>/</code> · Admin: <code>/panel-admin</code></p>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer" role="contentinfo">
+    <div class="container footer__grid">
+      <div>
+        <p class="footer__brand">Senti2</p>
+        <p class="footer__text">Estamos aquí para ayudarte a dar el primer paso.</p>
+      </div>
+      <div>
+        <p class="footer__heading">Explorar</p>
+        <ul class="footer__links">
+          <li><a href="index.html">Inicio</a></li>
+          <li><a href="servicios.html">Servicios</a></li>
+          <li><a href="origen.html">Origen</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="footer__heading">Acceso</p>
+        <ul class="footer__links">
+          <li><a href="/">Aplicación web</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="container footer__bottom">
+      <p>&copy; 2025–2026 Senti2</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.2/lib/anime.min.js" defer></script>
+  <script src="js/main.js" defer></script>
+</body>
+</html>

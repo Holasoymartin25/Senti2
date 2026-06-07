@@ -49,7 +49,7 @@ class Message extends Model
             ->where('receiver_id', $receiverId)
             ->unread()
             ->update([
-                'read'       => DB::raw('TRUE'),
+                'read' => DB::raw('TRUE'),
                 'updated_at' => now(),
             ]);
     }
