@@ -66,8 +66,7 @@ Esquema entidad–relación (PostgreSQL):
 - **Paciente:** `usuario1@admin.com` / `password` → tests, diario, chat
 - **Psicólogo:** `/admin` → `psicologo1@admin.com` / `password`
 - **Admin:** `/panel-admin/login` → `admin1@admin.com` / `password` (también accesible desde login Angular si el rol es admin)
-- **Landing local:** desde `Senti2/` → `npm run landing` (puerto 5500)
-- **Landing producción:** `/landing/`
+- **Landing page:** `/landing/`
 
 ---
 
