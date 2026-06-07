@@ -33,6 +33,7 @@ return [
     'pagination_showing' => 'Showing :from to :to of :total results',
     'pagination_previous' => 'Previous',
     'pagination_next' => 'Next',
+    'back_to_app' => 'Back to app',
     'login_brand_subtitle' => 'Your emotional wellbeing is our priority',
     'login_welcome' => 'Sign in to manage users and roles',
     'login_feature_secure' => 'Secure and reliable access',

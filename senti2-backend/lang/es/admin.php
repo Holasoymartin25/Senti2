@@ -33,6 +33,7 @@ return [
     'pagination_showing' => 'Mostrando :from a :to de :total resultados',
     'pagination_previous' => 'Anterior',
     'pagination_next' => 'Siguiente',
+    'back_to_app' => 'Volver a la app',
     'login_brand_subtitle' => 'Tu bienestar emocional es nuestra prioridad',
     'login_welcome' => 'Inicia sesión para gestionar usuarios y roles',
     'login_feature_secure' => 'Acceso seguro y confiable',

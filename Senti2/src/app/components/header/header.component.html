@@ -10,7 +10,7 @@
 
     @if (isAuthenticated) {
     @if (userRole === 'admin') {
-    <a [href]="adminPanelUrl" class="nav-link-with-badge">Panel Admin</a>
+    <a href="/panel-admin/users" (click)="goToAdminPanel($event)" class="nav-link-with-badge">Panel Admin</a>
     }
     @if (userRole === 'psicologo') {
     <a routerLink="/admin" routerLinkActive="active" class="nav-link-with-badge">

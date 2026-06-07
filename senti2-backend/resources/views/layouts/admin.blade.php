@@ -18,6 +18,7 @@
         </div>
         <nav class="navbar__nav">
             <a href="{{ route('admin.users.index') }}" @class(['is-active' => request()->routeIs('admin.users.*')])>{{ __('admin.users') }}</a>
+            <a href="/inicio">{{ __('admin.back_to_app') }}</a>
             <span class="lang-switch" aria-label="{{ __('admin.language') }}">
                 <a href="{{ route('admin.locale', 'es') }}" @class(['active' => app()->getLocale() === 'es'])>ES</a>
                 <a href="{{ route('admin.locale', 'en') }}" @class(['active' => app()->getLocale() === 'en'])>EN</a>
