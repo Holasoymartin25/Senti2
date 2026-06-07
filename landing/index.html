@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Senti2 — plataforma de bienestar emocional con tests, diario, citas y chat con psicólogos.">
-  <title>Senti2 — Bienestar emocional</title>
+  <meta name="description" content="Senti2 — plataforma de bienestar emocional.">
+  <title>Senti2 — Inicio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
@@ -15,8 +15,8 @@
 
   <header class="header" role="banner">
     <div class="container header__inner">
-      <a class="header__brand" href="index.html" aria-label="Senti2 — inicio">
-        <img class="header__logo" src="assets/logo.svg" alt="" width="40" height="40">
+      <a class="header__brand" href="index.html">
+        <img class="header__logo" src="assets/logo.svg" alt="" width="36" height="36">
         Senti2
       </a>
       <nav class="header__nav" aria-label="Navegación principal">
@@ -33,125 +33,72 @@
   <main id="contenido-principal">
     <section class="hero" aria-labelledby="hero-title">
       <canvas class="hero__canvas" id="wellness-canvas" aria-hidden="true"></canvas>
-      <div class="container hero__content">
-        <div class="parallax-layer" data-speed="0.15">
-          <h1 class="hero__title" id="hero-title">Tu espacio seguro para cuidar la salud emocional</h1>
+      <div class="container hero__grid">
+        <div>
+          <h1 class="hero__title" id="hero-title">Bienestar emocional al alcance de tu mano</h1>
           <p class="hero__text">
-            Senti2 conecta personas con profesionales de la psicología mediante tests validados,
-            diario emocional, citas y mensajería en tiempo real.
+            Senti2 conecta personas con psicólogos en un espacio seguro: tests, diario, citas y chat de apoyo.
           </p>
           <div class="hero__actions">
-            <a class="btn btn--primary" href="/">Comenzar ahora</a>
+            <a class="btn btn--primary" href="/">Comenzar</a>
             <a class="btn btn--outline" href="servicios.html">Ver servicios</a>
           </div>
-          <div class="calm-audio">
-            <label class="calm-audio__label" for="calm-audio">Audio de ambiente (relajación)</label>
-            <audio id="calm-audio" controls preload="none">
-              <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
-              Tu navegador no soporta audio HTML5.
-            </audio>
-          </div>
         </div>
-        <div class="hero__media parallax-layer" data-speed="0.08">
-          <video class="hero__video" controls poster="https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800&q=80" aria-label="Vídeo sobre mindfulness y bienestar">
-            <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
-            Tu navegador no soporta vídeo HTML5.
-          </video>
-        </div>
+        <img class="hero__image parallax-layer" src="assets/hands-plant.jpg" alt="Manos sosteniendo una planta" width="560" height="380" data-speed="0.15">
       </div>
     </section>
 
     <section class="section" aria-labelledby="features-title">
       <div class="container">
-        <h2 class="section__title reveal" id="features-title">¿Qué ofrece Senti2?</h2>
-        <div class="grid grid--3">
-          <article class="card reveal" data-tilt>
-            <svg class="card__icon" viewBox="0 0 48 48" fill="none" aria-hidden="true">
-              <circle cx="24" cy="24" r="20" stroke="currentColor" stroke-width="2"/>
-              <path d="M16 28h16M24 20v16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            </svg>
-            <h3 class="card__title">Tests psicológicos</h3>
-            <p class="card__text">Evaluaciones breves para conocer tu estado emocional y recibir orientación personalizada.</p>
+        <h2 class="page-title text-center" id="features-title">¿Qué ofrece Senti2?</h2>
+        <div class="cards cards--3">
+          <article class="card">
+            <h3 class="card__title">Tests emocionales</h3>
+            <p class="card__text">Evaluaciones breves para conocer tu estado emocional.</p>
           </article>
-          <article class="card reveal" data-tilt>
-            <svg class="card__icon" viewBox="0 0 48 48" fill="none" aria-hidden="true">
-              <rect x="8" y="10" width="32" height="28" rx="4" stroke="currentColor" stroke-width="2"/>
-              <path d="M14 18h20M14 24h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            </svg>
-            <h3 class="card__title">Diario emocional</h3>
-            <p class="card__text">Registra cómo te sientes cada día y detecta patrones con visualizaciones claras.</p>
+          <article class="card">
+            <h3 class="card__title">Chat de apoyo</h3>
+            <p class="card__text">Comunicación segura con tu psicólogo asignado.</p>
           </article>
-          <article class="card reveal" data-tilt>
-            <svg class="card__icon" viewBox="0 0 48 48" fill="none" aria-hidden="true">
-              <path d="M12 32c0-8 8-16 12-16s12 8 12 16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-              <circle cx="24" cy="16" r="6" stroke="currentColor" stroke-width="2"/>
-            </svg>
-            <h3 class="card__title">Acompañamiento profesional</h3>
-            <p class="card__text">Chat y citas con psicólogos verificados, con privacidad y continuidad de cuidado.</p>
+          <article class="card">
+            <h3 class="card__title">Diario y seguimiento</h3>
+            <p class="card__text">Registra emociones y visualiza tu progreso.</p>
           </article>
         </div>
       </div>
     </section>
 
-    <section class="section section--warm" aria-labelledby="balance-title">
+    <section class="section section--warm" aria-label="Multimedia">
       <div class="container">
-        <h2 class="section__title reveal" id="balance-title">Equilibrio y tensión compositiva</h2>
-        <div class="tension-block reveal">
-          <div class="tension-block__accent parallax-layer" data-speed="0.12" aria-hidden="true"></div>
-          <div class="tension-block__content">
-            <h3 class="card__title">Calma visual, mensaje claro</h3>
-            <p class="card__text">
-              El bloque asimétrico (1:2) genera tensión compositiva: el gradiente peach-lavender atrae la mirada,
-              mientras el texto en columna amplia aporta equilibrio y legibilidad. El verde sage en CTAs ancla la acción.
-            </p>
-            <a class="btn btn--outline" href="origen.html">Conoce nuestra misión</a>
+        <h2 class="page-title text-center">Recursos multimedia</h2>
+        <div class="media">
+          <figure>
+            <video class="media__video" controls poster="assets/hands-plant.jpg">
+              <source src="https://assets.mixkit.co/videos/preview/mixkit-woman-doing-yoga-in-the-living-room-32808-large.mp4" type="video/mp4">
+            </video>
+            <figcaption class="media__caption">Vídeo: mindfulness y movimiento</figcaption>
+          </figure>
+          <div>
+            <label for="calm-audio">Audio relajante</label>
+            <audio id="calm-audio" controls preload="none">
+              <source src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3" type="audio/mpeg">
+            </audio>
+            <p class="media__caption">Activa el audio para un momento de calma.</p>
           </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" aria-labelledby="stats-title">
-      <div class="container grid grid--3">
-        <div class="stat reveal">
-          <p class="stat__number">24/7</p>
-          <p class="stat__label">Acceso al diario y recursos</p>
-        </div>
-        <div class="stat reveal">
-          <p class="stat__number">100%</p>
-          <p class="stat__label">Datos cifrados en tránsito</p>
-        </div>
-        <div class="stat reveal">
-          <p class="stat__number">ES/EN</p>
-          <p class="stat__label">Interfaz bilingüe</p>
         </div>
       </div>
     </section>
   </main>
 
   <footer class="footer" role="contentinfo">
-    <div class="container footer__grid">
-      <div>
-        <p class="footer__brand">Senti2</p>
-        <p class="footer__text">Bienestar emocional accesible y humano.</p>
-      </div>
-      <div>
-        <p class="footer__heading">Explorar</p>
-        <ul class="footer__links">
-          <li><a href="servicios.html">Servicios</a></li>
-          <li><a href="psicologos.html">Psicólogos</a></li>
-          <li><a href="origen.html">Origen</a></li>
-        </ul>
-      </div>
-      <div>
-        <p class="footer__heading">Acceso</p>
-        <ul class="footer__links">
-          <li><a href="/">Aplicación web</a></li>
-          <li><a href="contacto.html">Contacto</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="container footer__bottom">
-      <p>&copy; 2025–2026 Senti2</p>
+    <div class="container footer__inner">
+      <p class="footer__brand">Senti2</p>
+      <ul class="footer__links">
+        <li><a href="servicios.html">Servicios</a></li>
+        <li><a href="contacto.html">Contacto</a></li>
+        <li><a href="/">App</a></li>
+      </ul>
+      <p class="footer__copy">&copy; 2025–2026 Senti2 · Paloma Ocaña y Martín Bernal González</p>
     </div>
   </footer>
 

@@ -17,8 +17,12 @@ class SetLocale
             $locale = $request->session()->get('locale');
         }
 
+        if (! $locale && $request->hasCookie('senti2_locale')) {
+            $locale = $request->cookie('senti2_locale');
+        }
+
         if (! $locale) {
-            $locale = $request->getPreferredLanguage(['es', 'en']) ?? config('app.locale', 'es');
+            $locale = config('app.locale', 'es');
         }
 
         if (! in_array($locale, ['es', 'en'], true)) {

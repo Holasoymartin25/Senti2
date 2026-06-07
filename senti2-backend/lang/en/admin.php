@@ -31,4 +31,9 @@ return [
     'language' => 'Language',
     'access_denied' => 'Access denied.',
     'api_docs' => 'API documentation',
+    'login_brand_subtitle' => 'Your emotional wellbeing is our priority',
+    'login_welcome' => 'Sign in to manage users and roles',
+    'login_feature_secure' => 'Secure and reliable access',
+    'login_feature_pros' => 'Verified professionals',
+    'login_feature_care' => 'Personalised care',
 ];

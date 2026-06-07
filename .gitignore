@@ -3,6 +3,10 @@ labuser.pem
 credentials.txt
 credentials
 
+# Node (landing SCSS, Angular, etc.)
+node_modules/
+*.css.map
+
 # Terraform
 infra/.terraform/
 infra/.terraform.lock.hcl

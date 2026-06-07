@@ -3,46 +3,52 @@
 @section('title', __('admin.users_list'))
 
 @section('content')
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+<div class="page-header">
     <h1>{{ __('admin.users_list') }}</h1>
     <a href="{{ route('admin.users.create') }}" class="btn btn-primary">{{ __('admin.new_user') }}</a>
 </div>
 
 <div class="card">
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>{{ __('admin.name') }}</th>
-                <th>{{ __('admin.email') }}</th>
-                <th>{{ __('admin.role') }}</th>
-                <th>{{ __('admin.actions') }}</th>
-            </tr>
-        </thead>
-        <tbody>
-            @forelse ($users as $user)
-            <tr>
-                <td>{{ $user->id }}</td>
-                <td>{{ $user->name ?? '—' }}</td>
-                <td>{{ $user->email }}</td>
-                <td>{{ __("admin.role_{$user->role}") }}</td>
-                <td>
-                    <a href="{{ route('admin.users.edit', $user) }}" class="btn btn-secondary">{{ __('admin.edit') }}</a>
-                    <form action="{{ route('admin.users.destroy', $user) }}" method="POST" style="display:inline" onsubmit="return confirm(@json(__('admin.confirm_delete')))">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger">{{ __('admin.delete') }}</button>
-                    </form>
-                </td>
-            </tr>
-            @empty
-            <tr><td colspan="5">—</td></tr>
-            @endforelse
-        </tbody>
-    </table>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>{{ __('admin.name') }}</th>
+                    <th>{{ __('admin.email') }}</th>
+                    <th>{{ __('admin.role') }}</th>
+                    <th>{{ __('admin.actions') }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse ($users as $user)
+                <tr>
+                    <td>{{ $user->id }}</td>
+                    <td>{{ $user->name ?? '—' }}</td>
+                    <td>{{ $user->email }}</td>
+                    <td><span class="role-badge">{{ __("admin.role_{$user->role}") }}</span></td>
+                    <td>
+                        <div class="actions-cell">
+                            <a href="{{ route('admin.users.edit', $user) }}" class="btn btn-secondary">{{ __('admin.edit') }}</a>
+                            <form action="{{ route('admin.users.destroy', $user) }}" method="POST" onsubmit="return confirm(@json(__('admin.confirm_delete')))">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger">{{ __('admin.delete') }}</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                @empty
+                <tr><td colspan="5" class="empty-state">—</td></tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
 
-    <div style="margin-top:1rem">
+    @if ($users->hasPages())
+    <div class="pagination">
         {{ $users->links() }}
     </div>
+    @endif
 </div>
 @endsection

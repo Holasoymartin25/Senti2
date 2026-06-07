@@ -1,0 +1,11 @@
+{
+  "name": "senti2-landing",
+  "private": true,
+  "scripts": {
+    "build:css": "sass scss/main.scss css/main.css --style=expanded --no-source-map",
+    "watch:css": "sass scss/main.scss css/main.css --watch --no-source-map"
+  },
+  "devDependencies": {
+    "sass": "^1.77.0"
+  }
+}

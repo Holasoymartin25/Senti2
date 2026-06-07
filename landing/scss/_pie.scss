@@ -1,0 +1,47 @@
+// Pie de página
+
+.footer {
+  background: $color-charcoal;
+  color: $color-cream;
+  padding: 2rem 0 1rem;
+  margin-top: auto;
+}
+
+.footer__inner {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+}
+
+.footer__brand {
+  font-weight: 700;
+  color: $color-sage;
+}
+
+.footer__links {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+
+  a {
+    color: $color-cream;
+    text-decoration: none;
+    font-size: 0.9rem;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.footer__copy {
+  width: 100%;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  font-size: 0.85rem;
+  color: $color-gray;
+}

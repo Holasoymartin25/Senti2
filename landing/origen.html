@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Origen y misión de Senti2: democratizar el acceso al bienestar emocional.">
+  <meta name="description" content="Origen y misión de Senti2.">
   <title>Origen — Senti2</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
@@ -16,7 +16,7 @@
   <header class="header" role="banner">
     <div class="container header__inner">
       <a class="header__brand" href="index.html">
-        <img class="header__logo" src="assets/logo.svg" alt="" width="40" height="40">
+        <img class="header__logo" src="assets/logo.svg" alt="" width="36" height="36">
         Senti2
       </a>
       <nav class="header__nav" aria-label="Navegación principal">
@@ -31,93 +31,43 @@
   </header>
 
   <main id="contenido-principal">
-    <header class="page-header">
-      <div class="container">
-        <h1 class="page-header__title reveal">Nuestra historia</h1>
-        <p class="page-header__subtitle reveal">De la hipótesis al producto: un TFC que une diseño accesible, backend robusto y acompañamiento humano.</p>
-      </div>
-    </header>
-
-    <section class="section">
-      <div class="container">
-        <div class="tension-block reveal">
-          <figure class="figure-photo">
-            <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=600&q=80" alt="Persona en un entorno tranquilo" width="600" height="400">
-          </figure>
-          <div class="tension-block__content">
-            <h2 class="card__title">Hipótesis de partida</h2>
-            <p class="card__text">
-              Muchas personas posponen pedir ayuda emocional por barreras de acceso, estigma o procesos burocráticos.
-              Senti2 nace para reducir esa distancia con una experiencia digital cálida, clara y profesional.
-            </p>
-            <h2 class="card__title card__title--offset">Metas</h2>
-            <ul class="card__text list-indented">
-              <li>Facilitar autoconocimiento con tests y diario.</li>
-              <li>Conectar con psicólogos de forma segura.</li>
-              <li>Cumplir estándares de accesibilidad y usabilidad.</li>
-            </ul>
-          </div>
+    <div class="container layout">
+      <div class="layout__main">
+        <h1 class="page-title">Nuestra misión</h1>
+        <div class="card card--spaced">
+          <p>
+            Senti2 nace para facilitar un vínculo auténtico entre pacientes y psicólogos,
+            eliminando barreras y ofreciendo un espacio seguro para el bienestar emocional.
+          </p>
+          <p>
+            Proporcionamos herramientas intuitivas para un seguimiento continuo y terapias personalizadas,
+            guiando a las personas usuarias hacia una vida más plena.
+          </p>
         </div>
+        <img class="content-image" src="assets/origin.jpg" alt="Manos conectando con un corazón digital" width="800" height="420">
       </div>
-    </section>
 
-    <section class="section section--warm">
-      <div class="container">
-        <h2 class="section__title reveal">Equipo</h2>
-        <div class="grid grid--3">
-          <article class="team-card reveal">
-            <div class="team-card__avatar" aria-hidden="true">S</div>
-            <p class="team-card__name">Equipo Senti2</p>
-            <p class="team-card__role">Desarrollo full-stack · DIW · DWES</p>
-          </article>
-          <article class="team-card reveal">
-            <div class="team-card__avatar" aria-hidden="true">D</div>
-            <p class="team-card__name">Diseño UI</p>
-            <p class="team-card__role">Atomic Design · Figma · WCAG 2</p>
-          </article>
-          <article class="team-card reveal">
-            <div class="team-card__avatar" aria-hidden="true">P</div>
-            <p class="team-card__name">Producto</p>
-            <p class="team-card__role">User flow · Bienestar emocional</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section text-center">
-      <div class="container reveal">
-        <svg class="sparkline" width="200" height="80" viewBox="0 0 200 80" aria-hidden="true">
-          <path d="M10 60 Q50 10 100 40 T190 30" fill="none" stroke="#87A96B" stroke-width="3" stroke-linecap="round"/>
-          <circle cx="100" cy="40" r="8" fill="#F4A88A"/>
-        </svg>
-        <p class="card__text text-narrow">Logo vectorial con animación al cargar.</p>
-      </div>
-    </section>
-  </main>
-
-  <footer class="footer" role="contentinfo">
-    <div class="container footer__grid">
-      <div>
-        <p class="footer__brand">Senti2</p>
-        <p class="footer__text">Proyecto Senti2.</p>
-      </div>
-      <div>
-        <p class="footer__heading">Explorar</p>
-        <ul class="footer__links">
+      <aside class="sidebar" aria-label="Barra lateral">
+        <p class="sidebar__title">Explorar</p>
+        <ul class="sidebar__nav">
           <li><a href="servicios.html">Servicios</a></li>
           <li><a href="psicologos.html">Psicólogos</a></li>
           <li><a href="contacto.html">Contacto</a></li>
+          <li><a href="/">App Senti2</a></li>
         </ul>
-      </div>
-      <div>
-        <p class="footer__heading">Documentación</p>
-        <ul class="footer__links">
-          <li><a href="https://github.com/Holasyomartin25/Senti2/blob/main/README.md">Documentación TFC</a></li>
-        </ul>
-      </div>
+      </aside>
     </div>
-    <div class="container footer__bottom">
-      <p>&copy; 2025–2026 Senti2</p>
+  </main>
+
+  <footer class="footer" role="contentinfo">
+    <div class="container footer__inner">
+      <p class="footer__brand">Senti2</p>
+      <ul class="footer__links">
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="contacto.html">Contacto</a></li>
+        <li><a href="/">App</a></li>
+      </ul>
+      <p class="footer__copy">&copy; 2025–2026 Senti2</p>
     </div>
   </footer>
 

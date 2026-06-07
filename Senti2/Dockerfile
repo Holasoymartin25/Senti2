@@ -29,25 +29,35 @@ RUN printf 'server {\n\
     proxy_pass http://backend:8000;\n\
     proxy_set_header Host $host;\n\
     proxy_set_header X-Real-IP $remote_addr;\n\
+    proxy_set_header X-Forwarded-Proto $scheme;\n\
+    proxy_set_header X-Forwarded-Host $host;\n\
   }\n\
   location ^~ /panel-admin {\n\
     proxy_pass http://backend:8000;\n\
     proxy_set_header Host $host;\n\
     proxy_set_header X-Real-IP $remote_addr;\n\
+    proxy_set_header X-Forwarded-Proto $scheme;\n\
+    proxy_set_header X-Forwarded-Host $host;\n\
   }\n\
   location ^~ /docs {\n\
     proxy_pass http://backend:8000;\n\
     proxy_set_header Host $host;\n\
     proxy_set_header X-Real-IP $remote_addr;\n\
+    proxy_set_header X-Forwarded-Proto $scheme;\n\
+    proxy_set_header X-Forwarded-Host $host;\n\
   }\n\
   location ^~ /storage {\n\
     proxy_pass http://backend:8000;\n\
     proxy_set_header Host $host;\n\
     proxy_set_header X-Real-IP $remote_addr;\n\
+    proxy_set_header X-Forwarded-Proto $scheme;\n\
+    proxy_set_header X-Forwarded-Host $host;\n\
   }\n\
   location ^~ /broadcasting {\n\
     proxy_pass http://backend:8000;\n\
     proxy_set_header Host $host;\n\
     proxy_set_header X-Real-IP $remote_addr;\n\
+    proxy_set_header X-Forwarded-Proto $scheme;\n\
+    proxy_set_header X-Forwarded-Host $host;\n\
   }\n\
 }\n' > /etc/nginx/conf.d/default.conf

@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Senti2 para psicólogos: panel de pacientes, citas y mensajería profesional.">
+  <meta name="description" content="Psicólogos de Senti2.">
   <title>Psicólogos — Senti2</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
@@ -16,7 +16,7 @@
   <header class="header" role="banner">
     <div class="container header__inner">
       <a class="header__brand" href="index.html">
-        <img class="header__logo" src="assets/logo.svg" alt="" width="40" height="40">
+        <img class="header__logo" src="assets/logo.svg" alt="" width="36" height="36">
         Senti2
       </a>
       <nav class="header__nav" aria-label="Navegación principal">
@@ -25,85 +25,59 @@
         <a class="header__link header__link--active" href="psicologos.html" aria-current="page">Psicólogos</a>
         <a class="header__link" href="origen.html">Origen</a>
         <a class="header__link" href="contacto.html">Contacto</a>
-        <a class="header__link btn btn--primary" href="/admin">Panel psicólogo</a>
+        <a class="header__link btn btn--primary" href="/">Entrar a la app</a>
       </nav>
     </div>
   </header>
 
   <main id="contenido-principal">
-    <header class="page-header">
-      <div class="container">
-        <h1 class="page-header__title reveal">Para profesionales</h1>
-        <p class="page-header__subtitle reveal">Gestiona pacientes, citas y comunicación desde un panel pensado para la práctica clínica digital.</p>
-      </div>
-    </header>
+    <div class="container layout">
+      <div class="layout__main">
+        <h1 class="page-title">Nuestros especialistas</h1>
+        <p class="intro">Profesionales que acompañan a las personas usuarias en su proceso de bienestar.</p>
 
-    <section class="section section--warm">
-      <div class="container grid grid--3">
-        <article class="card reveal">
-          <h2 class="card__title">Panel de pacientes</h2>
-          <p class="card__text">Listado paginado, asignación de casos y acceso al historial compartido con consentimiento.</p>
-        </article>
-        <article class="card reveal">
-          <h2 class="card__title">Agenda de citas</h2>
-          <p class="card__text">Confirma solicitudes, visualiza la semana y reduce ausencias con recordatorios.</p>
-        </article>
-        <article class="card reveal">
-          <h2 class="card__title">Chat clínico</h2>
-          <p class="card__text">Mensajería en tiempo real con estado de lectura y trazabilidad para continuidad asistencial.</p>
-        </article>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="container grid grid--2 reveal">
-        <div>
-          <h2 class="card__title">Flujo profesional</h2>
-          <ol class="card__text list-indented">
-            <li>Registro con rol psicólogo verificado por administración.</li>
-            <li>Recepción de solicitudes de pacientes sin asignar.</li>
-            <li>Aceptación y apertura de canal de mensajes.</li>
-            <li>Programación y seguimiento de citas.</li>
-          </ol>
-          <a class="btn btn--primary stack-top" href="/">Acceder al panel</a>
-        </div>
-        <div class="info-box">
-          <h2 class="info-box__title">Beneficios</h2>
-          <ul class="info-box__list">
-            <li>Menos fricción administrativa</li>
-            <li>Comunicación centralizada</li>
-            <li>Interfaz accesible y responsive</li>
-            <li>Soporte ES / EN</li>
-          </ul>
+        <div class="cards cards--3">
+          <article class="card profile">
+            <img src="assets/psychologist-1.jpg" alt="Dra. Elena Morales" width="100" height="100">
+            <h2>Dra. Elena Morales</h2>
+            <p class="profile__role">Terapia de pareja</p>
+            <p>Enfoque empático para mejorar la comunicación en la pareja.</p>
+          </article>
+          <article class="card profile">
+            <img src="assets/psychologist-2.jpg" alt="Dr. Alejandro Torres" width="100" height="100">
+            <h2>Dr. Alejandro Torres</h2>
+            <p class="profile__role">Ansiedad y estrés</p>
+            <p>Herramientas prácticas para la gestión emocional diaria.</p>
+          </article>
+          <article class="card profile">
+            <img src="assets/psychologist-3.jpg" alt="Dra. Sofía Ramos" width="100" height="100">
+            <h2>Dra. Sofía Ramos</h2>
+            <p class="profile__role">Autoestima</p>
+            <p>Desarrollo personal y reconstrucción de la confianza.</p>
+          </article>
         </div>
       </div>
-    </section>
+
+      <aside class="sidebar" aria-label="Barra lateral">
+        <p class="sidebar__title">Acceso</p>
+        <ul class="sidebar__nav">
+          <li><a href="/">Registrarse en la app</a></li>
+          <li><a href="servicios.html">Ver servicios</a></li>
+          <li><a href="contacto.html">Contacto</a></li>
+        </ul>
+      </aside>
+    </div>
   </main>
 
   <footer class="footer" role="contentinfo">
-    <div class="container footer__grid">
-      <div>
-        <p class="footer__brand">Senti2</p>
-        <p class="footer__text">Herramientas para psicólogos en entorno digital.</p>
-      </div>
-      <div>
-        <p class="footer__heading">Explorar</p>
-        <ul class="footer__links">
-          <li><a href="servicios.html">Servicios</a></li>
-          <li><a href="origen.html">Origen</a></li>
-          <li><a href="contacto.html">Contacto</a></li>
-        </ul>
-      </div>
-      <div>
-        <p class="footer__heading">Acceso</p>
-        <ul class="footer__links">
-          <li><a href="/admin">Panel psicólogo</a></li>
-          <li><a href="/">App paciente</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="container footer__bottom">
-      <p>&copy; 2025–2026 Senti2</p>
+    <div class="container footer__inner">
+      <p class="footer__brand">Senti2</p>
+      <ul class="footer__links">
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="contacto.html">Contacto</a></li>
+        <li><a href="/">App</a></li>
+      </ul>
+      <p class="footer__copy">&copy; 2025–2026 Senti2</p>
     </div>
   </footer>
 

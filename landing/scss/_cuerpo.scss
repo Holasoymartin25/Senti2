@@ -1,0 +1,386 @@
+// Cuerpo: base, layout y componentes
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: $font-body;
+  background: $color-cream;
+  color: $color-charcoal;
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+}
+
+a {
+  color: $color-sage-dark;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  z-index: 1000;
+  padding: 0.5rem 1rem;
+  background: $color-sage;
+  color: $color-white;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+
+  &:focus {
+    top: 1rem;
+  }
+}
+
+:focus-visible {
+  outline: 3px solid $color-sage;
+  outline-offset: 2px;
+}
+
+.page-transition {
+  animation: pageIn 0.4s ease;
+}
+
+@keyframes pageIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .page-transition { animation: none; }
+}
+
+.container {
+  width: 100%;
+  max-width: $max-width;
+  margin: 0 auto;
+  padding: 0 $gutter;
+}
+
+@media (min-width: $bp-lg) {
+  .container { padding: 0 $gutter-lg; }
+}
+
+.section { padding: 3rem 0; }
+.section--warm { background: $color-warm; }
+.text-center { text-align: center; }
+
+.layout {
+  display: grid;
+  gap: 2rem;
+  padding: 2rem 0 3rem;
+}
+
+@media (min-width: $bp-lg) {
+  .layout {
+    grid-template-columns: 1fr 280px;
+    align-items: start;
+  }
+}
+
+.layout__main { min-width: 0; }
+.layout__cta { margin-top: 1.5rem; }
+
+.page-title {
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.intro {
+  color: $color-slate;
+  margin-bottom: 1.5rem;
+  max-width: 60ch;
+}
+
+.cards {
+  display: grid;
+  gap: 1.5rem;
+}
+
+@media (min-width: $bp-md) {
+  .cards--3 { grid-template-columns: repeat(3, 1fr); }
+}
+
+.card {
+  background: $color-white;
+  border: 1px solid $color-stone;
+  border-radius: $radius;
+  padding: 1.5rem;
+
+  p + p { margin-top: 1rem; }
+}
+
+.card__title {
+  color: $color-sage-dark;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.card__text {
+  color: $color-slate;
+  font-size: 0.95rem;
+}
+
+.card--spaced { margin-bottom: 1.5rem; }
+
+.content-image {
+  border-radius: $radius;
+  margin-bottom: 1.5rem;
+}
+
+.btn {
+  display: inline-block;
+  padding: 0.65rem 1.25rem;
+  border-radius: $radius;
+  font-weight: 600;
+  text-decoration: none;
+  border: 2px solid transparent;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 1rem;
+
+  &--primary {
+    background: $color-sage;
+    color: $color-white;
+    &:hover { background: $color-sage-dark; }
+  }
+
+  &--outline {
+    background: transparent;
+    color: $color-sage-dark;
+    border-color: $color-sage;
+    &:hover {
+      background: $color-sage;
+      color: $color-white;
+    }
+  }
+}
+
+.hero {
+  position: relative;
+  padding: 3rem 0;
+  overflow: hidden;
+}
+
+.hero__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.2;
+  pointer-events: none;
+}
+
+.hero__grid {
+  position: relative;
+  display: grid;
+  gap: 2rem;
+  align-items: center;
+}
+
+@media (min-width: $bp-lg) {
+  .hero__grid { grid-template-columns: 1fr 1fr; }
+}
+
+.hero__title {
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 800;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+
+.hero__text {
+  color: $color-slate;
+  margin-bottom: 1.5rem;
+}
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.hero__image {
+  border-radius: $radius;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.parallax-layer { will-change: transform; }
+
+.media {
+  display: grid;
+  gap: 1.5rem;
+}
+
+@media (min-width: $bp-md) {
+  .media { grid-template-columns: 1fr 1fr; }
+}
+
+.media__video,
+.media audio {
+  width: 100%;
+  border-radius: $radius;
+}
+
+.media__caption {
+  font-size: 0.9rem;
+  color: $color-gray;
+  margin-top: 0.5rem;
+}
+
+.sidebar {
+  background: $color-white;
+  border: 1px solid $color-stone;
+  border-radius: $radius;
+  padding: 1.25rem;
+}
+
+.sidebar__title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+.sidebar__image {
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.sidebar__nav {
+  list-style: none;
+
+  a {
+    display: block;
+    padding: 0.4rem 0;
+    color: $color-slate;
+    text-decoration: none;
+    font-size: 0.9rem;
+    border-bottom: 1px solid $color-stone;
+
+    &:hover { color: $color-sage-dark; }
+    &:last-child { border-bottom: none; }
+  }
+}
+
+.service-list {
+  list-style: none;
+
+  li {
+    padding: 1rem 0;
+    border-bottom: 1px solid $color-stone;
+    &:last-child { border-bottom: none; }
+  }
+
+  h2 {
+    font-size: 1.05rem;
+    color: $color-sage-dark;
+    margin-bottom: 0.35rem;
+  }
+
+  p {
+    color: $color-slate;
+    font-size: 0.95rem;
+  }
+}
+
+.profile {
+  text-align: center;
+
+  img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 0 auto 0.75rem;
+  }
+
+  h2 {
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .profile__role {
+    color: $color-sage-dark;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    font-size: 0.9rem;
+    color: $color-slate;
+  }
+}
+
+.form {
+  background: $color-white;
+  border: 1px solid $color-stone;
+  border-radius: $radius;
+  padding: 1.5rem;
+}
+
+.form__group { margin-bottom: 1rem; }
+
+.form__label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+}
+
+.form__input,
+.form__textarea {
+  width: 100%;
+  padding: 0.6rem;
+  border: 1px solid $color-stone;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 1rem;
+  background: $color-cream;
+}
+
+.form__textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.form__feedback {
+  margin-top: 0.75rem;
+  padding: 0.6rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+
+  &--ok {
+    background: rgba(135, 169, 107, 0.15);
+    color: #3d5230;
+  }
+
+  &--error {
+    background: rgba(244, 168, 138, 0.2);
+    color: #6b3d2e;
+  }
+}

@@ -4,6 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "landing": "python3 -m http.server 5500 --directory ../landing",
     "build": "ng build",
     "build:aws": "ng build --configuration=aws",
     "watch": "ng build --watch --configuration development",

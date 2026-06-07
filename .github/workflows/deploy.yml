@@ -56,6 +56,7 @@ jobs:
               echo "REVERB_PORT=443"
               echo "REVERB_SCHEME=https"
               echo "SESSION_DRIVER=file"
+              echo "SESSION_SECURE_COOKIE=true"
               echo "CACHE_STORE=file"
               echo "QUEUE_CONNECTION=sync"
             } | sudo tee /app/senti2-backend/.env > /dev/null

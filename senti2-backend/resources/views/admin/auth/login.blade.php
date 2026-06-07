@@ -3,28 +3,47 @@
 @section('title', __('admin.login_title'))
 
 @section('content')
-<div class="card" style="max-width:420px;margin:3rem auto">
-    <h1>{{ __('admin.login_title') }}</h1>
-    <p style="margin-bottom:1.5rem;color:#666">Senti2 / Laravel Blade</p>
+<div class="login-page">
+    <div class="lang-switch login-lang" aria-label="{{ __('admin.language') }}">
+        <a href="{{ route('admin.locale', 'es') }}" @class(['active' => app()->getLocale() === 'es'])>ES</a>
+        <a href="{{ route('admin.locale', 'en') }}" @class(['active' => app()->getLocale() === 'en'])>EN</a>
+    </div>
 
-    <form method="POST" action="{{ route('admin.login.submit') }}">
-        @csrf
-        <label for="email">{{ __('admin.email') }}</label>
-        <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus>
+    <div class="login-wrapper">
+        <div class="login-left">
+            <h2 class="login-left__title">Senti2</h2>
+            <p class="login-left__subtitle">{{ __('admin.login_brand_subtitle') }}</p>
+            <div class="login-features">
+                <div class="login-feature">{{ __('admin.login_feature_secure') }}</div>
+                <div class="login-feature">{{ __('admin.login_feature_pros') }}</div>
+                <div class="login-feature">{{ __('admin.login_feature_care') }}</div>
+            </div>
+        </div>
 
-        <label for="password">{{ __('admin.password') }}</label>
-        <input id="password" type="password" name="password" required>
+        <div class="login-right">
+            <div class="login-form-card">
+                <h1>{{ __('admin.login_title') }}</h1>
+                <p class="login-form-card__subtitle">{{ __('admin.login_welcome') }}</p>
 
-        <label style="display:flex;align-items:center;gap:.5rem;font-weight:normal">
-            <input type="checkbox" name="remember" style="width:auto;margin:0">
-            {{ __('admin.remember') }}
-        </label>
+                <x-admin.alert />
 
-        <button type="submit" class="btn btn-primary">{{ __('admin.login') }}</button>
-    </form>
+                <form method="POST" action="{{ route('admin.login.submit') }}">
+                    @csrf
+                    <label for="email">{{ __('admin.email') }}</label>
+                    <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus autocomplete="email" placeholder="admin@senti2.com">
 
-    <p style="margin-top:1rem;font-size:.85rem">
-        <a href="?lang=es">ES</a> · <a href="?lang=en">EN</a>
-    </p>
+                    <label for="password">{{ __('admin.password') }}</label>
+                    <input id="password" type="password" name="password" required autocomplete="current-password">
+
+                    <label class="checkbox-row">
+                        <input type="checkbox" name="remember">
+                        {{ __('admin.remember') }}
+                    </label>
+
+                    <button type="submit" class="btn btn-primary" style="width:100%">{{ __('admin.login') }}</button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection

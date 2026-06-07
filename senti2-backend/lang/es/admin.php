@@ -31,4 +31,9 @@ return [
     'language' => 'Idioma',
     'access_denied' => 'Acceso denegado.',
     'api_docs' => 'Documentación API',
+    'login_brand_subtitle' => 'Tu bienestar emocional es nuestra prioridad',
+    'login_welcome' => 'Inicia sesión para gestionar usuarios y roles',
+    'login_feature_secure' => 'Acceso seguro y confiable',
+    'login_feature_pros' => 'Profesionales certificados',
+    'login_feature_care' => 'Atención personalizada',
 ];

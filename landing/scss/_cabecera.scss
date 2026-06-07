@@ -1,0 +1,58 @@
+// Cabecera
+
+.header {
+  background: $color-white;
+  border-bottom: 1px solid $color-stone;
+  padding: 1rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.header__brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: $color-sage;
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+.header__logo {
+  width: 36px;
+  height: 36px;
+}
+
+.header__nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.75rem;
+  align-items: center;
+}
+
+.header__link {
+  color: $color-slate;
+  text-decoration: none;
+  font-size: 0.95rem;
+  padding: 0.35rem 0.5rem;
+  border-radius: 6px;
+
+  &:hover {
+    color: $color-sage-dark;
+    background: $color-cream;
+  }
+
+  &--active {
+    color: $color-sage-dark;
+    font-weight: 600;
+  }
+}

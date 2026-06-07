@@ -169,7 +169,7 @@ return [
     |
     */
 
-    'secure' => env('SESSION_SECURE_COOKIE'),
+    'secure' => env('SESSION_SECURE_COOKIE', parse_url((string) config('app.url'), PHP_URL_SCHEME) === 'https'),
 
     /*
     |--------------------------------------------------------------------------
