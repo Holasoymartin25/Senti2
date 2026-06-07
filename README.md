@@ -29,9 +29,9 @@ Senti2 es una plataforma web de bienestar emocional que conecta pacientes con ps
 | Vídeo | https://youtu.be/iiZ3IyO55n0 |
 | UI Kit | https://www.figma.com/design/DEruwgHUcU4dyW1NMLYmQF/Proyecto-Senti2-UiKit |
 | FigJam | https://www.figma.com/board/l3mHfWrikJh4IhvWt1w6Yr/FigJam_Senti2 |
-| PDF presentación |  |
+| PDF presentación | [docs/Senti2_Presentacion.pdf](docs/Senti2_Presentacion.pdf) |
 
-_Pendiente: PDF · Notion (anteproyecto) · capturas en `docs/capturas/`_
+_Pendiente: Notion (anteproyecto) · capturas en `docs/capturas/`_
 ---
 
 ## Stack
