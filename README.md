@@ -57,7 +57,7 @@ Paloma — backend Laravel, base de datos, despliegue.
 
 Esquema entidad–relación (PostgreSQL):
 
-![Esquema E/R Senti2] (<img width="1507" height="1173" alt="image" src="https://github.com/user-attachments/assets/ca8f2344-7de3-457c-8880-0cf42fdebefe" />)
+<img width="1507" height="1173" alt="image" src="https://github.com/user-attachments/assets/ca8f2344-7de3-457c-8880-0cf42fdebefe" />
 
 ---
 
