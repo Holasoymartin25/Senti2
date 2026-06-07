@@ -1,8 +1,8 @@
 <?php
 
-test('la aplicación responde en la ruta raíz', function () {
+test('la aplicación redirige la ruta raíz al login de admin', function () {
     $response = $this->get('/');
-    $response->assertStatus(200);
+    $response->assertRedirect('/panel-admin/login');
 });
 
 test('el API de contacto valida campos requeridos', function () {

@@ -10,8 +10,16 @@ uses(RefreshDatabase::class);
 test('tiene los atributos fillable esperados', function () {
     $profile = new Profile;
     expect($profile->getFillable())
-        ->toContain('user_id', 'nombre', 'apellidos', 'telefono', 'fecha_nacimiento')
-        ->toHaveCount(5);
+        ->toContain(
+            'user_id',
+            'nombre',
+            'apellidos',
+            'telefono',
+            'fecha_nacimiento',
+            'avatar_path',
+            'private_document_path',
+        )
+        ->toHaveCount(7);
 });
 
 test('fecha_nacimiento se castea a date', function () {
