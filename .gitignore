@@ -6,6 +6,8 @@ credentials
 # Node (landing SCSS, Angular, etc.)
 node_modules/
 *.css.map
+Senti2/dist/
+Senti2/.angular/
 
 # Terraform
 infra/.terraform/
