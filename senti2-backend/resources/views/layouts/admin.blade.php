@@ -18,7 +18,6 @@
         </div>
         <nav class="navbar__nav">
             <a href="{{ route('admin.users.index') }}" @class(['is-active' => request()->routeIs('admin.users.*')])>{{ __('admin.users') }}</a>
-            <a href="/docs/api" target="_blank" rel="noopener">{{ __('admin.api_docs') }}</a>
             <span class="lang-switch" aria-label="{{ __('admin.language') }}">
                 <a href="{{ route('admin.locale', 'es') }}" @class(['active' => app()->getLocale() === 'es'])>ES</a>
                 <a href="{{ route('admin.locale', 'en') }}" @class(['active' => app()->getLocale() === 'en'])>EN</a>

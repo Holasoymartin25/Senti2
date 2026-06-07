@@ -46,9 +46,7 @@
     </div>
 
     @if ($users->hasPages())
-    <div class="pagination">
-        {{ $users->links() }}
-    </div>
+    {{ $users->links('pagination.admin') }}
     @endif
 </div>
 @endsection
